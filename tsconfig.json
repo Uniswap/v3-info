@@ -1,26 +1,34 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "esModuleInterop": true,
     "module": "esnext",
+    "strict": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["jest", "node"],
+    "baseUrl": "src"
   },
+  "exclude": ["node_modules", "cypress"],
   "include": [
-    "src"
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "src/components/Confetti/index.js"
   ]
 }

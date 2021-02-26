@@ -8,14 +8,29 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
+    "@types/react-router": "^5.1.11",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/rebass": "^4.0.8",
+    "@types/qs": "^6.9.2",
+    "@types/styled-components": "^5.1.7",
+    "inter-ui": "^3.15.0",
+    "polished": "^4.1.1",
+    "qs": "^6.9.6",
     "react": "^17.0.1",
+    "react-device-detect": "^1.15.0",
     "react-dom": "^17.0.1",
+    "react-feather": "^2.0.9",
+    "react-ga": "^3.3.0",
+    "react-i18next": "^11.8.8",
     "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "rebass": "^4.0.7",
+    "redux-localstorage-simple": "^2.4.0",
+    "styled-components": "^5.2.1",
     "typescript": "~3.8.2"
   },
   "scripts": {
@@ -38,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/node": "^12.20.4"
   }
 }

@@ -6,8 +6,10 @@ import styled from "styled-components";
 import Logo from "../../assets/images/logo.svg";
 import LogoDark from "../../assets/images/logo_white.svg";
 import { useDarkModeManager } from "../../state/user/hooks";
-import { ExternalLink } from "../../theme";
 import Row, { RowFixed } from "../Row";
+import Web3Status from "../Web3Status";
+
+const activeClassName = "ACTIVE";
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -51,12 +53,12 @@ const HeaderLinks = styled(Row)`
 `};
 `;
 
-const Title = styled.a`
+const Title = styled(NavLink)`
   display: flex;
   align-items: center;
   pointer-events: auto;
   justify-self: flex-start;
-  margin-right: 12px;
+  margin-right: 24px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
@@ -72,8 +74,6 @@ const UniIcon = styled.div`
   }
 `;
 
-const activeClassName = "ACTIVE";
-
 const StyledNavLink = styled(NavLink).attrs({
   activeClassName,
 })`
@@ -83,81 +83,22 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text3};
   font-size: 1rem;
   width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
+  margin: 0 6px;
+  font-weight: 600;
+  padding: 8.5px 12px;
 
   &.${activeClassName} {
     border-radius: 12px;
-    font-weight: 600;
     color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.bg2};
   }
 
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
-  }
-`;
-
-const StyledExternalLink = styled(ExternalLink).attrs({
-  activeClassName,
-})<{ isActive?: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
-
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.text1};
-  }
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      display: none;
-`}
-`;
-
-export const StyledMenuButton = styled.button`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
-  margin-left: 8px;
-  padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
-  }
-  > * {
-    stroke: ${({ theme }) => theme.text1};
   }
 `;
 
@@ -168,29 +109,34 @@ export default function Header() {
   return (
     <HeaderFrame>
       <HeaderRow>
-        <Title href=".">
+        <Title to={"/"}>
           <UniIcon>
-            <img width={"24px"} src={darkMode ? LogoDark : Logo} alt="logo" />
+            <img width={"20px"} src={darkMode ? LogoDark : Logo} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={"/swap"}>
+          <StyledNavLink
+            id={`swap-nav-link`}
+            to={"/"}
+            isActive={(match, { pathname }) => pathname === "/"}
+          >
+            Overview
+          </StyledNavLink>
+          <StyledNavLink id={`stake-nav-link`} to={"/protocol"}>
             Protocol
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={"/uni"}>
-            UNI
+          <StyledNavLink id={`stake-nav-link`} to={"/pools"}>
+            Pools
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={"/vote"}>
-            Vote
+          <StyledNavLink id={`stake-nav-link`} to={"/tokens"}>
+            Tokens
           </StyledNavLink>
-          <StyledExternalLink
-            id={`stake-nav-link`}
-            href={"https://uniswap.info"}
-          >
-            Charts <span style={{ fontSize: "11px" }}>↗</span>
-          </StyledExternalLink>
+          <StyledNavLink id={`stake-nav-link`} to={"/wallets"}>
+            Wallets
+          </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
+      <Web3Status />
     </HeaderFrame>
   );
 }

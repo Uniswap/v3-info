@@ -4,7 +4,11 @@ import styled from "styled-components";
 import GoogleAnalyticsReporter from "../components/analytics/GoogleAnalyticsReporter";
 import Header from "../components/Header";
 import Home from "./Home";
+import Protocol from "./Protocol";
 import DarkModeQueryParamReader from "../theme/DarkModeQueryParamReader";
+import TokensOverview from "./Token/TokensOverview";
+import PoolssOverview from "./Pool/PoolsOverview";
+import Wallets from "./Wallets";
 
 const AppWrapper = styled.div`
   display: flex;
@@ -53,7 +57,11 @@ export default function App() {
         </HeaderWrapper>
         <BodyWrapper>
           <Switch>
-            <Route exact strict path="/swap" component={Home} />
+            <Route exact strict path="/" component={Home} />
+            <Route exact strict path="/protocol" component={Protocol} />
+            <Route exact strict path="/tokens" component={TokensOverview} />
+            <Route exact strict path="/pools" component={PoolssOverview} />
+            <Route exact strict path="/wallets" component={Wallets} />
           </Switch>
           <Marginer />
         </BodyWrapper>

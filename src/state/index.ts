@@ -4,11 +4,7 @@ import { save, load } from 'redux-localstorage-simple'
 import application from './application/reducer'
 import { updateVersion } from './global/actions'
 import user from './user/reducer'
-import transactions from './transactions/reducer'
-import swap from './swap/reducer'
-import mint from './mint/reducer'
 import lists from './lists/reducer'
-import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
@@ -17,10 +13,6 @@ const store = configureStore({
   reducer: {
     application,
     user,
-    transactions,
-    swap,
-    mint,
-    burn,
     multicall,
     lists,
   },

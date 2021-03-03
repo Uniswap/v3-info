@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,7 +15,7 @@
     "strict": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -22,10 +26,16 @@
     "jsx": "react",
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["jest", "node"],
+    "types": [
+      "react-spring",
+      "jest"
+    ],
     "baseUrl": "src"
   },
-  "exclude": ["node_modules", "cypress"],
+  "exclude": [
+    "node_modules",
+    "cypress"
+  ],
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",

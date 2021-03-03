@@ -1,29 +1,40 @@
-import React, { Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
-import styled from "styled-components";
-import GoogleAnalyticsReporter from "../components/analytics/GoogleAnalyticsReporter";
-import Header from "../components/Header";
-import Home from "./Home";
-import DarkModeQueryParamReader from "../theme/DarkModeQueryParamReader";
+import React, { Suspense } from 'react'
+import { Route, Switch } from 'react-router-dom'
+import styled from 'styled-components'
+import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
+import Header from '../components/Header'
+import Polling from '../components/Header/Polling'
+import URLWarning from '../components/Header/URLWarning'
+import Popups from '../components/Popups'
+import Web3ReactManager from '../components/Web3ReactManager'
+import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
+import { HotKeys } from 'react-hotkeys'
+import Home from './Home'
+import Protocol from './Protocol'
+import PoolssOverview from './Pool/PoolsOverview'
+import TokensOverview from './Token/TokensOverview'
+import Wallets from './Wallets'
+import TopBar from 'components/Header/TopBar'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
-`;
+  min-height: 100vh;
+`
 
 const HeaderWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${({ theme }) => theme.flexColumnNoWrap}
   width: 100%;
   justify-content: space-between;
-`;
+`
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 100px;
+  padding-top: 40px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -36,11 +47,11 @@ const BodyWrapper = styled.div`
   `};
 
   z-index: 1;
-`;
+`
 
 const Marginer = styled.div`
   margin-top: 5rem;
-`;
+`
 
 export default function App() {
   return (
@@ -48,16 +59,26 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
+        <URLWarning />
         <HeaderWrapper>
+          <TopBar />
           <Header />
         </HeaderWrapper>
         <BodyWrapper>
-          <Switch>
-            <Route exact strict path="/swap" component={Home} />
-          </Switch>
+          <Popups />
+          <Polling />
+          <Web3ReactManager>
+            <Switch>
+              <Route exact strict path="/" component={Home} />
+              <Route exact strict path="/protocol" component={Protocol} />
+              <Route exact strict path="/pools" component={PoolssOverview} />
+              <Route exact strict path="/tokens" component={TokensOverview} />
+              <Route exact strict path="/wallet" component={Wallets} />
+            </Switch>
+          </Web3ReactManager>
           <Marginer />
         </BodyWrapper>
       </AppWrapper>
     </Suspense>
-  );
+  )
 }

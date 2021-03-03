@@ -18,6 +18,7 @@ import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
+import SearchSmall from 'components/Search'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -109,7 +110,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg1)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -182,7 +183,7 @@ const StyledNavLink = styled(NavLink).attrs({
   width: fit-content;
   margin: 0 6px;
   padding: 8px 12px;
-  font-weight: 600;
+  font-weight: 500;
 
   &.${activeClassName} {
     border-radius: 12px;
@@ -266,6 +267,7 @@ export default function Header() {
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
+        <SearchSmall style={{ marginRight: '20px' }} />
         <HeaderElement>
           <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (

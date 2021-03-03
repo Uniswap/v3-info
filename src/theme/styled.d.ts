@@ -39,6 +39,7 @@ export interface Colors {
   secondary3: Color
 
   // other
+  pink1: Color
   red1: Color
   red2: Color
   red3: Color

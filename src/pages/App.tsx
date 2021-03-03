@@ -8,22 +8,24 @@ import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-
+import { HotKeys } from 'react-hotkeys'
 import Home from './Home'
 import Protocol from './Protocol'
 import PoolssOverview from './Pool/PoolsOverview'
 import TokensOverview from './Token/TokensOverview'
 import Wallets from './Wallets'
+import TopBar from 'components/Header/TopBar'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
+  min-height: 100vh;
 `
 
 const HeaderWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${({ theme }) => theme.flexColumnNoWrap}
   width: 100%;
   justify-content: space-between;
 `
@@ -32,8 +34,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-  padding-top: 100px;
+  padding-top: 40px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -60,6 +61,7 @@ export default function App() {
       <AppWrapper>
         <URLWarning />
         <HeaderWrapper>
+          <TopBar />
           <Header />
         </HeaderWrapper>
         <BodyWrapper>

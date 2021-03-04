@@ -15,6 +15,7 @@ import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
 import UserUpdater from './state/user/updater'
+import ProtocolUpdater from './state/protocol/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 
@@ -52,6 +53,7 @@ function Updaters() {
       <UserUpdater />
       <ApplicationUpdater />
       <MulticallUpdater />
+      <ProtocolUpdater />
     </>
   )
 }

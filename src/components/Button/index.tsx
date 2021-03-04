@@ -12,11 +12,11 @@ const Base = styled(RebassButton)<{
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '18px')};
+  padding: ${({ padding }) => (padding ? padding : '8px 16px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 12px;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;

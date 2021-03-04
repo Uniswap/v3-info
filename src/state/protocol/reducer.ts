@@ -1,3 +1,4 @@
+import { currentTimestamp } from './../../utils/index'
 import { updateProtocolData } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
 
@@ -17,10 +18,10 @@ export interface ProtocolData {
 
 export interface ProtocolState {
   // timestamp for last updated fetch
-  lastUpdated: string | undefined
+  readonly lastUpdated: number | undefined
 
   // analytics data from subgraph
-  data: ProtocolData | undefined
+  readonly data: ProtocolData | undefined
 }
 
 export const initialState: ProtocolState = {
@@ -28,4 +29,12 @@ export const initialState: ProtocolState = {
   data: undefined,
 }
 
-export default createReducer(initialState, (builder) => builder.addCase(updateProtocolData, (state) => {}))
+export default createReducer(initialState, (builder) =>
+  builder.addCase(updateProtocolData, (state, { payload: { protocolData } }) => {
+    console.log('updating')
+
+    state.data = protocolData
+    // mark when last updated
+    state.lastUpdated = currentTimestamp()
+  })
+)

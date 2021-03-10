@@ -49,6 +49,10 @@ const BodyWrapper = styled.div`
   `};
 
   z-index: 1;
+
+  > * {
+    max-width: 1200px;
+  }
 `
 
 const Marginer = styled.div`

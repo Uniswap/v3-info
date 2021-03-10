@@ -4,12 +4,12 @@ import { createReducer } from '@reduxjs/toolkit'
 
 export interface ProtocolData {
   // volume
-  usdVolume: number
-  usdVolumeChange: number
+  volumeUSD: number
+  volumeUSDChange: number
 
   // in range liquidity
-  liquidityUsd: number
-  liquidityChange: number
+  liquidityUSD: number
+  liquidityUSDChange: number
 
   // transactions
   txnCount: number
@@ -31,8 +31,6 @@ export const initialState: ProtocolState = {
 
 export default createReducer(initialState, (builder) =>
   builder.addCase(updateProtocolData, (state, { payload: { protocolData } }) => {
-    console.log('updating')
-
     state.data = protocolData
     // mark when last updated
     state.lastUpdated = currentTimestamp()

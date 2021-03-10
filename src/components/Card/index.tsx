@@ -50,3 +50,12 @@ export const BlueCard = styled(Card)`
   border-radius: 12px;
   width: fit-content;
 `
+
+export const ScrollableX = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+`

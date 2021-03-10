@@ -1,12 +1,8 @@
+import numbro from 'numbro'
+
 // using a currency library here in case we want to add more in future
-export const formatDollarAmount = (num: number | undefined, digits?: number) => {
+export const formatDollarAmount = (num: number | undefined, digits = 2, round = true) => {
   if (!num) return '-'
 
-  const formatter = new Intl.NumberFormat([], {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  })
-  return formatter.format(num)
+  return numbro(num).formatCurrency({ average: round, mantissa: digits })
 }

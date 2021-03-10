@@ -1,5 +1,5 @@
+import { ProtocolData } from './reducer'
 import { createAction } from '@reduxjs/toolkit'
 
-// protocol wide
-export const updateProtocolData = createAction<{ data: string }>('application/updateBlockNumber')
-export const updateProtocolChartData = createAction<string>('data/protocolChart')
+// protocol wide info
+export const updateProtocolData = createAction<{ protocolData: ProtocolData }>('protocol/updateProtocolData')

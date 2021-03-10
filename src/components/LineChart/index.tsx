@@ -140,7 +140,7 @@ const LineChart = ({
             (param && param.point && param.point.y < 0) ||
             (param && param.point && param.point.y > height))
         ) {
-          setValue && setValue(currenValue)
+          setValue && setValue(undefined)
         } else {
           const price = parseFloat(param.seriesPrices.get(series)?.toString() ?? currenValue)
           setValue && setValue(price)

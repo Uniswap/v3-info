@@ -1,8 +1,16 @@
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../index'
+import { useProtocolData } from './hooks'
+import { useEffect } from 'react'
+import { fetchProtocolData } from 'data/protocol'
 
 export default function Updater(): null {
-  const dispatch = useDispatch<AppDispatch>()
+  const [protocolData, updateProtocolData] = useProtocolData()
+
+  useEffect(() => {
+    if (protocolData === undefined) {
+      const newData = fetchProtocolData()
+      updateProtocolData(newData)
+    }
+  }, [protocolData, updateProtocolData])
 
   return null
 }

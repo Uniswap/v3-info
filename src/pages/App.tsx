@@ -8,7 +8,6 @@ import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import { HotKeys } from 'react-hotkeys'
 import Home from './Home'
 import Protocol from './Protocol'
 import PoolssOverview from './Pool/PoolsOverview'
@@ -27,7 +26,9 @@ const AppWrapper = styled.div`
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   width: 100%;
+  position: fixed;
   justify-content: space-between;
+  z-index: 2;
 `
 
 const BodyWrapper = styled.div`
@@ -35,6 +36,7 @@ const BodyWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   padding-top: 40px;
+  margin-top: 100px;
   align-items: center;
   flex: 1;
   overflow-y: auto;

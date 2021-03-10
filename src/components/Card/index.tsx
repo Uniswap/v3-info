@@ -1,8 +1,5 @@
-import React from 'react'
 import styled from 'styled-components'
-import { CardProps, Text } from 'rebass'
 import { Box } from 'rebass/styled-components'
-import { darken } from 'polished'
 
 const Card = styled(Box)<{ width?: string; padding?: string; border?: string; borderRadius?: string }>`
   width: ${({ width }) => width ?? '100%'};
@@ -27,6 +24,10 @@ export const GreyCard = styled(Card)`
   background-color: ${({ theme }) => theme.bg3};
 `
 
+export const DarkGreyCard = styled(Card)`
+  background-color: ${({ theme }) => theme.bg0};
+`
+
 export const OutlineCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.bg3};
 `
@@ -48,4 +49,13 @@ export const BlueCard = styled(Card)`
   color: ${({ theme }) => theme.blue2};
   border-radius: 12px;
   width: fit-content;
+`
+
+export const ScrollableX = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
 `

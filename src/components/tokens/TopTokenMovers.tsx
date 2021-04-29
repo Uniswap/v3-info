@@ -19,7 +19,7 @@ const Wrapper = styled(GreyCard)`
 const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
   return (
     <Wrapper>
-      <AutoColumn gap="md">
+      {/* <AutoColumn gap="md">
         <RowFixed>
           <CurrencyLogo currency={tokenData.token} />
           <TYPE.label ml="8px">{tokenData.token.symbol}</TYPE.label>
@@ -31,7 +31,7 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
           </TYPE.label>
           <Percent value={tokenData.priceUSDChange} />
         </RowFlat>
-      </AutoColumn>
+      </AutoColumn> */}
     </Wrapper>
   )
 }
@@ -45,7 +45,7 @@ export default function TopTokenMovers() {
 
   return (
     <ScrollableX>
-      {Object.keys(allTokens).map((address: string) => (
+      {/* {Object.keys(allTokens).map((address: string) => (
         <DataCard key={'top-card-token-' + address} tokenData={allTokens[address].data} />
       ))}
       {Object.keys(allTokens).map((address: string) => (
@@ -53,7 +53,7 @@ export default function TopTokenMovers() {
       ))}
       {Object.keys(allTokens).map((address: string) => (
         <DataCard key={'top-card-token-' + address} tokenData={allTokens[address].data} />
-      ))}
+      ))} */}
     </ScrollableX>
   )
 }

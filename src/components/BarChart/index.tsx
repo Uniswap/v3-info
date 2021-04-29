@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from 'react'
 import { createChart, IChartApi } from 'lightweight-charts'
-import { darken } from 'polished'
 import { RowBetween } from 'components/Row'
 import Card from '../Card'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
+import usePrevious from 'hooks/usePrevious'
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -23,6 +23,7 @@ export type LineChartProps = {
   data: any[]
   color?: string | undefined
   height?: number | undefined
+  minHeight?: number
   setValue?: Dispatch<SetStateAction<number | undefined>> // used for value on hover
   topLeft?: ReactNode | undefined
   topRight?: ReactNode | undefined
@@ -39,15 +40,16 @@ const BarChart = ({
   bottomLeft,
   bottomRight,
   height = DEFAULT_HEIGHT,
+  minHeight = DEFAULT_HEIGHT,
   ...rest
 }: LineChartProps) => {
   const theme = useTheme()
-
+  const textColor = theme.text2
   const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
 
   // for reseting value on hover exit
-  const currenValue = data[data.length - 1].value
+  const currentValue = data[data.length - 1]?.value
 
   const handleResize = useCallback(() => {
     if (chartCreated && chartRef?.current?.parentElement) {
@@ -67,7 +69,13 @@ const BarChart = ({
     return () => window.removeEventListener('resize', handleResize)
   }, [isClient, chartRef, handleResize]) // Empty array ensures that effect is only run on mount and unmount
 
-  const textColor = theme.text2
+  // // reset chart if data changed
+  // const prevData = usePrevious(data)
+  // useEffect(() => {
+  //   if (prevData !== undefined && data !== undefined && prevData !== data) {
+  //     setChart(undefined)
+  //   }
+  // }, [data, prevData])
 
   // if chart not instantiated in canvas, create it
   useEffect(() => {
@@ -119,15 +127,22 @@ const BarChart = ({
         },
       })
 
-      const series = chart.addBarSeries({
-        upColor: darken(0.4, color),
-        downColor: theme.bg0,
+      chart.timeScale().fitContent()
+      setChart(chart)
+    }
+  }, [color, chartCreated, currentValue, data, height, setValue, textColor, theme])
+
+  useEffect(() => {
+    if (chartCreated && data) {
+      const series = chartCreated.addHistogramSeries({
+        color: color,
       })
 
       series.setData(data)
+      chartCreated.timeScale().fitContent()
 
       // update the title when hovering on the chart
-      chart.subscribeCrosshairMove(function (param) {
+      chartCreated.subscribeCrosshairMove(function (param) {
         if (
           chartRef?.current &&
           (param === undefined ||
@@ -137,19 +152,17 @@ const BarChart = ({
             (param && param.point && param.point.y < 0) ||
             (param && param.point && param.point.y > height))
         ) {
-          setValue && setValue(currenValue)
-        } else {
-          const price = parseFloat(param.seriesPrices.get(series)?.toString() ?? currenValue)
+          setValue && setValue(undefined)
+        } else if (series && param) {
+          const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue)
           setValue && setValue(price)
         }
       })
-      chart.timeScale().fitContent()
-      setChart(chart)
     }
-  }, [color, chartCreated, currenValue, data, height, setValue, textColor, theme])
+  }, [chartCreated, color, currentValue, data, height, setValue, theme.bg0])
 
   return (
-    <Wrapper>
+    <Wrapper minHeight={minHeight}>
       <RowBetween>
         {topLeft ?? null}
         {topRight ?? null}

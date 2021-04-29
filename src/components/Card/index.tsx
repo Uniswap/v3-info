@@ -59,3 +59,12 @@ export const ScrollableX = styled.div`
   overflow-y: hidden;
   white-space: nowrap;
 `
+
+export const GreyBadge = styled(Card)`
+  width: fit-content;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.bg3};
+  color: ${({ theme }) => theme.text1};
+  padding: 4px 6px;
+  font-weight: 400;
+`

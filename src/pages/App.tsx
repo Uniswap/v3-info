@@ -1,19 +1,20 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useState, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
-import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
-import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
 import Protocol from './Protocol'
-import PoolssOverview from './Pool/PoolsOverview'
+import PoolsOverview from './Pool/PoolsOverview'
 import TokensOverview from './Token/TokensOverview'
 import Wallets from './Wallets'
 import TopBar from 'components/Header/TopBar'
+import TokenPage from './Token/TokenPage'
+import { RedirectInvalidToken } from './Token/redirects'
+import { LocalLoader } from 'components/Loader'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -60,31 +61,37 @@ const Marginer = styled.div`
 `
 
 export default function App() {
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000)
+  }, [])
+
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
-      <AppWrapper>
-        <URLWarning />
-        <HeaderWrapper>
-          <TopBar />
-          <Header />
-        </HeaderWrapper>
-        <BodyWrapper>
-          <Popups />
-          <Polling />
-          <Web3ReactManager>
+      {loading ? (
+        <LocalLoader fill={true} />
+      ) : (
+        <AppWrapper>
+          <URLWarning />
+          <HeaderWrapper>
+            <TopBar />
+            <Header />
+          </HeaderWrapper>
+          <BodyWrapper>
+            <Popups />
             <Switch>
               <Route exact strict path="/" component={Home} />
               <Route exact strict path="/protocol" component={Protocol} />
-              <Route exact strict path="/pools" component={PoolssOverview} />
+              <Route exact strict path="/pools" component={PoolsOverview} />
               <Route exact strict path="/tokens" component={TokensOverview} />
-              <Route exact strict path="/wallet" component={Wallets} />
+              <Route exact strict path="/tokens/:address" component={RedirectInvalidToken} />
             </Switch>
-          </Web3ReactManager>
-          <Marginer />
-        </BodyWrapper>
-      </AppWrapper>
+            <Marginer />
+          </BodyWrapper>
+        </AppWrapper>
+      )}
     </Suspense>
   )
 }

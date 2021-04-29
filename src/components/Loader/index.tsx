@@ -1,6 +1,6 @@
 import React from 'react'
-
-import styled, { keyframes } from 'styled-components'
+import v3 from '../../assets/images/whitev3.svg'
+import styled, { keyframes, css } from 'styled-components'
 
 const rotate = keyframes`
   from {
@@ -42,5 +42,46 @@ export default function Loader({
         strokeLinejoin="round"
       />
     </StyledSVG>
+  )
+}
+
+const pulse = keyframes`
+  0% { transform: scale(1); }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+`
+
+const Wrapper = styled.div<{ fill?: boolean; height?: string }>`
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  height: 100%;
+  width: 100%;
+  ${(props) =>
+    props.fill && !props.height
+      ? css`
+          height: 100vh;
+        `
+      : css`
+          height: 180px;
+        `}
+`
+
+const AnimatedImg = styled.div`
+  animation: ${pulse} 800ms linear infinite;
+  & > * {
+    width: 72px;
+  }
+`
+
+export const LocalLoader = ({ fill }: { fill: boolean }) => {
+  return (
+    <Wrapper fill={fill}>
+      <AnimatedImg>
+        <img src={v3} alt="loading-icon" />
+      </AnimatedImg>
+    </Wrapper>
   )
 }

@@ -101,7 +101,9 @@
     "eject": "react-scripts eject",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
     "storybook": "start-storybook -p 6006",
-    "test": "react-scripts test --env=jsdom"
+    "test": "react-scripts test --env=jsdom",
+    "codegen:schema": "npx apollo client:download-schema --endpoint=https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-rinkeby",
+    "codegen:generate": "apollo codegen:generate --localSchemaFile=schema.json --target=typescript --includes=src/**/*.ts --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -123,7 +125,14 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@apollo/client": "^3.3.15",
     "@uniswap/default-token-list": "^2.0.0",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link-http": "^1.5.17",
+    "dayjs": "^1.10.4",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.11.0",
     "lightweight-charts": "^3.3.0",
     "numbro": "^2.3.2",
     "numeral": "^2.0.6",

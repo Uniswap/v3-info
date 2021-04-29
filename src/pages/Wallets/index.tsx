@@ -1,5 +1,5 @@
 import React from 'react'
 
 export default function Wallets() {
-  return <div>hey</div>
+  return <div></div>
 }

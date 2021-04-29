@@ -1,8 +1,9 @@
-import { updateProtocolData } from './actions'
+import { updateProtocolData, updateChartData } from './actions'
 import { AppState, AppDispatch } from './../index'
 import { ProtocolData } from './reducer'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { ChartDayData } from 'types'
 
 export function useProtocolData(): [ProtocolData | undefined, (protocolData: ProtocolData) => void] {
   const protocolData: ProtocolData | undefined = useSelector((state: AppState) => state.protocol.data)
@@ -14,4 +15,14 @@ export function useProtocolData(): [ProtocolData | undefined, (protocolData: Pro
   )
 
   return [protocolData, setProtocolData]
+}
+
+export function useProtocolChartData(): [ChartDayData[] | undefined, (chartData: ChartDayData[]) => void] {
+  const chartData: ChartDayData[] | undefined = useSelector((state: AppState) => state.protocol.chartData)
+  const dispatch = useDispatch<AppDispatch>()
+  const setChartData: (chartData: ChartDayData[]) => void = useCallback(
+    (chartData: ChartDayData[]) => dispatch(updateChartData({ chartData })),
+    [dispatch]
+  )
+  return [chartData, setChartData]
 }

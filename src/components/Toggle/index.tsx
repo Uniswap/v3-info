@@ -52,3 +52,36 @@ export default function Toggle({ id, isActive, toggle }: ToggleProps) {
     </StyledToggle>
   )
 }
+
+export const ToggleWrapper = styled.button<{ width?: string }>`
+  display: flex;
+  align-items: center;
+  width: ${({ width }) => width ?? '100%'}
+  padding: 1px;
+  background: ${({ theme }) => theme.bg2};
+  border-radius: 12px;
+  border: ${({ theme }) => '2px solid ' + theme.bg2};
+  cursor: pointer;
+  outline: none;
+  color: ${({ theme }) => theme.text2};
+
+`
+
+export const ToggleElementFree = styled.span<{ isActive?: boolean; fontSize?: string }>`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 2px 10px;
+  border-radius: 12px;
+  justify-content: center;
+  height: 100%;
+  background: ${({ theme, isActive }) => (isActive ? theme.black : 'none')};
+  color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text2)};
+  font-size: ${({ fontSize }) => fontSize ?? '1rem'};
+  font-weight: 600;
+  white-space: nowrap;
+  :hover {
+    user-select: initial;
+    color: ${({ theme, isActive }) => (isActive ? theme.text2 : theme.text3)};
+  }
+`

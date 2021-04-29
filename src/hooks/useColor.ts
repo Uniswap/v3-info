@@ -1,9 +1,10 @@
-import { useState, useLayoutEffect } from 'react'
+import { useState, useLayoutEffect, useMemo } from 'react'
 import { shade } from 'polished'
 import Vibrant from 'node-vibrant'
 import { hex } from 'wcag-contrast'
 import { Token, ChainId } from '@uniswap/sdk'
 import uriToHttp from 'utils/uriToHttp'
+import { isAddress } from 'utils'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
@@ -43,8 +44,14 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
     .catch(() => null)
 }
 
-export function useColor(token?: Token) {
+export function useColor(address?: string) {
   const [color, setColor] = useState('#2172E5')
+
+  const formattedAddress = isAddress(address)
+
+  const token = useMemo(() => {
+    return formattedAddress ? new Token(1, formattedAddress, 0) : undefined
+  }, [formattedAddress])
 
   useLayoutEffect(() => {
     let stale = false

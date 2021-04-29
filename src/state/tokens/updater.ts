@@ -1,25 +1,42 @@
-import { useAllTokenData, useUpdateTokenData } from './hooks'
-import { useEffect } from 'react'
-import { fetchTopTokens } from 'data/tokens'
-import { TokenData } from './reducer'
+import { useAllTokenData, useUpdateTokenData, useAddTokenKeys } from './hooks'
+import { useEffect, useMemo } from 'react'
+import { useTopTokenAddresses } from '../../data/tokens/topTokens'
+import { useTokenDatas } from 'data/tokens/tokenData'
 
 export default function Updater(): null {
-  const allTokenData = useAllTokenData()
+  // updaters
   const updateTokenDatas = useUpdateTokenData()
+  const addTokenKeys = useAddTokenKeys()
 
-  // if not top tokens know, fetch top token datas from subgraph
+  // intitial data
+  const allTokenData = useAllTokenData()
+  const { loading, error, addresses } = useTopTokenAddresses()
+
+  // add top pools on first load
   useEffect(() => {
-    async function fetchTokens() {
-      const tokenDatas: TokenData[] = fetchTopTokens()
-      if (tokenDatas) {
-        updateTokenDatas(tokenDatas)
-      }
+    if (addresses && !error && !loading) {
+      addTokenKeys(addresses)
     }
+  }, [addTokenKeys, addresses, error, loading])
 
-    if (Object.keys(allTokenData).length === 0) {
-      fetchTokens()
+  // detect for which addresses we havent loaded token data yet
+  const unfetchedTokenAddresses = useMemo(() => {
+    return Object.keys(allTokenData).reduce((accum: string[], key) => {
+      const tokenData = allTokenData[key]
+      if (!tokenData.data || !tokenData.lastUpdated) {
+        accum.push(key)
+      }
+      return accum
+    }, [])
+  }, [allTokenData])
+
+  // update unloaded pool entries with fetched data
+  const { error: tokenDataError, loading: tokenDataLoading, data: tokenDatas } = useTokenDatas(unfetchedTokenAddresses)
+  useEffect(() => {
+    if (tokenDatas && !tokenDataError && !tokenDataLoading) {
+      updateTokenDatas(Object.values(tokenDatas))
     }
-  }, [allTokenData, updateTokenDatas])
+  }, [tokenDataError, tokenDataLoading, tokenDatas, updateTokenDatas])
 
   return null
 }

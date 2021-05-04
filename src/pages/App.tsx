@@ -14,6 +14,7 @@ import TopBar from 'components/Header/TopBar'
 import { RedirectInvalidToken } from './Token/redirects'
 import { LocalLoader } from 'components/Loader'
 import PoolPage from './Pool/PoolPage'
+import { HideSmall } from 'theme'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -46,6 +47,7 @@ const BodyWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 16px;
     padding-top: 2rem;
+    margin-top: 140px;
   `};
 
   z-index: 1;
@@ -75,7 +77,9 @@ export default function App() {
         <AppWrapper>
           <URLWarning />
           <HeaderWrapper>
-            <TopBar />
+            <HideSmall>
+              <TopBar />
+            </HideSmall>
             <Header />
           </HeaderWrapper>
           <BodyWrapper>

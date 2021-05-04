@@ -3,6 +3,7 @@ import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
+import { MEDIA_WIDTHS } from './index'
 import { ArrowLeft, X, ExternalLink as LinkIconFeather, Trash } from 'react-feather'
 
 export const ButtonText = styled.button`
@@ -286,6 +287,18 @@ export function BackArrow({ to }: { to: string }) {
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
+`
+
+export const OnlyMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
+
+export const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
 `
 
 export const HideSmall = styled.span`

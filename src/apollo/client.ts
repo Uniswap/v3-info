@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 export const client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-rinkeby',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-subgraph',
   cache: new InMemoryCache(),
   queryDeduplication: false,
   defaultOptions: {

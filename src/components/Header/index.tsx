@@ -20,6 +20,7 @@ import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 // import Web3Status from '../Web3Status'
 import SearchSmall from 'components/Search'
+import { HideMedium } from 'theme'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -57,20 +58,8 @@ const HeaderControls = styled.div`
   justify-self: flex-end;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
-    justify-self: center;
-    width: 100%;
-    max-width: 960px;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    z-index: 99;
-    height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
+      padding-bottom: 1rem;
+      width: 100%;
   `};
 `
 
@@ -154,12 +143,12 @@ const Title = styled(NavLink)`
   pointer-events: auto;
   justify-self: flex-start;
   margin-right: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-self: center;
-  `};
   :hover {
     cursor: pointer;
   }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    justify-self: center;
+  `};
 `
 
 const UniIcon = styled.div`
@@ -285,12 +274,14 @@ export default function Header() {
             <Web3Status />
           </AccountElement>
         </HeaderElement> */}
-        <HeaderElementWrap>
-          {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
+        <HideMedium>
+          <HeaderElementWrap>
+            {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
             {darkMode ? <Moon size={20} /> : <Sun size={20} />}
           </StyledMenuButton> */}
-          <Menu />
-        </HeaderElementWrap>
+            <Menu />
+          </HeaderElementWrap>
+        </HideMedium>
       </HeaderControls>
     </HeaderFrame>
   )

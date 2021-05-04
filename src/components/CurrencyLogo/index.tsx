@@ -18,6 +18,7 @@ export default function CurrencyLogo({
   address,
   size = '24px',
   style,
+  ...rest
 }: {
   address?: string
   size?: string
@@ -30,5 +31,5 @@ export default function CurrencyLogo({
     return []
   }, [address])
 
-  return <StyledLogo size={size} srcs={srcs} alt={'token logo'} style={style} />
+  return <StyledLogo size={size} srcs={srcs} alt={'token logo'} style={style} {...rest} />
 }

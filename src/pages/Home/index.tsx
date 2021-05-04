@@ -2,14 +2,14 @@ import React, { useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
-import { RowBetween, RowFixed } from 'components/Row'
+import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart'
 import useTheme from 'hooks/useTheme'
 import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
-import { StyledInternalLink } from '../../theme/components'
+import { HideMedium, HideSmall, StyledInternalLink } from '../../theme/components'
 import TokenTable from 'components/tokens/TokenTable'
 import PoolTable from 'components/pools/PoolTable'
 import { PageWrapper, ThemedBackgroundGlobal } from 'pages/styled'
@@ -22,6 +22,10 @@ import { useAllTokenData } from 'state/tokens/hooks'
 
 const ChartWrapper = styled.div`
   width: 49%;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `};
 `
 
 export default function Home() {
@@ -81,6 +85,7 @@ export default function Home() {
   }, [chartData])
 
   const allTokens = useAllTokenData()
+
   const formattedTokens = useMemo(() => {
     return Object.values(allTokens)
       .map((t) => t.data)
@@ -92,7 +97,7 @@ export default function Home() {
       <ThemedBackgroundGlobal backgroundColor={'#fc077d'} />
       <AutoColumn gap="30px">
         <TYPE.mediumHeader>Uniswap Overview</TYPE.mediumHeader>
-        <RowBetween>
+        <ResponsiveRow>
           <ChartWrapper>
             <LineChart
               data={formattedTvlData}
@@ -123,28 +128,32 @@ export default function Home() {
               }
             />
           </ChartWrapper>
-        </RowBetween>
-        <DarkGreyCard>
-          <RowBetween>
-            <RowFixed>
-              <RowFixed mr="20px">
-                <TYPE.main mr="4px">24HR USD: </TYPE.main>
-                <TYPE.label mr="4px">{formatDollarAmount(protocolData?.volumeUSD)}</TYPE.label>
-                <Percent value={protocolData?.volumeUSDChange} wrap={true} />
+        </ResponsiveRow>
+        <HideSmall>
+          <DarkGreyCard>
+            <RowBetween>
+              <RowFixed>
+                <RowFixed mr="20px">
+                  <TYPE.main mr="4px">24HR USD: </TYPE.main>
+                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.volumeUSD)}</TYPE.label>
+                  <Percent value={protocolData?.volumeUSDChange} wrap={true} />
+                </RowFixed>
+                <RowFixed mr="20px">
+                  <TYPE.main mr="4px">24HR Transcations: </TYPE.main>
+                  <TYPE.label mr="4px">{protocolData?.txCount}</TYPE.label>
+                  <Percent value={protocolData?.txCountChange} wrap={true} />
+                </RowFixed>
+                <HideMedium>
+                  <RowFixed mr="20px">
+                    <TYPE.main mr="4px">TVL USD: </TYPE.main>
+                    <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
+                    <Percent value={protocolData?.tvlUSDChange} wrap={true} />
+                  </RowFixed>
+                </HideMedium>
               </RowFixed>
-              <RowFixed mr="20px">
-                <TYPE.main mr="4px">24HR Transcations: </TYPE.main>
-                <TYPE.label mr="4px">{protocolData?.txCount}</TYPE.label>
-                <Percent value={protocolData?.txCountChange} wrap={true} />
-              </RowFixed>
-              <RowFixed mr="20px">
-                <TYPE.main mr="4px">TVL USD: </TYPE.main>
-                <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
-                <Percent value={protocolData?.tvlUSDChange} wrap={true} />
-              </RowFixed>
-            </RowFixed>
-          </RowBetween>
-        </DarkGreyCard>
+            </RowBetween>
+          </DarkGreyCard>
+        </HideSmall>
         <RowBetween>
           <TYPE.mediumHeader>Top Tokens</TYPE.mediumHeader>
           <StyledInternalLink to="/tokens" fontSize="20px">

@@ -81,13 +81,13 @@ export function useTokenDatas(
 
   const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses))
   const { loading: loading24, error: error24, data: data24 } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(8482286, tokenAddresses)
+    TOKENS_BULK(parseInt(block24?.number), tokenAddresses)
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(8477286, tokenAddresses)
+    TOKENS_BULK(parseInt(block48?.number), tokenAddresses)
   )
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(8417286, tokenAddresses)
+    TOKENS_BULK(parseInt(blockWeek?.number), tokenAddresses)
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)

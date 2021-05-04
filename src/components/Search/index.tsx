@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import Row, { RowFixed } from 'components/Row'
-import { TYPE } from 'theme'
+import { HideSmall, TYPE } from 'theme'
 import Hotkeys from 'react-hot-keys'
 import { useFetchSearchResults } from 'data/search'
 import { AutoColumn } from 'components/Column'
@@ -19,6 +19,7 @@ import { usePoolDatas } from 'state/pools/hooks'
 const Container = styled.div`
   position: relative;
   z-index: 30;
+  width: 100%;
 `
 
 const Wrapper = styled(Row)`
@@ -29,6 +30,10 @@ const Wrapper = styled(Row)`
   border-radius: 20px;
   positon: relative;
   z-index: 9999;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `};
 `
 
 const StyledInput = styled.input`
@@ -73,6 +78,14 @@ const Menu = styled.div<{ hide: boolean }>`
     0px 24px 32px rgba(0, 0, 0, 0.04);
   display: ${({ hide }) => hide && 'none'};
   border: 1px solid ${({ theme }) => theme.pink1};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    position: absolute;
+    margin-top: 4px;
+    z-index: 9999;
+    width: 100%;
+    max-height: 400px;
+  `};
 `
 
 const Blackout = styled.div`
@@ -89,25 +102,10 @@ const Blackout = styled.div`
 const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-
   grid-template-columns: 1.5fr repeat(3, 1fr);
-
-  @media screen and (max-width: 900px) {
-    grid-template-columns: 1.5fr repeat(3, 1fr);
-    & :nth-child(4) {
-      display: none;
-    }
-  }
-
-  @media screen and (max-width: 700px) {
-    grid-template-columns: 20px 1.5fr repeat(3, 1fr);
-    & :nth-child(4) {
-      display: none;
-    }
-    & :nth-child(5) {
-      display: none;
-    }
-  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-template-columns: 1fr;
+  `};
 `
 
 const Break = styled.div`
@@ -258,15 +256,21 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
             </AutoColumn>
             <ResponsiveGrid>
               <TYPE.main>Tokens</TYPE.main>
-              <TYPE.main textAlign="end" fontSize="12px">
-                Volume 24H
-              </TYPE.main>
-              <TYPE.main textAlign="end" fontSize="12px">
-                TVL
-              </TYPE.main>
-              <TYPE.main textAlign="end" fontSize="12px">
-                Price
-              </TYPE.main>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
+                  Volume 24H
+                </TYPE.main>
+              </HideSmall>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
+                  TVL
+                </TYPE.main>
+              </HideSmall>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
+                  Price
+                </TYPE.main>
+              </HideSmall>
             </ResponsiveGrid>
             {tokensForList.slice(0, tokensShown).map((t, i) => {
               return (
@@ -286,9 +290,15 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                         }}
                       />
                     </RowFixed>
-                    <TYPE.label textAlign="end">{formatDollarAmount(t.volumeUSD)}</TYPE.label>
-                    <TYPE.label textAlign="end">{formatDollarAmount(t.tvlUSD)}</TYPE.label>
-                    <TYPE.label textAlign="end">{formatDollarAmount(t.priceUSD)}</TYPE.label>
+                    <HideSmall>
+                      <TYPE.label textAlign="end">{formatDollarAmount(t.volumeUSD)}</TYPE.label>
+                    </HideSmall>
+                    <HideSmall>
+                      <TYPE.label textAlign="end">{formatDollarAmount(t.tvlUSD)}</TYPE.label>
+                    </HideSmall>
+                    <HideSmall>
+                      <TYPE.label textAlign="end">{formatDollarAmount(t.priceUSD)}</TYPE.label>
+                    </HideSmall>
                   </ResponsiveGrid>
                 </HoverRowLink>
               )
@@ -308,15 +318,21 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
             <Break />
             <ResponsiveGrid>
               <TYPE.main>Pools</TYPE.main>
-              <TYPE.main textAlign="end" fontSize="12px">
-                Volume 24H
-              </TYPE.main>
-              <TYPE.main textAlign="end" fontSize="12px">
-                TVL
-              </TYPE.main>
-              <TYPE.main textAlign="end" fontSize="12px">
-                Price
-              </TYPE.main>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
+                  Volume 24H
+                </TYPE.main>
+              </HideSmall>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
+                  TVL
+                </TYPE.main>
+              </HideSmall>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
+                  Price
+                </TYPE.main>
+              </HideSmall>
             </ResponsiveGrid>
             {poolForList.slice(0, poolsShown).map((p, i) => {
               return (
@@ -337,9 +353,15 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                         }}
                       />
                     </RowFixed>
-                    <TYPE.label textAlign="end">{formatDollarAmount(p.volumeUSD)}</TYPE.label>
-                    <TYPE.label textAlign="end">{formatDollarAmount(p.tvlUSD)}</TYPE.label>
-                    <TYPE.label textAlign="end">{formatDollarAmount(p.token0Price)}</TYPE.label>
+                    <HideSmall>
+                      <TYPE.label textAlign="end">{formatDollarAmount(p.volumeUSD)}</TYPE.label>
+                    </HideSmall>
+                    <HideSmall>
+                      <TYPE.label textAlign="end">{formatDollarAmount(p.tvlUSD)}</TYPE.label>
+                    </HideSmall>
+                    <HideSmall>
+                      <TYPE.label textAlign="end">{formatDollarAmount(p.token0Price)}</TYPE.label>
+                    </HideSmall>
                   </ResponsiveGrid>
                 </HoverRowLink>
               )
@@ -358,6 +380,9 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
             </HoverText>
           </AutoColumn>
         </Menu>
+        {/* <BelowMedium>
+          <MobileMenu>hey</MobileMenu>
+        </BelowMedium> */}
       </Container>
     </Hotkeys>
   )

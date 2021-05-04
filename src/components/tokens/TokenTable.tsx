@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { TYPE } from 'theme'
+import { HideExtraSmall, HideSmall, TYPE } from 'theme'
 import { DarkGreyCard } from 'components/Card'
 import { TokenData } from '../../state/tokens/reducer'
 import Loader from 'components/Loader'
@@ -30,12 +30,26 @@ const ResponsiveGrid = styled.div`
     }
   }
 
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 800px) {
     grid-template-columns: 20px 1.5fr repeat(3, 1fr);
-    & :nth-child(4) {
+    & :nth-child(5) {
       display: none;
     }
-    & :nth-child(5) {
+  }
+
+  @media screen and (max-width: 670px) {
+    grid-template-columns: 1.5fr repeat(2, 1fr);
+    > *:first-child {
+      display: none;
+    }
+    & :nth-child(7) {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 670px) {
+    grid-template-columns: repeat(2, 1fr);
+    > *:nth-child(6) {
       display: none;
     }
   }
@@ -49,6 +63,13 @@ const LinkWrapper = styled(Link)`
   }
 `
 
+const ResponsiveLogo = styled(CurrencyLogo)`
+  @media screen and (max-width: 670px) {
+    width: 16px;
+    height: 16px;
+  }
+`
+
 const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) => {
   return (
     <LinkWrapper to={'tokens/' + tokenData.address}>
@@ -56,11 +77,11 @@ const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) 
         <Label>{index + 1}</Label>
         <Label>
           <RowFixed>
-            <CurrencyLogo address={tokenData.address} />
+            <ResponsiveLogo address={tokenData.address} />
           </RowFixed>
-          <TYPE.label ml="8px">
-            {tokenData.symbol} ({tokenData.name})
-          </TYPE.label>
+          <Label ml="8px">
+            {tokenData.symbol} <HideExtraSmall style={{ marginLeft: '6px' }}> ({tokenData.name})</HideExtraSmall>
+          </Label>
         </Label>
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(tokenData.priceUSD)}

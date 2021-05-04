@@ -125,6 +125,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
       query: GLOBAL_TRANSACTIONS,
       fetchPolicy: 'cache-first',
     })
+
     if (error || loading || !data) {
       return undefined
     }
@@ -160,6 +161,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
           amountToken1: parseFloat(m.amount1),
         }
       })
+
       const swapEntries = t.swaps.map((m) => {
         return {
           hash: t.id,

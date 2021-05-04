@@ -50,11 +50,12 @@ async function fetchEthPrices(
     const { data, error } = await client.query<PricesResponse>({
       query: ETH_PRICES,
       variables: {
-        block24: 8505836,
-        block48: 8505836,
-        blockWeek: 8505836,
+        block24: blocks[0],
+        block48: blocks[1],
+        blockWeek: blocks[2],
       },
     })
+
     if (error) {
       return {
         error: true,
@@ -63,23 +64,25 @@ async function fetchEthPrices(
     } else if (data) {
       return {
         data: {
-          current: parseFloat(data.current[0].ethPriceUSD),
-          oneDay: parseFloat(data.oneDay[0].ethPriceUSD),
-          twoDay: parseFloat(data.twoDay[0].ethPriceUSD),
-          week: parseFloat(data.oneWeek[0].ethPriceUSD),
+          current: parseFloat(data.current[0].ethPriceUSD ?? 0),
+          oneDay: parseFloat(data.oneDay[0]?.ethPriceUSD ?? 0),
+          twoDay: parseFloat(data.twoDay[0]?.ethPriceUSD ?? 0),
+          week: parseFloat(data.oneWeek[0]?.ethPriceUSD ?? 0),
         },
         error: false,
       }
+    } else {
+      return {
+        data: undefined,
+        error: true,
+      }
     }
-  } catch {
+  } catch (e) {
+    console.log(e)
     return {
       data: undefined,
       error: true,
     }
-  }
-  return {
-    data: undefined,
-    error: false,
   }
 }
 

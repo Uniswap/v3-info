@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import { client } from 'apollo/client'
 import JSBI from 'jsbi'
 import keyBy from 'lodash.keyby'
-import { tickToPrice } from '@uniswap/v3-sdk'
+import { TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 
 const PRICE_FIXED_DIGITS = 4
@@ -64,19 +64,11 @@ interface TickProcessed {
   price1: string
 }
 
-// Final result object containing everything needed to render tick liquidity graphs.
-export interface TicksProcessed {
-  ticksProcessed: TickProcessed[]
-  feeTier: string
-  tickSpacing: number
-  activeTickIdx: number
-}
-
 const fetchInitializedTicks = async (
   poolAddress: string,
   tickIdxLowerBound: number,
   tickIdxUpperBound: number
-): Promise<Tick[]> => {
+): Promise<{ loading?: boolean; error?: boolean; ticks?: Tick[] }> => {
   const tickQuery = gql`
     query surroundingTicks($poolAddress: String!, $tickIdxLowerBound: BigInt!, $tickIdxUpperBound: BigInt!) {
       ticks(where: { poolAddress: $poolAddress, tickIdx_lte: $tickIdxUpperBound, tickIdx_gte: $tickIdxLowerBound }) {
@@ -98,15 +90,26 @@ const fetchInitializedTicks = async (
     },
   })
 
-  // TODO: Handle error and loading.
+  if (error || loading) {
+    return { error: Boolean(error), loading, ticks: [] }
+  }
 
-  return surroundingTicksResult.ticks
+  return { ticks: surroundingTicksResult.ticks, loading: false, error: false }
 }
 
 export const fetchTicksSurroundingPrice = async (
   poolAddress: string,
   numSurroundingTicks = DEFAULT_SURROUNDING_TICKS
-): Promise<TicksProcessed> => {
+): Promise<{
+  loading?: boolean
+  error?: boolean
+  data?: {
+    ticksProcessed: TickProcessed[]
+    feeTier: string
+    tickSpacing: number
+    activeTickIdx: number
+  }
+}> => {
   const poolQuery = gql`
     query pool($poolAddress: String!) {
       pool(id: $poolAddress) {
@@ -134,7 +137,13 @@ export const fetchTicksSurroundingPrice = async (
     },
   })
 
-  // TODO: Handle error and loading.
+  if (loading || error || !poolResult) {
+    return {
+      loading,
+      error: Boolean(error),
+      data: undefined,
+    }
+  }
 
   const {
     pool: {
@@ -157,19 +166,41 @@ export const fetchTicksSurroundingPrice = async (
   const tickIdxLowerBound = activeTickIdx - numSurroundingTicks * tickSpacing
   const tickIdxUpperBound = activeTickIdx + numSurroundingTicks * tickSpacing
 
-  const initializedTicks = await fetchInitializedTicks(poolAddress, tickIdxLowerBound, tickIdxUpperBound)
+  const initializedTicksResult = await fetchInitializedTicks(poolAddress, tickIdxLowerBound, tickIdxUpperBound)
+  if (initializedTicksResult.error || initializedTicksResult.loading) {
+    return {
+      error: initializedTicksResult.error,
+      loading: initializedTicksResult.loading,
+    }
+  }
+
+  const { ticks: initializedTicks } = initializedTicksResult
 
   const tickIdxToInitializedTick = keyBy(initializedTicks, 'tickIdx')
 
   const token0 = new Token(1, token0Address, parseInt(token0Decimals))
   const token1 = new Token(1, token1Address, parseInt(token1Decimals))
 
+  console.log({ activeTickIdx, poolCurrentTickIdx }, 'Active ticks')
+
+  // If the pool's tick is MIN_TICK (-887272), then when we find the closest
+  // initializable tick to its left, the value would be smaller than MIN_TICK.
+  // In this case we must ensure that the prices shown never go below/above.
+  // what actual possible from the protocol.
+  let activeTickIdxForPrice = activeTickIdx
+  if (activeTickIdxForPrice < TickMath.MIN_TICK) {
+    activeTickIdxForPrice = TickMath.MIN_TICK
+  }
+  if (activeTickIdxForPrice > TickMath.MAX_TICK) {
+    activeTickIdxForPrice = TickMath.MAX_TICK
+  }
+
   const activeTickProcessed: TickProcessed = {
     liquidityActive: JSBI.BigInt(liquidity),
     tickIdx: activeTickIdx,
     liquidityNet: JSBI.BigInt(0),
-    price0: tickToPrice(token0, token1, activeTickIdx).toFixed(PRICE_FIXED_DIGITS),
-    price1: tickToPrice(token1, token0, activeTickIdx).toFixed(PRICE_FIXED_DIGITS),
+    price0: tickToPrice(token0, token1, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
+    price1: tickToPrice(token1, token0, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
     liquidityGross: JSBI.BigInt(0),
   }
 
@@ -207,6 +238,10 @@ export const fetchTicksSurroundingPrice = async (
           ? previousTickProcessed.tickIdx + tickSpacing
           : previousTickProcessed.tickIdx - tickSpacing
 
+      if (currentTickIdx < TickMath.MIN_TICK || currentTickIdx > TickMath.MAX_TICK) {
+        break
+      }
+
       const currentTickProcessed: TickProcessed = {
         liquidityActive: previousTickProcessed.liquidityActive,
         tickIdx: currentTickIdx,
@@ -233,14 +268,12 @@ export const fetchTicksSurroundingPrice = async (
           previousTickProcessed.liquidityActive,
           JSBI.BigInt(currentInitializedTick.liquidityNet)
         )
-      } else if (direction == Direction.DESC) {
-        if (JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
-          // We are iterating descending, so look at the previous tick and apply any net liquidity.
-          currentTickProcessed.liquidityActive = JSBI.subtract(
-            previousTickProcessed.liquidityActive,
-            previousTickProcessed.liquidityNet
-          )
-        }
+      } else if (direction == Direction.DESC && JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
+        // We are iterating descending, so look at the previous tick and apply any net liquidity.
+        currentTickProcessed.liquidityActive = JSBI.subtract(
+          previousTickProcessed.liquidityActive,
+          previousTickProcessed.liquidityNet
+        )
       }
 
       processedTicks.push(currentTickProcessed)
@@ -271,9 +304,11 @@ export const fetchTicksSurroundingPrice = async (
   const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
 
   return {
-    ticksProcessed,
-    feeTier,
-    tickSpacing,
-    activeTickIdx,
+    data: {
+      ticksProcessed,
+      feeTier,
+      tickSpacing,
+      activeTickIdx,
+    },
   }
 }

@@ -5,6 +5,7 @@ import { RowBetween } from 'components/Row'
 import Card from '../Card'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
+import usePrevious from 'hooks/usePrevious'
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -50,6 +51,15 @@ const LineChart = ({
   // chart pointer
   const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
+  const dataPrev = usePrevious(data)
+
+  // reset on new data
+  useEffect(() => {
+    if (dataPrev !== data && chartCreated) {
+      chartCreated.resize(0, 0)
+      setChart(undefined)
+    }
+  }, [data, dataPrev, chartCreated])
 
   // for reseting value on hover exit
   const currentValue = data[data.length - 1]?.value

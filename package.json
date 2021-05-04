@@ -137,6 +137,7 @@
     "numbro": "^2.3.2",
     "numeral": "^2.0.6",
     "react-hot-keys": "^2.6.2",
-    "react-hotkeys": "^2.0.0"
+    "react-hotkeys": "^2.0.0",
+    "uifx": "^2.0.7"
   }
 }

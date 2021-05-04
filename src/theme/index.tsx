@@ -228,6 +228,27 @@ html {
   background-color: ${({ theme }) => theme.bg1};
 }
 
+.three-line-legend-dark {
+	width: 100%;
+	height: 70px;
+	position: absolute;
+	padding: 8px;
+	font-size: 12px;
+	color: white;
+	background-color: transparent;
+	text-align: left;
+	z-index: 10;
+  pointer-events: none;
+}
+
+.tv-lightweight-charts{
+  width: 100% !important;
+  
+  & > * {
+    width: 100% !important;
+  }
+}
+
 body {
   min-height: 100vh;
   background-position: 0 -30vh;

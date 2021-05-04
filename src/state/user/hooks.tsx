@@ -12,6 +12,8 @@ import {
   SerializedToken,
   updateUserDarkMode,
   toggleURLWarning,
+  addSavedToken,
+  addSavedPool,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -51,7 +53,7 @@ export function useIsDarkMode(): boolean {
 
 export function useDarkModeManager(): [boolean, () => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const darkMode = useIsDarkMode()
+  const darkMode = true
 
   const toggleSetDarkMode = useCallback(() => {
     dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
@@ -68,6 +70,30 @@ export function useAddUserToken(): (token: Token) => void {
     },
     [dispatch]
   )
+}
+
+export function useSavedTokens(): [string[], (address: string) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const savedTokens = useSelector((state: AppState) => state.user.savedTokens)
+  const updatedSavedTokens = useCallback(
+    (address: string) => {
+      dispatch(addSavedToken({ address }))
+    },
+    [dispatch]
+  )
+  return [savedTokens ?? [], updatedSavedTokens]
+}
+
+export function useSavedPools(): [string[], (address: string) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const savedPools = useSelector((state: AppState) => state.user.savedPools)
+  const updateSavedPools = useCallback(
+    (address: string) => {
+      dispatch(addSavedPool({ address }))
+    },
+    [dispatch]
+  )
+  return [savedPools ?? [], updateSavedPools]
 }
 
 export function useRemoveUserAddedToken(): (chainId: number, address: string) => void {

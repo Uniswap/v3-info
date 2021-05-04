@@ -10,6 +10,8 @@ import {
   updateMatchesDarkMode,
   updateUserDarkMode,
   toggleURLWarning,
+  addSavedToken,
+  addSavedPool,
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -34,6 +36,9 @@ export interface UserState {
     }
   }
 
+  savedTokens: string[]
+  savedPools: string[]
+
   timestamp: number
   URLWarningVisible: boolean
 }
@@ -43,10 +48,12 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  userDarkMode: null,
+  userDarkMode: true,
   matchesDarkMode: false,
   tokens: {},
   pairs: {},
+  savedTokens: [],
+  savedPools: [],
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
 }
@@ -73,6 +80,28 @@ export default createReducer(initialState, (builder) =>
       state.tokens[chainId] = state.tokens[chainId] || {}
       delete state.tokens[chainId][address]
       state.timestamp = currentTimestamp()
+    })
+    .addCase(addSavedToken, (state, { payload: { address } }) => {
+      if (!state.savedTokens || !state.savedTokens.includes(address)) {
+        const newTokens = state.savedTokens ?? []
+        newTokens.push(address)
+        state.savedTokens = newTokens
+      }
+      // toggle for delete
+      else if (state.savedTokens && state.savedTokens.includes(address)) {
+        const newTokens = state.savedTokens.filter((x) => x !== address)
+        state.savedTokens = newTokens
+      }
+    })
+    .addCase(addSavedPool, (state, { payload: { address } }) => {
+      if (!state.savedPools || !state.savedPools.includes(address)) {
+        const newPools = state.savedPools ?? []
+        newPools.push(address)
+        state.savedPools = newPools
+      } else if (state.savedPools && state.savedPools.includes(address)) {
+        const newPools = state.savedPools.filter((x) => x !== address)
+        state.savedPools = newPools
+      }
     })
     .addCase(addSerializedPair, (state, { payload: { serializedPair } }) => {
       if (

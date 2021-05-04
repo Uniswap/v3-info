@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { TYPE } from 'theme'
@@ -9,9 +9,9 @@ import { RowFixed } from 'components/Row'
 import { formatDollarAmount } from 'utils/numbers'
 import { PoolData } from 'state/pools/reducer'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { Token } from '@uniswap/sdk'
 import { feeTierPercent } from 'utils'
 import { Label, ClickableText } from 'components/Text'
+import { PageButtons, Arrow } from 'components/shared'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -56,15 +56,13 @@ const SORT_FIELD = {
 }
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
-  const mockCurrency0 = new Token(1, poolData.token0.address, 0, poolData.token0.symbol, poolData.token0.name)
-  const mockCurrency1 = new Token(1, poolData.token1.address, 0, poolData.token1.symbol, poolData.token1.name)
   return (
-    <LinkWrapper to="tokens/">
+    <LinkWrapper to={'/pools/' + poolData.address}>
       <ResponsiveGrid>
         <Label>{index + 1}</Label>
         <Label>
           <RowFixed>
-            <DoubleCurrencyLogo currency0={mockCurrency0} currency1={mockCurrency1} />
+            <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} />
             <TYPE.label ml="8px">
               {poolData.token0.symbol}/{poolData.token1.symbol}
             </TYPE.label>
@@ -79,10 +77,21 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   )
 }
 
-export default function PoolTable({ poolDatas }: { poolDatas: PoolData[] }) {
+export default function PoolTable({ poolDatas, maxItems = 10 }: { poolDatas: PoolData[]; maxItems?: number }) {
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.volumeUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
+
+  // pagination
+  const [page, setPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(1)
+  useEffect(() => {
+    let extraPages = 1
+    if (poolDatas.length % maxItems === 0) {
+      extraPages = 0
+    }
+    setMaxPage(Math.floor(poolDatas.length / maxItems) + extraPages)
+  }, [maxItems, poolDatas])
 
   const sortedPools = useMemo(() => {
     return poolDatas
@@ -97,8 +106,9 @@ export default function PoolTable({ poolDatas }: { poolDatas: PoolData[] }) {
               return -1
             }
           })
+          .slice(maxItems * (page - 1), page * maxItems)
       : []
-  }, [poolDatas, sortDirection, sortField])
+  }, [maxItems, page, poolDatas, sortDirection, sortField])
 
   const handleSort = useCallback(
     (newField: string) => {
@@ -141,6 +151,23 @@ export default function PoolTable({ poolDatas }: { poolDatas: PoolData[] }) {
           }
           return null
         })}
+        <PageButtons>
+          <div
+            onClick={() => {
+              setPage(page === 1 ? page : page - 1)
+            }}
+          >
+            <Arrow faded={page === 1 ? true : false}>←</Arrow>
+          </div>
+          <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
+          <div
+            onClick={() => {
+              setPage(page === maxPage ? page : page + 1)
+            }}
+          >
+            <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+          </div>
+        </PageButtons>
       </AutoColumn>
     </Wrapper>
   )

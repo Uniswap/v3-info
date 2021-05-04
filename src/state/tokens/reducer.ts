@@ -1,6 +1,14 @@
 import { currentTimestamp } from './../../utils/index'
-import { updateTokenData, addTokenKeys, addPoolAddresses, updateChartData, updatePriceData } from './actions'
+import {
+  updateTokenData,
+  addTokenKeys,
+  addPoolAddresses,
+  updateChartData,
+  updatePriceData,
+  updateTransactions,
+} from './actions'
 import { createReducer } from '@reduxjs/toolkit'
+import { Transaction } from 'types'
 
 export type TokenData = {
   // basic token info
@@ -46,7 +54,7 @@ export interface TokensState {
       priceData: {
         [secondsInterval: number]: TokenPriceEntry[] | undefined
       }
-
+      transactions: Transaction[] | undefined
       lastUpdated: number | undefined
     }
   }
@@ -74,6 +82,7 @@ export default createReducer(initialState, (builder) =>
             data: undefined,
             chartData: undefined,
             priceData: {},
+            transactions: undefined,
             lastUpdated: undefined,
           }
         }
@@ -83,10 +92,13 @@ export default createReducer(initialState, (builder) =>
     .addCase(addPoolAddresses, (state, { payload: { tokenAddress, poolAddresses } }) => {
       state.byAddress[tokenAddress] = { ...state.byAddress[tokenAddress], poolAddresses }
     })
-
     // add list of pools the token is included in
     .addCase(updateChartData, (state, { payload: { tokenAddress, chartData } }) => {
       state.byAddress[tokenAddress] = { ...state.byAddress[tokenAddress], chartData }
+    })
+    // add list of pools the token is included in
+    .addCase(updateTransactions, (state, { payload: { tokenAddress, transactions } }) => {
+      state.byAddress[tokenAddress] = { ...state.byAddress[tokenAddress], transactions }
     })
     // update historical price volume based on interval size
     .addCase(updatePriceData, (state, { payload: { tokenAddress, secondsInterval, priceData } }) => {

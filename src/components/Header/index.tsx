@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 // import { Text } from 'rebass'
@@ -6,14 +7,14 @@ import { darken } from 'polished'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/logo.svg'
+// import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 // import { useActiveWeb3React } from '../../hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
+// import { useDarkModeManager } from '../../state/user/hooks'
 // import { useETHBalances } from '../../state/wallet/hooks'
 
 // import { YellowCard } from '../Card'
-import { Moon, Sun } from 'react-feather'
+// import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
@@ -239,14 +240,14 @@ export default function Header() {
 
   // const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  // const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   return (
     <HeaderFrame>
       <HeaderRow>
         <Title to="/">
           <UniIcon>
-            <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+            <img width={'24px'} src={LogoDark} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
@@ -268,7 +269,7 @@ export default function Header() {
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
-        <SearchSmall style={{ marginRight: '20px' }} />
+        <SearchSmall />
         {/* <HeaderElement>
           <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
@@ -285,9 +286,9 @@ export default function Header() {
           </AccountElement>
         </HeaderElement> */}
         <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
+          {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
             {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
+          </StyledMenuButton> */}
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>

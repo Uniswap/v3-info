@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { TYPE, ExternalLink } from 'theme'
+import { useEthPrices } from 'hooks/useEthPrices'
+import { formatDollarAmount } from 'utils/numbers'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -19,6 +21,7 @@ const StyledLink = styled(ExternalLink)`
 `
 
 const TopBar = () => {
+  const ethPrices = useEthPrices()
   return (
     <Wrapper>
       <RowBetween>
@@ -26,19 +29,7 @@ const TopBar = () => {
           <RowFixed>
             <Item>ETH Price:</Item>
             <Item fontWeight="700" ml="4px">
-              $1565.32
-            </Item>
-          </RowFixed>
-          <RowFixed>
-            <Item>ETH Price:</Item>
-            <Item fontWeight="500" ml="4px">
-              $1565.32
-            </Item>
-          </RowFixed>
-          <RowFixed>
-            <Item>ETH Price:</Item>
-            <Item fontWeight="500" ml="4px">
-              $1565.32
+              {formatDollarAmount(ethPrices?.current)}
             </Item>
           </RowFixed>
         </AutoRow>

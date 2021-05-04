@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { TYPE } from 'theme'
 import { DarkGreyCard } from 'components/Card'
 import { TokenData } from '../../state/tokens/reducer'
-import { useAllTokenData } from 'state/tokens/hooks'
 import Loader from 'components/Loader'
 import { Link } from 'react-router-dom'
 import { AutoColumn } from 'components/Column'
@@ -11,8 +10,8 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { RowFixed } from 'components/Row'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
-import { Token } from '@uniswap/sdk'
 import { Label, ClickableText } from '../Text'
+import { PageButtons, Arrow } from 'components/shared'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -51,14 +50,13 @@ const LinkWrapper = styled(Link)`
 `
 
 const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) => {
-  const mockCurrency1 = new Token(1, tokenData.address, 0, tokenData.symbol, tokenData.name)
   return (
     <LinkWrapper to={'tokens/' + tokenData.address}>
       <ResponsiveGrid>
         <Label>{index + 1}</Label>
         <Label>
           <RowFixed>
-            <CurrencyLogo currency={mockCurrency1} />
+            <CurrencyLogo address={tokenData.address} />
           </RowFixed>
           <TYPE.label ml="8px">
             {tokenData.symbol} ({tokenData.name})
@@ -93,19 +91,33 @@ const SORT_FIELD = {
   priceUSDChangeWeek: 'priceUSDChangeWeek',
 }
 
-export default function TokenTable() {
-  const allTokenData = useAllTokenData()
-
+export default function TokenTable({
+  tokenDatas,
+  maxItems = 10,
+}: {
+  tokenDatas: TokenData[] | undefined
+  maxItems?: number
+}) {
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.volumeUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
 
+  // pagination
+  const [page, setPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(1)
+  useEffect(() => {
+    let extraPages = 1
+    if (tokenDatas) {
+      if (tokenDatas.length % maxItems === 0) {
+        extraPages = 0
+      }
+      setMaxPage(Math.floor(tokenDatas.length / maxItems) + extraPages)
+    }
+  }, [maxItems, tokenDatas])
+
   const sortedTokens = useMemo(() => {
-    return allTokenData
-      ? Object.keys(allTokenData)
-          .map((address) => {
-            return allTokenData[address].data
-          })
+    return tokenDatas
+      ? tokenDatas
           .filter((x) => !!x)
           .sort((a, b) => {
             if (a && b) {
@@ -116,8 +128,9 @@ export default function TokenTable() {
               return -1
             }
           })
+          .slice(maxItems * (page - 1), page * maxItems)
       : []
-  }, [allTokenData, sortDirection, sortField])
+  }, [tokenDatas, maxItems, page, sortDirection, sortField])
 
   const handleSort = useCallback(
     (newField: string) => {
@@ -134,7 +147,7 @@ export default function TokenTable() {
     [sortDirection, sortField]
   )
 
-  if (!allTokenData) {
+  if (!tokenDatas) {
     return <Loader />
   }
 
@@ -166,6 +179,23 @@ export default function TokenTable() {
           }
           return null
         })}
+        <PageButtons>
+          <div
+            onClick={() => {
+              setPage(page === 1 ? page : page - 1)
+            }}
+          >
+            <Arrow faded={page === 1 ? true : false}>←</Arrow>
+          </div>
+          <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
+          <div
+            onClick={() => {
+              setPage(page === maxPage ? page : page + 1)
+            }}
+          >
+            <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+          </div>
+        </PageButtons>
       </AutoColumn>
     </Wrapper>
   )

@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk'
+import { WETH_ADDRESS } from '../constants/index'
 
 export interface SerializedToken {
   chainId: number
@@ -26,4 +27,18 @@ export function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
+}
+
+export function formatTokenSymbol(address: string, symbol: string) {
+  if (address === WETH_ADDRESS) {
+    return 'ETH'
+  }
+  return symbol
+}
+
+export function formatTokenName(address: string, name: string) {
+  if (address === WETH_ADDRESS) {
+    return 'Ether'
+  }
+  return name
 }

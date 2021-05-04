@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
 import { PageWrapper } from 'pages/styled'
 import { AutoColumn } from 'components/Column'
-import { OutlineCard } from 'components/Card'
 import { TYPE } from 'theme'
-import TopPoolMovers from 'components/pools/TopPoolMovers'
 import PoolTable from 'components/pools/PoolTable'
-import { useAllPoolData } from 'state/pools/hooks'
+import { useAllPoolData, usePoolDatas } from 'state/pools/hooks'
 import { notEmpty } from 'utils'
+import { useSavedPools } from 'state/user/hooks'
+import { DarkGreyCard } from 'components/Card'
 
 export default function PoolPage() {
   // get all the pool datas that exist
@@ -17,15 +17,21 @@ export default function PoolPage() {
       .filter(notEmpty)
   }, [allPoolData])
 
+  const [savedPools] = useSavedPools()
+  const watchlistPools = usePoolDatas(savedPools)
+
   return (
     <PageWrapper>
       <AutoColumn gap="lg">
-        {/* <OutlineCard>
-          <AutoColumn gap="lg">
-            <TYPE.mediumHeader>Top Movers</TYPE.mediumHeader>
-            <TopPoolMovers />
-          </AutoColumn>
-        </OutlineCard> */}
+        <TYPE.main>Your Watchlist</TYPE.main>
+        {savedPools.length > 0 ? (
+          <PoolTable poolDatas={watchlistPools} />
+        ) : (
+          <DarkGreyCard>
+            <TYPE.main>Saved pools will appear here</TYPE.main>
+          </DarkGreyCard>
+        )}
+        <TYPE.main>All Pools</TYPE.main>
         <PoolTable poolDatas={poolDatas} />
       </AutoColumn>
     </PageWrapper>

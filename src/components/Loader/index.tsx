@@ -51,12 +51,12 @@ const pulse = keyframes`
   100% { transform: scale(1); }
 `
 
-const Wrapper = styled.div<{ fill?: boolean; height?: string }>`
+const Wrapper = styled.div<{ fill: number; height?: string }>`
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: black;
+  background-color: ${({ theme, fill }) => (fill ? 'black' : theme.bg0)};
   height: 100%;
   width: 100%;
   ${(props) =>
@@ -78,7 +78,7 @@ const AnimatedImg = styled.div`
 
 export const LocalLoader = ({ fill }: { fill: boolean }) => {
   return (
-    <Wrapper fill={fill}>
+    <Wrapper fill={fill ? 1 : 0}>
       <AnimatedImg>
         <img src={v3} alt="loading-icon" />
       </AnimatedImg>

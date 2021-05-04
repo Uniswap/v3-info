@@ -48,6 +48,16 @@ const BarChart = ({
   const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
 
+  const dataPrev = usePrevious(data)
+
+  // reset on new data
+  useEffect(() => {
+    if (dataPrev !== data && chartCreated) {
+      chartCreated.resize(0, 0)
+      setChart(undefined)
+    }
+  }, [data, dataPrev, chartCreated])
+
   // for reseting value on hover exit
   const currentValue = data[data.length - 1]?.value
 

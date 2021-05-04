@@ -1,12 +1,22 @@
 import { AppState, AppDispatch } from './../index'
 import { TokenData, TokenChartEntry, TokenPriceEntry } from './reducer'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateTokenData, addTokenKeys, addPoolAddresses, updateChartData, updatePriceData } from './actions'
+import {
+  updateTokenData,
+  addTokenKeys,
+  addPoolAddresses,
+  updateChartData,
+  updatePriceData,
+  updateTransactions,
+} from './actions'
 import { isAddress } from 'ethers/lib/utils'
 import { fetchPoolsForToken } from 'data/tokens/poolsForToken'
 import { fetchTokenChartData } from 'data/tokens/chartData'
 import { fetchTokenPriceData } from 'data/tokens/priceData'
+import { fetchTokenTransactions } from 'data/tokens/transactions'
+import { Transaction } from 'types'
+import { notEmpty } from 'utils'
 
 export function useAllTokenData(): {
   [address: string]: { data: TokenData | undefined; lastUpdated: number | undefined }
@@ -28,6 +38,31 @@ export function useUpdateTokenData(): (tokens: TokenData[]) => void {
 export function useAddTokenKeys(): (addresses: string[]) => void {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback((tokenAddresses: string[]) => dispatch(addTokenKeys({ tokenAddresses })), [dispatch])
+}
+
+export function useTokenDatas(addresses: string[] | undefined): TokenData[] | undefined {
+  const allTokenData = useAllTokenData()
+  const addTokenKeys = useAddTokenKeys()
+
+  // if token not tracked yet track it
+  addresses?.map((a) => {
+    if (!allTokenData[a]) {
+      addTokenKeys([a])
+    }
+  })
+
+  const data = useMemo(() => {
+    if (!addresses) {
+      return undefined
+    }
+    return addresses
+      .map((a) => {
+        return allTokenData[a]?.data
+      })
+      .filter(notEmpty)
+  }, [addresses, allTokenData])
+
+  return data
 }
 
 export function useTokenData(address: string | undefined): TokenData | undefined {
@@ -143,4 +178,33 @@ export function useTokenPriceData(address: string, interval: number): TokenPrice
 
   // return data
   return priceData
+}
+
+/**
+ * Get top pools addresses that token is included in
+ * If not loaded, fetch and store
+ * @param address
+ */
+export function useTokenTransactions(address: string): Transaction[] | undefined {
+  const dispatch = useDispatch<AppDispatch>()
+  const token = useSelector((state: AppState) => state.tokens.byAddress[address])
+  const transactions = token.transactions
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    async function fetch() {
+      const { error, data } = await fetchTokenTransactions(address)
+      if (error) {
+        setError(true)
+      } else if (data) {
+        dispatch(updateTransactions({ tokenAddress: address, transactions: data }))
+      }
+    }
+    if (!transactions && !error) {
+      fetch()
+    }
+  }, [address, dispatch, error, transactions])
+
+  // return data
+  return transactions
 }

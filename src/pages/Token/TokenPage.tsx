@@ -1,21 +1,27 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
-import { useTokenData, usePoolsForToken, useTokenChartData, useTokenPriceData } from 'state/tokens/hooks'
+import {
+  useTokenData,
+  usePoolsForToken,
+  useTokenChartData,
+  useTokenPriceData,
+  useTokenTransactions,
+} from 'state/tokens/hooks'
 import styled from 'styled-components'
 import { useColor } from 'hooks/useColor'
-import { Token } from '@uniswap/sdk'
 import { ThemedBackground, PageWrapper } from 'pages/styled'
-import { shortenAddress } from 'utils'
+import { shortenAddress, getEtherscanLink } from 'utils'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed, AutoRow, RowFlat } from 'components/Row'
-import { TYPE } from 'theme'
-import Loader from 'components/Loader'
-import { LogIn, Star, ExternalLink, Download } from 'react-feather'
+import { TYPE, StyledInternalLink } from 'theme'
+import Loader, { LocalLoader } from 'components/Loader'
+import { ExternalLink, Download } from 'react-feather'
+import { ExternalLink as StyledExternalLink } from '../../theme/components'
 import useTheme from 'hooks/useTheme'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
-import { ButtonPrimary, ButtonGray } from 'components/Button'
+import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
 import { DarkGreyCard } from 'components/Card'
 import { usePoolDatas } from 'state/pools/hooks'
 import PoolTable from 'components/pools/PoolTable'
@@ -24,6 +30,8 @@ import { unixToDate } from 'utils/date'
 import { ToggleWrapper, ToggleElementFree } from 'components/Toggle/index'
 import BarChart from 'components/BarChart'
 import CandleChart from 'components/CandleChart'
+import TransactionTable from 'components/TransactionsTable'
+import { useSavedTokens } from 'state/user/hooks'
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;
@@ -51,14 +59,17 @@ export default function TokenPage({
   const backgroundColor = useColor(address)
   const theme = useTheme()
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // token data
   const tokenData = useTokenData(address)
-  const mockCurrency = new Token(1, address, 0)
 
   // get the data for the pools this token is a part of
   const poolsForToken = usePoolsForToken(address)
   const poolDatas = usePoolDatas(poolsForToken ?? [])
-
+  const transactions = useTokenTransactions(address)
   const chartData = useTokenChartData(address)
 
   const formattedTvlData = useMemo(() => {
@@ -88,7 +99,7 @@ export default function TokenPage({
   }, [chartData])
 
   const [view, setView] = useState(ChartView.TVL)
-  const [latestValue, setLatestValue] = useState<number | undefined>(10)
+  const [latestValue, setLatestValue] = useState<number | undefined>()
 
   const priceData = useTokenPriceData(address, 3600)
   const formattedPriceData = useMemo(() => {
@@ -107,6 +118,9 @@ export default function TokenPage({
     }
   }, [priceData])
 
+  // watchlist
+  const [savedTokens, addSavedToken] = useSavedTokens()
+
   return (
     <PageWrapper>
       <ThemedBackground backgroundColor={backgroundColor} />
@@ -114,22 +128,29 @@ export default function TokenPage({
         <AutoColumn gap="32px">
           <RowBetween>
             <AutoRow gap="4px">
-              <TYPE.main>{`Home > `}</TYPE.main>
-              <TYPE.label>{` Tokens `}</TYPE.label>
+              <StyledInternalLink to={'/'}>
+                <TYPE.main>{`Home > `}</TYPE.main>
+              </StyledInternalLink>
+              <StyledInternalLink to={'/tokens'}>
+                <TYPE.label>{` Tokens `}</TYPE.label>
+              </StyledInternalLink>
               <TYPE.main>{` > `}</TYPE.main>
               <TYPE.label>{` ${tokenData.symbol} `}</TYPE.label>
-              <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
+              <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+                <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
+              </StyledExternalLink>
             </AutoRow>
             <AutoRow gap="10px" justify="flex-end">
-              <LogIn stroke={theme.text2} />
-              <Star stroke={theme.text2} />
-              <ExternalLink stroke={theme.text2} />
+              <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
+              <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+                <ExternalLink stroke={theme.text2} />
+              </StyledExternalLink>
             </AutoRow>
           </RowBetween>
           <RowBetween>
             <AutoColumn gap="md">
               <AutoRow gap="4px">
-                <CurrencyLogo currency={mockCurrency} />
+                <CurrencyLogo address={address} />
                 <TYPE.label fontSize="20px">{tokenData.name}</TYPE.label>
                 <TYPE.main fontSize="20px">{tokenData.symbol}</TYPE.main>
               </AutoRow>
@@ -173,19 +194,28 @@ export default function TokenPage({
             </DarkGreyCard>
             <DarkGreyCard>
               <RowBetween>
-                <TYPE.main>{latestValue}</TYPE.main>
+                <AutoColumn>
+                  <TYPE.main>{view === ChartView.VOL ? '24H Volume' : 'TVL'}</TYPE.main>
+                  <TYPE.label fontSize="24px" height="30px">
+                    {latestValue
+                      ? formatDollarAmount(latestValue)
+                      : view === ChartView.VOL
+                      ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                      : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}
+                  </TYPE.label>
+                </AutoColumn>
                 <ToggleWrapper width="160px">
                   <ToggleElementFree
                     isActive={view === ChartView.VOL}
                     fontSize="12px"
-                    onClick={() => setView(ChartView.VOL)}
+                    onClick={() => (view === ChartView.VOL ? setView(ChartView.TVL) : setView(ChartView.VOL))}
                   >
                     Volume
                   </ToggleElementFree>
                   <ToggleElementFree
                     isActive={view === ChartView.TVL}
                     fontSize="12px"
-                    onClick={() => setView(ChartView.TVL)}
+                    onClick={() => (view === ChartView.VOL ? setView(ChartView.TVL) : setView(ChartView.VOL))}
                   >
                     TVL
                   </ToggleElementFree>
@@ -201,7 +231,12 @@ export default function TokenPage({
               {view === ChartView.TVL ? (
                 <LineChart data={formattedTvlData} color={backgroundColor} minHeight={340} setValue={setLatestValue} />
               ) : view === ChartView.VOL ? (
-                <BarChart data={formattedVolumeData} color={backgroundColor} minHeight={340} />
+                <BarChart
+                  data={formattedVolumeData}
+                  color={backgroundColor}
+                  minHeight={340}
+                  setValue={setLatestValue}
+                />
               ) : view === ChartView.PRICE ? (
                 <CandleChart data={formattedPriceData} />
               ) : null}
@@ -210,6 +245,10 @@ export default function TokenPage({
           <TYPE.main fontSize="24px">Pools</TYPE.main>
           <DarkGreyCard>
             <PoolTable poolDatas={poolDatas} />
+          </DarkGreyCard>
+          <TYPE.main fontSize="24px">Transactions</TYPE.main>
+          <DarkGreyCard>
+            {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
           </DarkGreyCard>
         </AutoColumn>
       ) : (

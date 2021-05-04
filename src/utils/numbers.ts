@@ -6,3 +6,14 @@ export const formatDollarAmount = (num: number | undefined, digits = 2, round = 
   if (!num) return '-'
   return numbro(num).formatCurrency({ average: round, mantissa: digits })
 }
+
+// using a currency library here in case we want to add more in future
+export const formatAmount = (num: number | undefined, digits = 2) => {
+  if (num === 0) return '0'
+  if (!num) return '-'
+  if (num < 0.001) {
+    return '<0.001'
+  }
+
+  return num.toFixed(digits)
+}

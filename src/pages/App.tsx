@@ -10,11 +10,10 @@ import Home from './Home'
 import Protocol from './Protocol'
 import PoolsOverview from './Pool/PoolsOverview'
 import TokensOverview from './Token/TokensOverview'
-import Wallets from './Wallets'
 import TopBar from 'components/Header/TopBar'
-import TokenPage from './Token/TokenPage'
 import { RedirectInvalidToken } from './Token/redirects'
 import { LocalLoader } from 'components/Loader'
+import PoolPage from './Pool/PoolPage'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -87,6 +86,7 @@ export default function App() {
               <Route exact strict path="/pools" component={PoolsOverview} />
               <Route exact strict path="/tokens" component={TokensOverview} />
               <Route exact strict path="/tokens/:address" component={RedirectInvalidToken} />
+              <Route exact strict path="/pools/:address" component={PoolPage} />
             </Switch>
             <Marginer />
           </BodyWrapper>

@@ -1,7 +1,8 @@
-import { useProtocolData, useProtocolChartData } from './hooks'
+import { useProtocolData, useProtocolChartData, useProtocolTransactions } from './hooks'
 import { useEffect } from 'react'
-import { useFetchProtocolData } from 'data/global/overview'
-import { useFetchGlobalChartData } from 'data/global/chart'
+import { useFetchProtocolData } from 'data/protocol/overview'
+import { useFetchGlobalChartData } from 'data/protocol/chart'
+import { fetchTopTransactions } from 'data/protocol/transactions'
 
 export default function Updater(): null {
   const [protocolData, updateProtocolData] = useProtocolData()
@@ -9,6 +10,8 @@ export default function Updater(): null {
 
   const [chartData, updateChartData] = useProtocolChartData()
   const { data: fetchedChartData, error: chartError } = useFetchGlobalChartData()
+
+  const [transactions, updateTransactions] = useProtocolTransactions()
 
   // update overview data if available and not set
   useEffect(() => {
@@ -23,6 +26,18 @@ export default function Updater(): null {
       updateChartData(fetchedChartData)
     }
   }, [chartData, chartError, fetchedChartData, updateChartData])
+
+  useEffect(() => {
+    async function fetch() {
+      const data = await fetchTopTransactions()
+      if (data) {
+        updateTransactions(data)
+      }
+    }
+    if (!transactions) {
+      fetch()
+    }
+  }, [transactions, updateTransactions])
 
   return null
 }

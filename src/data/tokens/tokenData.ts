@@ -5,6 +5,8 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { get2DayChange } from 'utils/data'
 import { TokenData } from 'state/tokens/reducer'
+import { useEthPrices } from 'hooks/useEthPrices'
+import { formatTokenSymbol, formatTokenName } from 'utils/tokens'
 
 export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
   let tokenString = `[`
@@ -75,6 +77,7 @@ export function useTokenDatas(
   const [t24, t48, tWeek] = useDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek])
   const [block24, block48, blockWeek] = blocks ?? []
+  const ethPrices = useEthPrices()
 
   const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses))
   const { loading: loading24, error: error24, data: data24 } = useQuery<TokenDataResponse>(
@@ -89,6 +92,14 @@ export function useTokenDatas(
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)
   const anyLoading = Boolean(loading || loading24 || loading48 || loadingWeek)
+
+  if (!ethPrices) {
+    return {
+      loading: true,
+      error: false,
+      data: undefined,
+    }
+  }
 
   // return early if not all data yet
   if (anyError || anyLoading) {
@@ -150,10 +161,9 @@ export function useTokenDatas(
       current && oneDay ? parseFloat(current.totalValueLockedUSD) - parseFloat(oneDay.totalValueLockedUSD) : 0
     const tvlToken = current ? parseFloat(current.totalValueLocked) : 0
 
-    const ethPrice = 2600
-    const priceUSD = current ? parseFloat(current.derivedETH) * ethPrice : 0
-    const priceUSDOneDay = oneDay ? parseFloat(oneDay.derivedETH) * ethPrice : 0
-    const priceUSDWeek = week ? parseFloat(week.derivedETH) * ethPrice : 0
+    const priceUSD = current ? parseFloat(current.derivedETH) * ethPrices.current : 0
+    const priceUSDOneDay = oneDay ? parseFloat(oneDay.derivedETH) * ethPrices.oneDay : 0
+    const priceUSDWeek = week ? parseFloat(week.derivedETH) * ethPrices.week : 0
     const priceUSDChange =
       priceUSD && priceUSDOneDay ? getPercentChange(priceUSD.toString(), priceUSDOneDay.toString()) : 0
     const priceUSDChangeWeek =
@@ -164,8 +174,8 @@ export function useTokenDatas(
     if (current) {
       accum[address] = {
         address,
-        name: current.name,
-        symbol: current.symbol,
+        name: formatTokenName(address, current.name),
+        symbol: formatTokenSymbol(address, current.symbol),
         volumeUSD,
         volumeUSDChange,
         volumeUSDWeek,

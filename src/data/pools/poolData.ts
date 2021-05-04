@@ -4,6 +4,7 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { PoolData } from 'state/pools/reducer'
 import { get2DayChange } from 'utils/data'
+import { formatTokenName, formatTokenSymbol } from 'utils/tokens'
 
 export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
   let poolString = `[`
@@ -23,11 +24,13 @@ export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
             id
             symbol 
             name
+            derivedETH
         }
         token1 {
             id
             symbol 
             name
+            derivedETH
         }
         token0Price
         token1Price
@@ -49,11 +52,13 @@ interface PoolFields {
     id: string
     symbol: string
     name: string
+    derivedETH: string
   }
   token1: {
     id: string
     symbol: string
     name: string
+    derivedETH: string
   }
   token0Price: string
   token1Price: string
@@ -172,14 +177,18 @@ export function usePoolDatas(
         feeTier,
         token0: {
           address: current.token0.id,
-          name: current.token0.name,
-          symbol: current.token0.symbol,
+          name: formatTokenName(current.token0.id, current.token0.name),
+          symbol: formatTokenSymbol(current.token0.id, current.token0.symbol),
+          derivedETH: parseFloat(current.token0.derivedETH),
         },
         token1: {
           address: current.token1.id,
-          name: current.token1.name,
-          symbol: current.token1.symbol,
+          name: formatTokenName(current.token1.id, current.token1.name),
+          symbol: formatTokenSymbol(current.token1.id, current.token1.symbol),
+          derivedETH: parseFloat(current.token1.derivedETH),
         },
+        token0Price: parseFloat(current.token0Price),
+        token1Price: parseFloat(current.token1Price),
         volumeUSD,
         volumeUSDChange,
         volumeUSDWeek,

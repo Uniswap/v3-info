@@ -1,7 +1,7 @@
 import { currentTimestamp } from './../../utils/index'
-import { updateProtocolData, updateChartData } from './actions'
+import { updateProtocolData, updateChartData, updateTransactions } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
-import { ChartDayData } from 'types'
+import { ChartDayData, Transaction } from 'types'
 
 export interface ProtocolData {
   // volume
@@ -25,12 +25,15 @@ export interface ProtocolState {
   readonly data: ProtocolData | undefined
 
   readonly chartData: ChartDayData[] | undefined
+
+  readonly transactions: Transaction[] | undefined
 }
 
 export const initialState: ProtocolState = {
-  lastUpdated: undefined,
   data: undefined,
   chartData: undefined,
+  transactions: undefined,
+  lastUpdated: undefined,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -42,5 +45,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateChartData, (state, { payload: { chartData } }) => {
       state.chartData = chartData
+    })
+    .addCase(updateTransactions, (state, { payload: { transactions } }) => {
+      state.transactions = transactions
     })
 )

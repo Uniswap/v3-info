@@ -5,21 +5,20 @@ import { TYPE } from 'theme'
 import { RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart'
 import useTheme from 'hooks/useTheme'
-import { useProtocolData, useProtocolChartData } from 'state/protocol/hooks'
-import { DarkGreyCard, OutlineCard } from 'components/Card'
+import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
+import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { StyledInternalLink } from '../../theme/components'
-import TopTokenMovers from 'components/tokens/TopTokenMovers'
 import TokenTable from 'components/tokens/TokenTable'
-import TopPoolMovers from 'components/pools/TopPoolMovers'
 import PoolTable from 'components/pools/PoolTable'
 import { PageWrapper, ThemedBackgroundGlobal } from 'pages/styled'
 import { unixToDate } from 'utils/date'
 import BarChart from 'components/BarChart'
 import { useAllPoolData } from 'state/pools/hooks'
 import { notEmpty } from 'utils'
-import { LocalLoader } from 'components/Loader'
+import TransactionsTable from '../../components/TransactionsTable'
+import { useAllTokenData } from 'state/tokens/hooks'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -30,6 +29,7 @@ export default function Home() {
 
   const [protocolData] = useProtocolData()
   const [chartData] = useProtocolChartData()
+  const [transactions] = useProtocolTransactions()
 
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
@@ -79,6 +79,13 @@ export default function Home() {
       return []
     }
   }, [chartData])
+
+  const allTokens = useAllTokenData()
+  const formattedTokens = useMemo(() => {
+    return Object.values(allTokens)
+      .map((t) => t.data)
+      .filter(notEmpty)
+  }, [allTokens])
 
   return (
     <PageWrapper>
@@ -150,7 +157,7 @@ export default function Home() {
             <TopTokenMovers />
           </AutoColumn>
         </OutlineCard> */}
-        <TokenTable />
+        <TokenTable tokenDatas={formattedTokens} />
         <RowBetween>
           <TYPE.mediumHeader>Top Pools</TYPE.mediumHeader>
           <StyledInternalLink to="/pools" fontSize="20px">
@@ -164,6 +171,13 @@ export default function Home() {
           </AutoColumn>
         </OutlineCard> */}
         <PoolTable poolDatas={poolDatas} />
+        <RowBetween>
+          <TYPE.mediumHeader>Transaction</TYPE.mediumHeader>
+          <StyledInternalLink to="/transactions" fontSize="20px">
+            Explore
+          </StyledInternalLink>
+        </RowBetween>
+        {transactions ? <TransactionsTable transactions={transactions} /> : null}
       </AutoColumn>
     </PageWrapper>
   )

@@ -1,10 +1,13 @@
-import { addPoolKeys } from 'state/pools/actions'
+import { addPoolKeys, updatePoolChartData, updatePoolTransactions } from 'state/pools/actions'
 import { AppState, AppDispatch } from './../index'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { PoolData } from './reducer'
+import { PoolData, PoolChartEntry } from './reducer'
 import { updatePoolData } from './actions'
 import { notEmpty } from 'utils'
+import { fetchPoolChartData } from 'data/pools/chartData'
+import { Transaction } from 'types'
+import { fetchPoolTransactions } from 'data/pools/transactions'
 
 export function useAllPoolData(): {
   [address: string]: { data: PoolData | undefined; lastUpdated: number | undefined }
@@ -49,4 +52,62 @@ export function usePoolDatas(poolAddresses: string[]): PoolData[] {
     .filter(notEmpty)
 
   return poolsWithData
+}
+
+/**
+ * Get top pools addresses that token is included in
+ * If not loaded, fetch and store
+ * @param address
+ */
+export function usePoolChartData(address: string): PoolChartEntry[] | undefined {
+  const dispatch = useDispatch<AppDispatch>()
+  const pool = useSelector((state: AppState) => state.pools.byAddress[address])
+  const chartData = pool.chartData
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    async function fetch() {
+      const { error, data } = await fetchPoolChartData(address)
+      if (!error && data) {
+        dispatch(updatePoolChartData({ poolAddress: address, chartData: data }))
+      }
+      if (error) {
+        setError(error)
+      }
+    }
+    if (!chartData && !error) {
+      fetch()
+    }
+  }, [address, dispatch, error, chartData])
+
+  // return data
+  return chartData
+}
+
+/**
+ * Get all transactions on pool
+ * @param address
+ */
+export function usePoolTransactions(address: string): Transaction[] | undefined {
+  const dispatch = useDispatch<AppDispatch>()
+  const pool = useSelector((state: AppState) => state.pools.byAddress[address])
+  const transactions = pool.transactions
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    async function fetch() {
+      const { error, data } = await fetchPoolTransactions(address)
+      if (error) {
+        setError(true)
+      } else if (data) {
+        dispatch(updatePoolTransactions({ poolAddress: address, transactions: data }))
+      }
+    }
+    if (!transactions && !error) {
+      fetch()
+    }
+  }, [address, dispatch, error, transactions])
+
+  // return data
+  return transactions
 }

@@ -84,4 +84,5 @@ export const ToggleElementFree = styled.span<{ isActive?: boolean; fontSize?: st
     user-select: initial;
     color: ${({ theme, isActive }) => (isActive ? theme.text2 : theme.text3)};
   }
+  margin-top: 0.5px;
 `

@@ -104,12 +104,12 @@ export const StyledInternalLink = styled(Link)<{ fontSize?: string }>`
   font-size: ${({ fontSize }) => fontSize ?? '16px'};
 
   :hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   :focus {
     outline: none;
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   :active {

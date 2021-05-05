@@ -79,17 +79,28 @@ export function useTokenDatas(
   const [block24, block48, blockWeek] = blocks ?? []
   const ethPrices = useEthPrices()
 
-  const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses))
+  const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses), {
+    fetchPolicy: 'network-only',
+  })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(parseInt(block24?.number), tokenAddresses)
+    TOKENS_BULK(parseInt(block24?.number), tokenAddresses),
+    {
+      fetchPolicy: 'network-only',
+    }
   )
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(parseInt(block48?.number), tokenAddresses)
+    TOKENS_BULK(parseInt(block48?.number), tokenAddresses),
+    {
+      fetchPolicy: 'network-only',
+    }
   )
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(parseInt(blockWeek?.number), tokenAddresses)
+    TOKENS_BULK(parseInt(blockWeek?.number), tokenAddresses),
+    {
+      fetchPolicy: 'network-only',
+    }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)

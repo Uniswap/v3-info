@@ -24,7 +24,9 @@ export function useTopPoolAddresses(): {
   error: boolean
   addresses: string[] | undefined
 } {
-  const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS)
+  const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
+    fetchPolicy: 'network-only',
+  })
 
   const formattedData = useMemo(() => {
     if (data) {

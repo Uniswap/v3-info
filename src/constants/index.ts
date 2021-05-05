@@ -83,6 +83,10 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
 }
 
+export const NETWORK_ONLY = {
+  fetchPolicy: 'network-only',
+}
+
 // temporary! fixing USD accounting on subgraph
 export const TOKEN_HIDE = ['0x7d29a64504629172a429e64183d6673b9dacbfce', '0xd46ba6d942050d489dbd938a2c909a5d5039a161']
 export const POOL_HIDE = ['0x86d257cdb7bc9c0df10e84c8709697f92770b335', '0xf8dbd52488978a79dfe6ffbd81a01fc5948bf9ee']

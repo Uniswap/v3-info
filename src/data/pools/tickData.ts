@@ -70,8 +70,17 @@ const fetchInitializedTicks = async (
   tickIdxUpperBound: number
 ): Promise<{ loading?: boolean; error?: boolean; ticks?: Tick[] }> => {
   const tickQuery = gql`
-    query surroundingTicks($poolAddress: String!, $tickIdxLowerBound: BigInt!, $tickIdxUpperBound: BigInt!) {
-      ticks(where: { poolAddress: $poolAddress, tickIdx_lte: $tickIdxUpperBound, tickIdx_gte: $tickIdxLowerBound }) {
+    query surroundingTicks(
+      $poolAddress: String!
+      $tickIdxLowerBound: BigInt!
+      $tickIdxUpperBound: BigInt!
+      $skip: Int!
+    ) {
+      ticks(
+        first: 1000
+        skip: $skip
+        where: { poolAddress: $poolAddress, tickIdx_lte: $tickIdxUpperBound, tickIdx_gte: $tickIdxLowerBound }
+      ) {
         tickIdx
         liquidityGross
         liquidityNet
@@ -81,20 +90,36 @@ const fetchInitializedTicks = async (
     }
   `
 
-  const { data: surroundingTicksResult, error, loading } = await client.query<SurroundingTicksResult>({
-    query: tickQuery,
-    variables: {
-      poolAddress,
-      tickIdxLowerBound,
-      tickIdxUpperBound,
-    },
-  })
+  let surroundingTicks: Tick[] = []
+  let surroundingTicksResult: Tick[] = []
+  let skip = 0
+  do {
+    const { data, error, loading } = await client.query<SurroundingTicksResult>({
+      query: tickQuery,
+      variables: {
+        poolAddress,
+        tickIdxLowerBound,
+        tickIdxUpperBound,
+        skip,
+      },
+    })
 
-  if (error || loading) {
-    return { error: Boolean(error), loading, ticks: [] }
-  }
+    console.log({ data, error, loading }, 'Result. Skip: ' + skip)
 
-  return { ticks: surroundingTicksResult.ticks, loading: false, error: false }
+    if (loading) {
+      continue
+    }
+
+    if (error) {
+      return { error: Boolean(error), loading, ticks: surroundingTicksResult }
+    }
+
+    surroundingTicks = data.ticks
+    surroundingTicksResult = surroundingTicksResult.concat(surroundingTicks)
+    skip += 1000
+  } while (surroundingTicks.length > 0)
+
+  return { ticks: surroundingTicksResult, loading: false, error: false }
 }
 
 export interface PoolTickData {

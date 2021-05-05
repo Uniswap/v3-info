@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
+import { isAddress } from 'utils'
 import Logo from '../Logo'
 
 export const getTokenLogoURL = (address: string) =>
@@ -25,8 +26,10 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const srcs: string[] = useMemo(() => {
-    if (address) {
-      return [getTokenLogoURL(address)]
+    const checkSummed = isAddress(address)
+
+    if (checkSummed) {
+      return [getTokenLogoURL(checkSummed)]
     }
     return []
   }, [address])

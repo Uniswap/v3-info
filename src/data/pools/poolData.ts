@@ -20,16 +20,21 @@ export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
     ` orderBy: totalValueLockedUSD, orderDirection: desc) {
         id
         feeTier
+        liquidity
+        sqrtPrice
+        tick
         token0 {
             id
             symbol 
             name
+            decimals
             derivedETH
         }
         token1 {
             id
             symbol 
             name
+            decimals
             derivedETH
         }
         token0Price
@@ -48,16 +53,21 @@ export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
 interface PoolFields {
   id: string
   feeTier: string
+  liquidity: string
+  sqrtPrice: string
+  tick: string
   token0: {
     id: string
     symbol: string
     name: string
+    decimals: string
     derivedETH: string
   }
   token1: {
     id: string
     symbol: string
     name: string
+    decimals: string
     derivedETH: string
   }
   token0Price: string
@@ -175,16 +185,21 @@ export function usePoolDatas(
       accum[address] = {
         address,
         feeTier,
+        liquidity: parseFloat(current.liquidity),
+        sqrtPrice: parseFloat(current.sqrtPrice),
+        tick: parseFloat(current.tick),
         token0: {
           address: current.token0.id,
           name: formatTokenName(current.token0.id, current.token0.name),
           symbol: formatTokenSymbol(current.token0.id, current.token0.symbol),
+          decimals: parseInt(current.token0.decimals),
           derivedETH: parseFloat(current.token0.derivedETH),
         },
         token1: {
           address: current.token1.id,
           name: formatTokenName(current.token1.id, current.token1.name),
           symbol: formatTokenSymbol(current.token1.id, current.token1.symbol),
+          decimals: parseInt(current.token0.decimals),
           derivedETH: parseFloat(current.token1.derivedETH),
         },
         token0Price: parseFloat(current.token0Price),

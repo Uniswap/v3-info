@@ -4,12 +4,12 @@ import { TYPE } from 'theme'
 // responsive text
 export const Label = styled(TYPE.label)<{ end?: number }>`
   display: flex;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
   align-items: center;
   @media screen and (max-width: 640px) {
-    font-size: 12px;
+    font-size: 14px;
   }
 `
 

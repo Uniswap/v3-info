@@ -6,7 +6,7 @@ import { TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 
 const PRICE_FIXED_DIGITS = 4
-const DEFAULT_SURROUNDING_TICKS = 800
+const DEFAULT_SURROUNDING_TICKS = 400
 const FEE_TIER_TO_TICK_SPACING = (feeTier: string): number => {
   switch (feeTier) {
     case '10000':
@@ -55,7 +55,7 @@ interface SurroundingTicksResult {
 }
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
-interface TickProcessed {
+export interface TickProcessed {
   liquidityGross: JSBI
   liquidityNet: JSBI
   tickIdx: number
@@ -97,18 +97,20 @@ const fetchInitializedTicks = async (
   return { ticks: surroundingTicksResult.ticks, loading: false, error: false }
 }
 
+export interface PoolTickData {
+  ticksProcessed: TickProcessed[]
+  feeTier: string
+  tickSpacing: number
+  activeTickIdx: number
+}
+
 export const fetchTicksSurroundingPrice = async (
   poolAddress: string,
   numSurroundingTicks = DEFAULT_SURROUNDING_TICKS
 ): Promise<{
   loading?: boolean
   error?: boolean
-  data?: {
-    ticksProcessed: TickProcessed[]
-    feeTier: string
-    tickSpacing: number
-    activeTickIdx: number
-  }
+  data?: PoolTickData
 }> => {
   const poolQuery = gql`
     query pool($poolAddress: String!) {
@@ -181,7 +183,7 @@ export const fetchTicksSurroundingPrice = async (
   const token0 = new Token(1, token0Address, parseInt(token0Decimals))
   const token1 = new Token(1, token1Address, parseInt(token1Decimals))
 
-  console.log({ activeTickIdx, poolCurrentTickIdx }, 'Active ticks')
+  // console.log({ activeTickIdx, poolCurrentTickIdx }, 'Active ticks')
 
   // If the pool's tick is MIN_TICK (-887272), then when we find the closest
   // initializable tick to its left, the value would be smaller than MIN_TICK.

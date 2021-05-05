@@ -40,8 +40,22 @@ const PriceText = styled(TYPE.label)`
 
 const ContentLayout = styled.div`
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 260px 1fr;
   grid-gap: 1em;
+
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+`
+
+const ResponsiveRow = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 24px;
+    width: 100%:
+  `};
 `
 
 enum ChartView {
@@ -125,7 +139,7 @@ export default function TokenPage({
     <PageWrapper>
       <ThemedBackground backgroundColor={backgroundColor} />
       {tokenData ? (
-        <AutoColumn gap="32px">
+        <AutoColumn gap="24px">
           <RowBetween>
             <AutoRow gap="4px">
               <StyledInternalLink to={'/'}>
@@ -147,7 +161,7 @@ export default function TokenPage({
               </StyledExternalLink>
             </AutoRow>
           </RowBetween>
-          <RowBetween>
+          <ResponsiveRow align="flex-end">
             <AutoColumn gap="md">
               <AutoRow gap="4px">
                 <CurrencyLogo address={address} />
@@ -166,9 +180,11 @@ export default function TokenPage({
                   <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
                 </RowBetween>
               </ButtonGray>
-              <ButtonPrimary width="100px">Trade</ButtonPrimary>
+              <ButtonPrimary width="100px" style={{ backgroundColor: backgroundColor }}>
+                Trade
+              </ButtonPrimary>
             </RowFixed>
-          </RowBetween>
+          </ResponsiveRow>
           <ContentLayout>
             <DarkGreyCard>
               <AutoColumn gap="lg">

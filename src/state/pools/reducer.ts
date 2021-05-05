@@ -1,8 +1,9 @@
 import { currentTimestamp } from './../../utils/index'
-import { updatePoolData, addPoolKeys, updatePoolChartData, updatePoolTransactions } from './actions'
+import { updatePoolData, addPoolKeys, updatePoolChartData, updatePoolTransactions, updateTickData } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
 import { SerializedToken } from 'state/user/actions'
 import { Transaction } from 'types'
+import { PoolTickData } from 'data/pools/tickData'
 
 export interface Pool {
   address: string
@@ -19,6 +20,7 @@ export interface PoolData {
     name: string
     symbol: string
     address: string
+    decimals: number
     derivedETH: number
   }
 
@@ -26,8 +28,14 @@ export interface PoolData {
     name: string
     symbol: string
     address: string
+    decimals: number
     derivedETH: number
   }
+
+  // for tick math
+  liquidity: number
+  sqrtPrice: number
+  tick: number
 
   // volume
   volumeUSD: number
@@ -61,6 +69,7 @@ export interface PoolsState {
       chartData: PoolChartEntry[] | undefined
       transactions: Transaction[] | undefined
       lastUpdated: number | undefined
+      tickData: PoolTickData | undefined
     }
   }
 }
@@ -88,6 +97,7 @@ export default createReducer(initialState, (builder) =>
             chartData: undefined,
             transactions: undefined,
             lastUpdated: undefined,
+            tickData: undefined,
           }
         }
       })
@@ -97,5 +107,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updatePoolTransactions, (state, { payload: { poolAddress, transactions } }) => {
       state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], transactions }
+    })
+    .addCase(updateTickData, (state, { payload: { poolAddress, tickData } }) => {
+      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], tickData }
     })
 )

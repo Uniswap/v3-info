@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { HideExtraSmall, HideSmall, TYPE } from 'theme'
+import { ExtraSmallOnly, HideExtraSmall, TYPE } from 'theme'
 import { DarkGreyCard } from 'components/Card'
 import { TokenData } from '../../state/tokens/reducer'
 import Loader from 'components/Loader'
@@ -12,6 +12,8 @@ import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { Label, ClickableText } from '../Text'
 import { PageButtons, Arrow } from 'components/shared'
+import HoverInlineText from '../HoverInlineText'
+import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -21,7 +23,7 @@ const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
 
-  grid-template-columns: 20px 1.5fr repeat(5, 1fr);
+  grid-template-columns: 20px 2.5fr repeat(5, 1fr);
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(4, 1fr);
@@ -71,6 +73,7 @@ const ResponsiveLogo = styled(CurrencyLogo)`
 `
 
 const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) => {
+  const theme = useTheme()
   return (
     <LinkWrapper to={'tokens/' + tokenData.address}>
       <ResponsiveGrid>
@@ -79,18 +82,26 @@ const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) 
           <RowFixed>
             <ResponsiveLogo address={tokenData.address} />
           </RowFixed>
-          <Label ml="8px">
-            {tokenData.symbol} <HideExtraSmall style={{ marginLeft: '6px' }}> ({tokenData.name})</HideExtraSmall>
-          </Label>
+          <ExtraSmallOnly style={{ marginLeft: '6px' }}>
+            <Label ml="8px">{tokenData.symbol}</Label>
+          </ExtraSmallOnly>
+          <HideExtraSmall style={{ marginLeft: '10px' }}>
+            <RowFixed>
+              <HoverInlineText text={tokenData.name} />
+              <Label ml="8px" color={theme.text3}>
+                ({tokenData.symbol})
+              </Label>
+            </RowFixed>
+          </HideExtraSmall>
         </Label>
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(tokenData.priceUSD)}
         </Label>
         <Label end={1} fontWeight={400}>
-          <Percent value={tokenData.priceUSDChange} />
+          <Percent value={tokenData.priceUSDChange} fontWeight={400} />
         </Label>
         <Label end={1} fontWeight={400}>
-          <Percent value={tokenData.priceUSDChangeWeek} />
+          <Percent value={tokenData.priceUSDChangeWeek} fontWeight={400} />
         </Label>
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(tokenData.volumeUSD)}

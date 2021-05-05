@@ -24,7 +24,6 @@ import BarChart from 'components/BarChart'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedPools } from 'state/user/hooks'
-import { fetchTicksSurroundingPrice } from 'data/pools/tickData'
 import DensityChart from 'components/DensityChart'
 
 const ContentLayout = styled.div`
@@ -81,7 +80,7 @@ export default function PoolPage({
   const chartData = usePoolChartData(address)
   const transactions = usePoolTransactions(address)
 
-  const [view, setView] = useState(ChartView.DENSITY)
+  const [view, setView] = useState(ChartView.VOL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
 
   const formattedTvlData = useMemo(() => {

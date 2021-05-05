@@ -93,7 +93,7 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
 
   return (
     <ResponsiveGrid>
-      <ExternalLink href={getEtherscanLink(4, transaction.hash, 'transaction')}>
+      <ExternalLink href={getEtherscanLink(1, transaction.hash, 'transaction')}>
         <Label color={theme.blue1}>
           {transaction.type === TransactionType.MINT
             ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
@@ -109,7 +109,7 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
       <Label end={1}>
         {formatAmount(abs1)} {transaction.token1Symbol}
       </Label>
-      <ExternalLink href={getEtherscanLink(4, transaction.sender, 'address')}>
+      <ExternalLink href={getEtherscanLink(1, transaction.sender, 'address')}>
         <Label end={1}>{shortenAddress(transaction.sender)}</Label>
       </ExternalLink>
       <Label end={1}> {formatTime(transaction.timestamp)}</Label>

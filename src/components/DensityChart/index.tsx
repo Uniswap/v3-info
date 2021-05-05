@@ -1,6 +1,6 @@
 import { fetchTicksSurroundingPrice } from 'data/pools/tickData'
 import React, { useEffect, useMemo } from 'react'
-import { BarChart, Bar, Cell, Brush, ReferenceLine, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, Cell, ReferenceLine, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import Loader from 'components/Loader'
 import styled from 'styled-components'
 import { LightCard } from 'components/Card'
@@ -93,7 +93,7 @@ export default function DensityChart({ address }: DensityChartProps) {
     const index = props.label as number
     const price0 = poolTickData?.ticksProcessed[index]?.price0
     const price1 = poolTickData?.ticksProcessed[index]?.price1
-    const liquidity = poolTickData?.ticksProcessed[index]?.liquidityActive ?? undefined
+    // const liquidity = poolTickData?.ticksProcessed[index]?.liquidityActive ?? undefined
 
     return (
       <TooltipWrapper>
@@ -110,10 +110,6 @@ export default function DensityChart({ address }: DensityChartProps) {
             <TYPE.label>
               {price1 ?? ''} {poolData?.token0?.symbol}
             </TYPE.label>
-          </RowBetween>
-          <RowBetween>
-            <TYPE.label>Liquidity: </TYPE.label>
-            <TYPE.label>{liquidity ? Number(liquidity).toExponential() : '-'}</TYPE.label>
           </RowBetween>
         </AutoColumn>
       </TooltipWrapper>
@@ -141,11 +137,11 @@ export default function DensityChart({ address }: DensityChartProps) {
           <CartesianGrid strokeDasharray="4 4 4" stroke="#2C2F36" />
           <Tooltip content={CustomToolTip} />
           <ReferenceLine y={0} stroke="#000" />
-          <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} />
+          {/* <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} /> */}
           <Bar dataKey="activeLiquidity" fill="#2172E5">
             {poolTickData.ticksProcessed.map((entry, index) => {
               const active = entry.tickIdx === poolTickData.activeTickIdx
-              return <Cell key={`cell-${index}`} fill={active ? theme.pink1 : theme.blue1} />
+              return <Cell key={`cell-${index}`} fill={active ? theme.blue2 : theme.blue1} />
             })}
           </Bar>
         </BarChart>

@@ -63,9 +63,22 @@ export function useFetchProtocolData(): {
   const [block24, block48, blockWeek] = blocks ?? []
 
   // fetch all data
-  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA())
-  const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(GLOBAL_DATA('8482286'))
-  const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(GLOBAL_DATA('8477286'))
+  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), {
+    fetchPolicy: 'network-only',
+  })
+
+  const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
+    GLOBAL_DATA(block24?.number ?? undefined),
+    {
+      fetchPolicy: 'network-only',
+    }
+  )
+  const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
+    GLOBAL_DATA(block48?.number ?? undefined),
+    {
+      fetchPolicy: 'network-only',
+    }
+  )
 
   const anyError = Boolean(error || error24 || error48 || blockError)
   const anyLoading = Boolean(loading || loading24 || loading48)
@@ -78,6 +91,7 @@ export function useFetchProtocolData(): {
     if (anyError || anyLoading || !parsed) {
       return undefined
     }
+
     // case where hasnt existed yet
     const [volumeUSD, volumeUSDChange] =
       parsed && parsed24 && parsed48
@@ -89,8 +103,10 @@ export function useFetchProtocolData(): {
         ? get2DayChange(parsed.txCount, parsed24.txCount, parsed48.txCount)
         : [parseFloat(parsed.txCount), 0]
 
+    console.log(volumeUSD)
+
     return {
-      volumeUSD: volumeUSD,
+      volumeUSD: parseFloat(parsed?.totalVolumeUSD),
       volumeUSDChange,
       tvlUSD: parseFloat(parsed.totalValueLockedUSD),
       tvlUSDChange,

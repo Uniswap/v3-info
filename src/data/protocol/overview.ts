@@ -27,6 +27,14 @@ interface GlobalResponse {
   }[]
 }
 
+export const OFFSET_QUERY = gql`
+  query pools {
+    pools(where: { id: "0xb2cd930798efa9b6cb042f073a2ccea5012e7abf" }) {
+      totalValueLockedUSD
+    }
+  }
+`
+
 // mocked
 export function useFetchProtocolData(): {
   loading: boolean
@@ -50,8 +58,10 @@ export function useFetchProtocolData(): {
   const parsed24 = data24?.factories?.[0]
   const parsed48 = data48?.factories?.[0]
 
+  const { data: offsetData } = useQuery(OFFSET_QUERY)
+
   const formattedData: ProtocolData | undefined = useMemo(() => {
-    if (anyError || anyLoading || !parsed) {
+    if (anyError || anyLoading || !parsed || !offsetData) {
       return undefined
     }
     // case where hasnt existed yet
@@ -66,14 +76,14 @@ export function useFetchProtocolData(): {
         : [parseFloat(parsed.txCount), 0]
 
     return {
-      volumeUSD,
+      volumeUSD: volumeUSD,
       volumeUSDChange,
-      tvlUSD: parseFloat(parsed.totalValueLockedUSD),
+      tvlUSD: parseFloat(parsed.totalValueLockedUSD) - parseFloat(offsetData?.pools?.[0]?.totalValueLockedUSD) ?? 0,
       tvlUSDChange,
       txCount,
       txCountChange,
     }
-  }, [anyError, anyLoading, parsed, parsed24, parsed48])
+  }, [anyError, anyLoading, offsetData, parsed, parsed24, parsed48])
 
   return {
     loading: anyLoading,

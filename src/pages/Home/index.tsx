@@ -139,8 +139,8 @@ export default function Home() {
                   <Percent value={protocolData?.volumeUSDChange} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">24HR Transcations: </TYPE.main>
-                  <TYPE.label mr="4px">{protocolData?.txCount}</TYPE.label>
+                  <TYPE.main mr="4px">24HR Transactions: </TYPE.main>
+                  <TYPE.label mr="4px">{protocolData?.txCount?.toLocaleString()}</TYPE.label>
                   <Percent value={protocolData?.txCountChange} wrap={true} />
                 </RowFixed>
                 <HideMedium>

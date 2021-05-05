@@ -92,7 +92,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
 
 export default function PoolTable({ poolDatas, maxItems = 10 }: { poolDatas: PoolData[]; maxItems?: number }) {
   // for sorting
-  const [sortField, setSortField] = useState(SORT_FIELD.volumeUSD)
+  const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
 
   // pagination

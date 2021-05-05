@@ -173,17 +173,21 @@ export default function TokenPage({
                 (<Percent value={tokenData.priceUSDChange} />)
               </RowFlat>
             </AutoColumn>
-            {/* <RowFixed>
-              <ButtonGray width="170px" mr="12px">
-                <RowBetween>
-                  <Download size={24} />
-                  <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
-                </RowBetween>
-              </ButtonGray>
-              <ButtonPrimary width="100px" style={{ backgroundColor: backgroundColor }}>
-                Trade
-              </ButtonPrimary>
-            </RowFixed> */}
+            <RowFixed>
+              <StyledExternalLink href={`https://app.uniswap.org/#/add/${address}`}>
+                <ButtonGray width="170px" mr="12px">
+                  <RowBetween>
+                    <Download size={24} />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
+                  </RowBetween>
+                </ButtonGray>
+              </StyledExternalLink>
+              <StyledExternalLink href={`https://app.uniswap.org/#/swap?inputCurrency=${address}`}>
+                <ButtonPrimary width="100px" style={{ backgroundColor: backgroundColor }}>
+                  Trade
+                </ButtonPrimary>
+              </StyledExternalLink>
+            </RowFixed>
           </ResponsiveRow>
           <ContentLayout>
             <DarkGreyCard>

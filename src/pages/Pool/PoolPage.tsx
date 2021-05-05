@@ -15,7 +15,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { formatDollarAmount, formatAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
-import { DarkGreyCard, GreyCard, GreyBadge, LightCard, LightGreyCard } from 'components/Card'
+import { DarkGreyCard, GreyCard, GreyBadge } from 'components/Card'
 import { usePoolDatas, usePoolChartData, usePoolTransactions } from 'state/pools/hooks'
 import LineChart from 'components/LineChart'
 import { unixToDate } from 'utils/date'
@@ -176,15 +176,23 @@ export default function PoolPage({
               </ResponsiveRow>
             </AutoColumn>
             <AutoColumn gap="lg">
-              {/* <RowFixed>
-                <ButtonGray width="170px" mr="12px">
-                  <RowBetween>
-                    <Download size={24} />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
-                  </RowBetween>
-                </ButtonGray>
-                <ButtonPrimary width="100px">Trade</ButtonPrimary>
-              </RowFixed> */}
+              <RowFixed>
+                <StyledExternalLink
+                  href={`https://app.uniswap.org/#/add/${poolData.token0.address}/${poolData.token1.address}/${poolData.feeTier}`}
+                >
+                  <ButtonGray width="170px" mr="12px">
+                    <RowBetween>
+                      <Download size={24} />
+                      <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
+                    </RowBetween>
+                  </ButtonGray>
+                </StyledExternalLink>
+                <StyledExternalLink
+                  href={`https://app.uniswap.org/#/swap?inputCurrency=${poolData.token0.address}&outputCurrency=${poolData.token1.address}`}
+                >
+                  <ButtonPrimary width="100px">Trade</ButtonPrimary>
+                </StyledExternalLink>
+              </RowFixed>
             </AutoColumn>
           </ResponsiveRow>
           <ContentLayout>

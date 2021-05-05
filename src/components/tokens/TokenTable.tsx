@@ -131,7 +131,7 @@ export default function TokenTable({
   maxItems?: number
 }) {
   // for sorting
-  const [sortField, setSortField] = useState(SORT_FIELD.volumeUSD)
+  const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
 
   // pagination

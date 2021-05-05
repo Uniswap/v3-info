@@ -136,13 +136,12 @@ export default function DensityChart({ address }: DensityChartProps) {
         >
           <CartesianGrid strokeDasharray="4 4 4" stroke="#2C2F36" />
           <Tooltip content={CustomToolTip} />
-          <ReferenceLine y={0} stroke="#000" />
           {/* <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} /> */}
           <Bar dataKey="activeLiquidity" fill="#2172E5">
-            {poolTickData.ticksProcessed.map((entry, index) => {
+            {/* {poolTickData.ticksProcessed.map((entry, index) => {
               const active = entry.tickIdx === poolTickData.activeTickIdx
               return <Cell key={`cell-${index}`} fill={active ? theme.blue2 : theme.blue1} />
-            })}
+            })} */}
           </Bar>
         </BarChart>
       </ResponsiveContainer>

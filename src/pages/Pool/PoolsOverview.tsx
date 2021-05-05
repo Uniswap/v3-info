@@ -24,7 +24,7 @@ export default function PoolPage() {
     <PageWrapper>
       <AutoColumn gap="lg">
         <TYPE.main>Your Watchlist</TYPE.main>
-        {savedPools.length > 0 ? (
+        {watchlistPools.length > 0 ? (
           <PoolTable poolDatas={watchlistPools} />
         ) : (
           <DarkGreyCard>

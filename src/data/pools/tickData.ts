@@ -6,7 +6,7 @@ import { TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 
 const PRICE_FIXED_DIGITS = 4
-const DEFAULT_SURROUNDING_TICKS = 400
+const DEFAULT_SURROUNDING_TICKS = 300
 const FEE_TIER_TO_TICK_SPACING = (feeTier: string): number => {
   switch (feeTier) {
     case '10000':

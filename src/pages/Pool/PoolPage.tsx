@@ -15,7 +15,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { formatDollarAmount, formatAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
-import { DarkGreyCard, GreyCard, GreyBadge } from 'components/Card'
+import { DarkGreyCard, GreyCard, GreyBadge, LightCard, LightGreyCard } from 'components/Card'
 import { usePoolDatas, usePoolChartData, usePoolTransactions } from 'state/pools/hooks'
 import LineChart from 'components/LineChart'
 import { unixToDate } from 'utils/date'
@@ -162,7 +162,7 @@ export default function PoolPage({
                   </TokenButton>
                 </StyledInternalLink>
                 <StyledInternalLink to={'/tokens/' + poolData.token1.address}>
-                  <TokenButton>
+                  <TokenButton ml="10px">
                     <RowFixed>
                       <CurrencyLogo address={poolData.token1.address} size={'20px'} />
                       <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
@@ -176,7 +176,7 @@ export default function PoolPage({
               </ResponsiveRow>
             </AutoColumn>
             <AutoColumn gap="lg">
-              <RowFixed>
+              {/* <RowFixed>
                 <ButtonGray width="170px" mr="12px">
                   <RowBetween>
                     <Download size={24} />
@@ -184,7 +184,7 @@ export default function PoolPage({
                   </RowBetween>
                 </ButtonGray>
                 <ButtonPrimary width="100px">Trade</ButtonPrimary>
-              </RowFixed>
+              </RowFixed> */}
             </AutoColumn>
           </ResponsiveRow>
           <ContentLayout>
@@ -245,7 +245,7 @@ export default function PoolPage({
                       : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}
                   </TYPE.label>
                 </AutoColumn>
-                <ToggleWrapper width="160px">
+                <ToggleWrapper width="200px">
                   <ToggleElementFree
                     isActive={view === ChartView.VOL}
                     fontSize="12px"
@@ -265,7 +265,7 @@ export default function PoolPage({
                     fontSize="12px"
                     onClick={() => (view === ChartView.DENSITY ? setView(ChartView.VOL) : setView(ChartView.DENSITY))}
                   >
-                    Liq
+                    Liquidity
                   </ToggleElementFree>
                 </ToggleWrapper>
               </RowBetween>

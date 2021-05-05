@@ -173,7 +173,7 @@ export default function TokenPage({
                 (<Percent value={tokenData.priceUSDChange} />)
               </RowFlat>
             </AutoColumn>
-            <RowFixed>
+            {/* <RowFixed>
               <ButtonGray width="170px" mr="12px">
                 <RowBetween>
                   <Download size={24} />
@@ -183,7 +183,7 @@ export default function TokenPage({
               <ButtonPrimary width="100px" style={{ backgroundColor: backgroundColor }}>
                 Trade
               </ButtonPrimary>
-            </RowFixed>
+            </RowFixed> */}
           </ResponsiveRow>
           <ContentLayout>
             <DarkGreyCard>

@@ -1,4 +1,4 @@
-import { addPoolKeys, updatePoolChartData, updatePoolTransactions } from 'state/pools/actions'
+import { addPoolKeys, updatePoolChartData, updatePoolTransactions, updateTickData } from 'state/pools/actions'
 import { AppState, AppDispatch } from './../index'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +8,7 @@ import { notEmpty } from 'utils'
 import { fetchPoolChartData } from 'data/pools/chartData'
 import { Transaction } from 'types'
 import { fetchPoolTransactions } from 'data/pools/transactions'
+import { PoolTickData } from 'data/pools/tickData'
 
 export function useAllPoolData(): {
   [address: string]: { data: PoolData | undefined; lastUpdated: number | undefined }
@@ -110,4 +111,19 @@ export function usePoolTransactions(address: string): Transaction[] | undefined 
 
   // return data
   return transactions
+}
+
+export function usePoolTickData(
+  address: string
+): [PoolTickData | undefined, (poolAddress: string, tickData: PoolTickData) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const pool = useSelector((state: AppState) => state.pools.byAddress[address])
+  const tickData = pool.tickData
+
+  const setPoolTickData = useCallback(
+    (address: string, tickData: PoolTickData) => dispatch(updateTickData({ poolAddress: address, tickData })),
+    [dispatch]
+  )
+
+  return [tickData, setPoolTickData]
 }

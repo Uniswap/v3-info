@@ -15,6 +15,7 @@ import { SavedIcon } from 'components/Button'
 import { useHistory } from 'react-router-dom'
 import { useTokenDatas } from 'state/tokens/hooks'
 import { usePoolDatas } from 'state/pools/hooks'
+import HoverInlineText from 'components/HoverInlineText'
 
 const Container = styled.div`
   position: relative;
@@ -31,7 +32,7 @@ const Wrapper = styled(Row)`
   positon: relative;
   z-index: 9999;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
   `};
 `
@@ -79,7 +80,7 @@ const Menu = styled.div<{ hide: boolean }>`
   display: ${({ hide }) => hide && 'none'};
   border: 1px solid ${({ theme }) => theme.pink1};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     position: absolute;
     margin-top: 4px;
     z-index: 9999;
@@ -278,7 +279,9 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                   <ResponsiveGrid>
                     <RowFixed>
                       <CurrencyLogo address={t.address} />
-                      <TYPE.label ml="10px">{`${t.name} (${t.symbol})`}</TYPE.label>
+                      <TYPE.label ml="10px">
+                        <HoverInlineText text={`${t.name} (${t.symbol})`} />{' '}
+                      </TYPE.label>
                       <SavedIcon
                         id="watchlist-icon"
                         size={'16px'}
@@ -340,7 +343,9 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                   <ResponsiveGrid key={i}>
                     <RowFixed>
                       <DoubleCurrencyLogo address0={p.token0.address} address1={p.token1.address} />
-                      <TYPE.label ml="10px">{`${p.token0.symbol} / ${p.token1.symbol}`}</TYPE.label>
+                      <TYPE.label ml="10px" style={{ whiteSpace: 'nowrap' }}>
+                        <HoverInlineText maxCharacters={12} text={`${p.token0.symbol} / ${p.token1.symbol}`} />
+                      </TYPE.label>
                       <GreyBadge ml="10px">{feeTierPercent(p.feeTier)}</GreyBadge>
                       <SavedIcon
                         id="watchlist-icon"

@@ -24,11 +24,18 @@ import BarChart from 'components/BarChart'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedPools } from 'state/user/hooks'
+import { fetchTicksSurroundingPrice } from 'data/pools/tickData'
+import DensityChart from 'components/DensityChart'
 
 const ContentLayout = styled.div`
   display: grid;
   grid-template-columns: 300px 1fr;
   grid-gap: 1em;
+
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 `
 
 const TokenButton = styled(GreyCard)`
@@ -40,10 +47,20 @@ const TokenButton = styled(GreyCard)`
   }
 `
 
+const ResponsiveRow = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 24px;
+    width: 100%:
+  `};
+`
+
 enum ChartView {
   TVL,
   VOL,
   PRICE,
+  DENSITY,
 }
 
 export default function PoolPage({
@@ -64,7 +81,7 @@ export default function PoolPage({
   const chartData = usePoolChartData(address)
   const transactions = usePoolTransactions(address)
 
-  const [view, setView] = useState(ChartView.TVL)
+  const [view, setView] = useState(ChartView.DENSITY)
   const [latestValue, setLatestValue] = useState<number | undefined>()
 
   const formattedTvlData = useMemo(() => {
@@ -121,7 +138,7 @@ export default function PoolPage({
               </StyledExternalLink>
             </AutoRow>
           </RowBetween>
-          <RowBetween>
+          <ResponsiveRow align="flex-end">
             <AutoColumn gap="lg">
               <RowFixed gap="4px">
                 <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={24} />
@@ -132,7 +149,7 @@ export default function PoolPage({
                 >{` ${poolData.token0.symbol} / ${poolData.token1.symbol} `}</TYPE.label>
                 <GreyBadge>{feeTierPercent(poolData.feeTier)}</GreyBadge>
               </RowFixed>
-              <RowFixed>
+              <ResponsiveRow>
                 <StyledInternalLink to={'/tokens/' + poolData.token0.address}>
                   <TokenButton>
                     <RowFixed>
@@ -146,7 +163,7 @@ export default function PoolPage({
                   </TokenButton>
                 </StyledInternalLink>
                 <StyledInternalLink to={'/tokens/' + poolData.token1.address}>
-                  <TokenButton ml="10px">
+                  <TokenButton>
                     <RowFixed>
                       <CurrencyLogo address={poolData.token1.address} size={'20px'} />
                       <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
@@ -157,7 +174,7 @@ export default function PoolPage({
                     </RowFixed>
                   </TokenButton>
                 </StyledInternalLink>
-              </RowFixed>
+              </ResponsiveRow>
             </AutoColumn>
             <AutoColumn gap="lg">
               <RowFixed>
@@ -169,9 +186,8 @@ export default function PoolPage({
                 </ButtonGray>
                 <ButtonPrimary width="100px">Trade</ButtonPrimary>
               </RowFixed>
-              <div></div>
             </AutoColumn>
-          </RowBetween>
+          </ResponsiveRow>
           <ContentLayout>
             <DarkGreyCard>
               <AutoColumn gap="lg">
@@ -215,14 +231,18 @@ export default function PoolPage({
               </AutoColumn>
             </DarkGreyCard>
             <DarkGreyCard>
-              <RowBetween>
+              <RowBetween align="flex-start">
                 <AutoColumn>
-                  <TYPE.main>{view === ChartView.VOL ? '24H Volume' : 'TVL'}</TYPE.main>
+                  <TYPE.main>
+                    {view === ChartView.VOL ? '24H Volume' : view === ChartView.TVL ? 'TVL' : 'Liquidity Distribution'}
+                  </TYPE.main>
                   <TYPE.label fontSize="24px" height="30px">
                     {latestValue
                       ? formatDollarAmount(latestValue)
                       : view === ChartView.VOL
                       ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                      : view === ChartView.DENSITY
+                      ? ''
                       : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}
                   </TYPE.label>
                 </AutoColumn>
@@ -237,9 +257,16 @@ export default function PoolPage({
                   <ToggleElementFree
                     isActive={view === ChartView.TVL}
                     fontSize="12px"
-                    onClick={() => (view === ChartView.VOL ? setView(ChartView.TVL) : setView(ChartView.VOL))}
+                    onClick={() => (view === ChartView.TVL ? setView(ChartView.DENSITY) : setView(ChartView.TVL))}
                   >
                     TVL
+                  </ToggleElementFree>
+                  <ToggleElementFree
+                    isActive={view === ChartView.DENSITY}
+                    fontSize="12px"
+                    onClick={() => (view === ChartView.DENSITY ? setView(ChartView.VOL) : setView(ChartView.DENSITY))}
+                  >
+                    Liq
                   </ToggleElementFree>
                 </ToggleWrapper>
               </RowBetween>
@@ -252,7 +279,9 @@ export default function PoolPage({
                   minHeight={340}
                   setValue={setLatestValue}
                 />
-              ) : null}
+              ) : (
+                <DensityChart address={address} />
+              )}
             </DarkGreyCard>
           </ContentLayout>
           <TYPE.main fontSize="24px">Transactions</TYPE.main>

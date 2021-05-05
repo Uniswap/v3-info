@@ -11,6 +11,7 @@ import { formatTime } from 'utils/date'
 import { RowFixed } from 'components/Row'
 import { ExternalLink, TYPE } from 'theme'
 import { PageButtons, Arrow } from 'components/shared'
+import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -22,19 +23,38 @@ const ResponsiveGrid = styled.div`
 
   grid-template-columns: 1.5fr repeat(5, 1fr);
 
-  @media screen and (max-width: 900px) {
-    grid-template-columns: 20px 1.5fr repeat(3, 1fr);
-    & :nth-child(4) {
+  @media screen and (max-width: 940px) {
+    grid-template-columns: 1.5fr repeat(4, 1fr);
+    & > *:nth-child(5) {
       display: none;
     }
   }
 
-  @media screen and (max-width: 700px) {
-    grid-template-columns: 20px 1.5fr repeat(3, 1fr);
-    & :nth-child(4) {
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1.5fr repeat(2, 1fr);
+    & > *:nth-child(5) {
       display: none;
     }
-    & :nth-child(5) {
+    & > *:nth-child(3) {
+      display: none;
+    }
+    & > *:nth-child(4) {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    grid-template-columns: 1.5fr repeat(1, 1fr);
+    & > *:nth-child(5) {
+      display: none;
+    }
+    & > *:nth-child(3) {
+      display: none;
+    }
+    & > *:nth-child(4) {
+      display: none;
+    }
+    & > *:nth-child(2) {
       display: none;
     }
   }
@@ -69,14 +89,18 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
   const outputTokenSymbol = transaction.amountToken0 < 0 ? transaction.token0Symbol : transaction.token1Symbol
   const inputTokenSymbol = transaction.amountToken1 < 0 ? transaction.token0Symbol : transaction.token1Symbol
 
+  const theme = useTheme()
+
   return (
     <ResponsiveGrid>
       <ExternalLink href={getEtherscanLink(4, transaction.hash, 'transaction')}>
-        {transaction.type === TransactionType.MINT
-          ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
-          : transaction.type === TransactionType.SWAP
-          ? `Swap ${inputTokenSymbol} for ${outputTokenSymbol}`
-          : `Remove ${transaction.token0Symbol} and ${transaction.token1Symbol}`}
+        <Label color={theme.blue1}>
+          {transaction.type === TransactionType.MINT
+            ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
+            : transaction.type === TransactionType.SWAP
+            ? `Swap ${inputTokenSymbol} for ${outputTokenSymbol}`
+            : `Remove ${transaction.token0Symbol} and ${transaction.token1Symbol}`}
+        </Label>
       </ExternalLink>
       <Label end={1}>{formatDollarAmount(transaction.amountUSD)}</Label>
       <Label end={1}>

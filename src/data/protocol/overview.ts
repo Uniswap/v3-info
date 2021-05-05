@@ -92,7 +92,7 @@ export function useFetchProtocolData(): {
     return {
       volumeUSD: volumeUSD,
       volumeUSDChange,
-      tvlUSD: 71466000,
+      tvlUSD: parseFloat(parsed.totalValueLockedUSD),
       tvlUSDChange,
       txCount,
       txCountChange,

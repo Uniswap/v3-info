@@ -80,9 +80,11 @@ export function useTokenDatas(
   const ethPrices = useEthPrices()
 
   const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses))
+
   const { loading: loading24, error: error24, data: data24 } = useQuery<TokenDataResponse>(
     TOKENS_BULK(parseInt(block24?.number), tokenAddresses)
   )
+
   const { loading: loading48, error: error48, data: data48 } = useQuery<TokenDataResponse>(
     TOKENS_BULK(parseInt(block48?.number), tokenAddresses)
   )

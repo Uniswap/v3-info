@@ -34,10 +34,7 @@ const TopBar = () => {
           </RowFixed>
         </AutoRow>
         <AutoRow gap="6px" style={{ justifyContent: 'flex-end' }}>
-          <StyledLink href="">V2 Analytics</StyledLink>
-          <StyledLink href="">Docs</StyledLink>
-          <StyledLink href="">Discord</StyledLink>
-          <StyledLink href="">App</StyledLink>
+          <StyledLink href="https://app.uniswap.org/#/swap">App</StyledLink>
         </AutoRow>
       </RowBetween>
     </Wrapper>

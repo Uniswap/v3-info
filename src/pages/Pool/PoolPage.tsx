@@ -162,7 +162,7 @@ export default function PoolPage({
                   </TokenButton>
                 </StyledInternalLink>
                 <StyledInternalLink to={'/tokens/' + poolData.token1.address}>
-                  <TokenButton>
+                  <TokenButton ml="10px">
                     <RowFixed>
                       <CurrencyLogo address={poolData.token1.address} size={'20px'} />
                       <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>

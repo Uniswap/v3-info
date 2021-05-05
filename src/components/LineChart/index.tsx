@@ -6,6 +6,7 @@ import Card from '../Card'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
 import usePrevious from 'hooks/usePrevious'
+import { formatDollarAmount } from 'utils/numbers'
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -91,7 +92,7 @@ const LineChart = ({
         layout: {
           backgroundColor: 'transparent',
           textColor: textColor,
-          fontFamily: 'Inter',
+          fontFamily: 'Inter var',
         },
         rightPriceScale: {
           scaleMargins: {
@@ -148,6 +149,14 @@ const LineChart = ({
       series.setData(data)
       chartCreated.timeScale().fitContent()
       chartCreated.timeScale().scrollToRealTime()
+
+      series.applyOptions({
+        priceFormat: {
+          type: 'custom',
+          minMove: 0.02,
+          formatter: (price: any) => formatDollarAmount(price),
+        },
+      })
 
       // update the title when hovering on the chart
       chartCreated.subscribeCrosshairMove(function (param) {

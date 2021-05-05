@@ -126,14 +126,16 @@ const StyledLink = styled.a`
 
   :hover {
     text-decoration: underline;
+    text-decoration: none;
   }
 
   :focus {
     outline: none;
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   :active {
+    outline: none;
     text-decoration: none;
   }
 `

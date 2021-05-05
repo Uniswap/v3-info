@@ -12,6 +12,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { feeTierPercent } from 'utils'
 import { Label, ClickableText } from 'components/Text'
 import { PageButtons, Arrow } from 'components/shared'
+import { POOL_HIDE } from '../../constants/index'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -109,7 +110,7 @@ export default function PoolTable({ poolDatas, maxItems = 10 }: { poolDatas: Poo
   const sortedPools = useMemo(() => {
     return poolDatas
       ? poolDatas
-          .filter((x) => !!x)
+          .filter((x) => !!x && !POOL_HIDE.includes(x.address))
           .sort((a, b) => {
             if (a && b) {
               return a[sortField as keyof PoolData] > b[sortField as keyof PoolData]

@@ -35,6 +35,22 @@ export const OFFSET_QUERY = gql`
   }
 `
 
+export const OFFSET_QUERY1 = gql`
+  query pools {
+    pools(where: { id: "0xf8dbd52488978a79dfe6ffbd81a01fc5948bf9ee" }) {
+      totalValueLockedUSD
+    }
+  }
+`
+
+export const OFFSET_QUERY2 = gql`
+  query pools {
+    pools(where: { id: "0x86d257cdb7bc9c0df10e84c8709697f92770b335" }) {
+      totalValueLockedUSD
+    }
+  }
+`
+
 // mocked
 export function useFetchProtocolData(): {
   loading: boolean
@@ -58,10 +74,8 @@ export function useFetchProtocolData(): {
   const parsed24 = data24?.factories?.[0]
   const parsed48 = data48?.factories?.[0]
 
-  const { data: offsetData } = useQuery(OFFSET_QUERY)
-
   const formattedData: ProtocolData | undefined = useMemo(() => {
-    if (anyError || anyLoading || !parsed || !offsetData) {
+    if (anyError || anyLoading || !parsed) {
       return undefined
     }
     // case where hasnt existed yet
@@ -78,12 +92,12 @@ export function useFetchProtocolData(): {
     return {
       volumeUSD: volumeUSD,
       volumeUSDChange,
-      tvlUSD: parseFloat(parsed.totalValueLockedUSD) - parseFloat(offsetData?.pools?.[0]?.totalValueLockedUSD) ?? 0,
+      tvlUSD: 71466000,
       tvlUSDChange,
       txCount,
       txCountChange,
     }
-  }, [anyError, anyLoading, offsetData, parsed, parsed24, parsed48])
+  }, [anyError, anyLoading, parsed, parsed24, parsed48])
 
   return {
     loading: anyLoading,

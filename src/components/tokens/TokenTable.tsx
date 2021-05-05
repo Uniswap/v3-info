@@ -14,6 +14,7 @@ import { Label, ClickableText } from '../Text'
 import { PageButtons, Arrow } from 'components/shared'
 import HoverInlineText from '../HoverInlineText'
 import useTheme from 'hooks/useTheme'
+import { TOKEN_HIDE } from '../../constants/index'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -150,7 +151,7 @@ export default function TokenTable({
   const sortedTokens = useMemo(() => {
     return tokenDatas
       ? tokenDatas
-          .filter((x) => !!x)
+          .filter((x) => !!x && !TOKEN_HIDE.includes(x.address))
           .sort((a, b) => {
             if (a && b) {
               return a[sortField as keyof TokenData] > b[sortField as keyof TokenData]

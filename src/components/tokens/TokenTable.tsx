@@ -11,7 +11,7 @@ import { RowFixed } from 'components/Row'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { Label, ClickableText } from '../Text'
-import { PageButtons, Arrow } from 'components/shared'
+import { PageButtons, Arrow, Break } from 'components/shared'
 import HoverInlineText from '../HoverInlineText'
 import useTheme from 'hooks/useTheme'
 import { TOKEN_HIDE } from '../../constants/index'
@@ -23,6 +23,7 @@ const Wrapper = styled(DarkGreyCard)`
 const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
+  align-items: center;
 
   grid-template-columns: 20px 3fr repeat(4, 1fr);
 
@@ -133,6 +134,9 @@ export default function TokenTable({
   tokenDatas: TokenData[] | undefined
   maxItems?: number
 }) {
+  // theming
+  const theme = useTheme()
+
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
@@ -189,30 +193,38 @@ export default function TokenTable({
   return (
     <Wrapper>
       {sortedTokens.length > 0 ? (
-        <AutoColumn gap="lg">
+        <AutoColumn gap="16px">
           <ResponsiveGrid>
-            <Label>#</Label>
-            <ClickableText onClick={() => handleSort(SORT_FIELD.name)}>Name {arrow(SORT_FIELD.name)}</ClickableText>
-            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSD)}>
+            <Label color={theme.text2}>#</Label>
+            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.name)}>
+              Name {arrow(SORT_FIELD.name)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.priceUSD)}>
               Price {arrow(SORT_FIELD.priceUSD)}
             </ClickableText>
-            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChange)}>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChange)}>
               24Hr {arrow(SORT_FIELD.priceUSDChange)}
             </ClickableText>
             {/* <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChangeWeek)}>
             7d {arrow(SORT_FIELD.priceUSDChangeWeek)}
           </ClickableText> */}
-            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
               Volume {arrow(SORT_FIELD.volumeUSD)}
             </ClickableText>
-            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
           </ResponsiveGrid>
 
+          <Break />
           {sortedTokens.map((data, i) => {
             if (data) {
-              return <DataRow index={(page - 1) * MAX_ITEMS + i} key={i} tokenData={data} />
+              return (
+                <>
+                  <DataRow index={(page - 1) * MAX_ITEMS + i} key={i} tokenData={data} />
+                  <Break />
+                </>
+              )
             }
             return null
           })}

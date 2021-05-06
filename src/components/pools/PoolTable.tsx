@@ -11,8 +11,9 @@ import { PoolData } from 'state/pools/reducer'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { feeTierPercent } from 'utils'
 import { Label, ClickableText } from 'components/Text'
-import { PageButtons, Arrow } from 'components/shared'
+import { PageButtons, Arrow, Break } from 'components/shared'
 import { POOL_HIDE } from '../../constants/index'
+import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -21,6 +22,7 @@ const Wrapper = styled(DarkGreyCard)`
 const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
+  align-items: center;
 
   grid-template-columns: 20px 2.5fr repeat(3, 1fr);
 
@@ -59,6 +61,7 @@ const LinkWrapper = styled(Link)`
   text-decoration: none;
   :hover {
     cursor: pointer;
+    opacity: 0.7;
   }
 `
 
@@ -73,8 +76,8 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   return (
     <LinkWrapper to={'/pools/' + poolData.address}>
       <ResponsiveGrid>
-        <Label>{index + 1}</Label>
-        <Label>
+        <Label fontWeight={400}>{index + 1}</Label>
+        <Label fontWeight={400}>
           <RowFixed>
             <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} />
             <TYPE.label ml="8px">
@@ -83,9 +86,15 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
             <GreyBadge ml="10px">{feeTierPercent(poolData.feeTier)}</GreyBadge>
           </RowFixed>
         </Label>
-        <Label end={1}>{formatDollarAmount(poolData.tvlUSD)}</Label>
-        <Label end={1}>{formatDollarAmount(poolData.volumeUSD)}</Label>
-        <Label end={1}>{formatDollarAmount(poolData.volumeUSDWeek)}</Label>
+        <Label end={1} fontWeight={400}>
+          {formatDollarAmount(poolData.tvlUSD)}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {formatDollarAmount(poolData.volumeUSD)}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {formatDollarAmount(poolData.volumeUSDWeek)}
+        </Label>
       </ResponsiveGrid>
     </LinkWrapper>
   )
@@ -94,6 +103,9 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
 const MAX_ITEMS = 10
 
 export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: PoolData[]; maxItems?: number }) {
+  // theming
+  const theme = useTheme()
+
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
@@ -148,25 +160,33 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   return (
     <Wrapper>
       {sortedPools.length > 0 ? (
-        <AutoColumn gap="lg">
+        <AutoColumn gap="16px">
           <ResponsiveGrid>
-            <Label>#</Label>
-            <ClickableText onClick={() => handleSort(SORT_FIELD.feeTier)}>
+            <Label color={theme.text2}>#</Label>
+            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
               Pool {arrow(SORT_FIELD.feeTier)}
             </ClickableText>
-            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
-            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
               24hr Volume {arrow(SORT_FIELD.volumeUSD)}
             </ClickableText>
-            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
               7d Volume {arrow(SORT_FIELD.volumeUSDWeek)}
             </ClickableText>
           </ResponsiveGrid>
+
+          <Break />
+
           {sortedPools.map((poolData, i) => {
             if (poolData) {
-              return <DataRow index={(page - 1) * MAX_ITEMS + i} key={i} poolData={poolData} />
+              return (
+                <>
+                  <DataRow index={(page - 1) * MAX_ITEMS + i} key={i + 'poolItem'} poolData={poolData} />
+                  <Break />
+                </>
+              )
             }
             return null
           })}

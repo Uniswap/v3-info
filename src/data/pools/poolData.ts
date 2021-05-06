@@ -108,19 +108,19 @@ export function usePoolDatas(
   })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<PoolDataResponse>(
-    POOLS_BULK(8482286, poolAddresses),
+    POOLS_BULK(block24?.number, poolAddresses),
     {
       fetchPolicy: 'network-only',
     }
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(
-    POOLS_BULK(8477286, poolAddresses),
+    POOLS_BULK(block48?.number, poolAddresses),
     {
       fetchPolicy: 'network-only',
     }
   )
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponse>(
-    POOLS_BULK(8417286, poolAddresses),
+    POOLS_BULK(blockWeek?.number, poolAddresses),
     {
       fetchPolicy: 'network-only',
     }

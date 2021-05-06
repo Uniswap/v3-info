@@ -130,12 +130,12 @@ export default function PoolPage({
                 poolData.feeTier
               )} `}</TYPE.label>
             </AutoRow>
-            <AutoRow gap="10px" justify="flex-end">
+            <RowFixed gap="10px" align="center">
               <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
               <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
-                <ExternalLink stroke={theme.text2} />
+                <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
               </StyledExternalLink>
-            </AutoRow>
+            </RowFixed>
           </RowBetween>
           <ResponsiveRow align="flex-end">
             <AutoColumn gap="lg">
@@ -180,7 +180,7 @@ export default function PoolPage({
                 <StyledExternalLink
                   href={`https://app.uniswap.org/#/add/${poolData.token0.address}/${poolData.token1.address}/${poolData.feeTier}`}
                 >
-                  <ButtonGray width="170px" mr="12px">
+                  <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
                     <RowBetween>
                       <Download size={24} />
                       <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
@@ -190,7 +190,9 @@ export default function PoolPage({
                 <StyledExternalLink
                   href={`https://app.uniswap.org/#/swap?inputCurrency=${poolData.token0.address}&outputCurrency=${poolData.token1.address}`}
                 >
-                  <ButtonPrimary width="100px">Trade</ButtonPrimary>
+                  <ButtonPrimary width="100px" style={{ height: '44px' }}>
+                    Trade
+                  </ButtonPrimary>
                 </StyledExternalLink>
               </RowFixed>
             </AutoColumn>

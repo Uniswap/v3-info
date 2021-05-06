@@ -39,19 +39,19 @@ const Base = styled(RebassButton)<{
   }
 `
 
-export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => theme.primary1};
+export const ButtonPrimary = styled(Base)<{ bgColor?: string }>`
+  background-color: ${({ theme, bgColor }) => bgColor ?? theme.primary1};
   color: white;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme, bgColor }) => darken(0.05, bgColor ?? theme.primary1)};
+    background-color: ${({ theme, bgColor }) => darken(0.05, bgColor ?? theme.primary1)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    background-color: ${({ theme, bgColor }) => darken(0.05, bgColor ?? theme.primary1)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme, bgColor }) => darken(0.1, bgColor ?? theme.primary1)};
+    background-color: ${({ theme, bgColor }) => darken(0.1, bgColor ?? theme.primary1)};
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
@@ -99,14 +99,18 @@ export const ButtonGray = styled(Base)`
   color: ${({ theme }) => theme.text2};
   font-size: 16px;
   font-weight: 500;
+  outline: none;
   &:focus {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg4)};
+    outline: none;
   }
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg4)};
+    outline: none;
   }
   &:active {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.bg4)};
+    outline: none;
   }
 `
 

@@ -104,6 +104,7 @@ const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 1.5fr repeat(3, 1fr);
+  align-items: center;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 1fr;
   `};

@@ -32,10 +32,11 @@ import BarChart from 'components/BarChart'
 import CandleChart from 'components/CandleChart'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedTokens } from 'state/user/hooks'
+import { marginLeft } from 'styled-system'
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;
-  line-height: 1;
+  line-height: 0.8;
 `
 
 const ContentLayout = styled.div`
@@ -139,56 +140,62 @@ export default function TokenPage({
     <PageWrapper>
       <ThemedBackground backgroundColor={backgroundColor} />
       {tokenData ? (
-        <AutoColumn gap="24px">
-          <RowBetween>
-            <AutoRow gap="4px">
-              <StyledInternalLink to={'/'}>
-                <TYPE.main>{`Home > `}</TYPE.main>
-              </StyledInternalLink>
-              <StyledInternalLink to={'/tokens'}>
-                <TYPE.label>{` Tokens `}</TYPE.label>
-              </StyledInternalLink>
-              <TYPE.main>{` > `}</TYPE.main>
-              <TYPE.label>{` ${tokenData.symbol} `}</TYPE.label>
-              <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
-                <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
-              </StyledExternalLink>
-            </AutoRow>
-            <AutoRow gap="10px" justify="flex-end">
-              <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
-              <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
-                <ExternalLink stroke={theme.text2} />
-              </StyledExternalLink>
-            </AutoRow>
-          </RowBetween>
-          <ResponsiveRow align="flex-end">
-            <AutoColumn gap="md">
+        <AutoColumn gap="16px">
+          <AutoColumn gap="lg">
+            <RowBetween>
               <AutoRow gap="4px">
-                <CurrencyLogo address={address} />
-                <TYPE.label fontSize="20px">{tokenData.name}</TYPE.label>
-                <TYPE.main fontSize="20px">{tokenData.symbol}</TYPE.main>
+                <StyledInternalLink to={'/'}>
+                  <TYPE.main>{`Home > `}</TYPE.main>
+                </StyledInternalLink>
+                <StyledInternalLink to={'/tokens'}>
+                  <TYPE.label>{` Tokens `}</TYPE.label>
+                </StyledInternalLink>
+                <TYPE.main>{` > `}</TYPE.main>
+                <TYPE.label>{` ${tokenData.symbol} `}</TYPE.label>
+                <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+                  <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
+                </StyledExternalLink>
               </AutoRow>
-              <RowFlat>
-                <PriceText mr="10px"> {formatDollarAmount(tokenData.priceUSD)}</PriceText>
-                (<Percent value={tokenData.priceUSDChange} />)
-              </RowFlat>
-            </AutoColumn>
-            <RowFixed>
-              <StyledExternalLink href={`https://app.uniswap.org/#/add/${address}`}>
-                <ButtonGray width="170px" mr="12px">
-                  <RowBetween>
-                    <Download size={24} />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
-                  </RowBetween>
-                </ButtonGray>
-              </StyledExternalLink>
-              <StyledExternalLink href={`https://app.uniswap.org/#/swap?inputCurrency=${address}`}>
-                <ButtonPrimary width="100px" style={{ backgroundColor: backgroundColor }}>
-                  Trade
-                </ButtonPrimary>
-              </StyledExternalLink>
-            </RowFixed>
-          </ResponsiveRow>
+              <RowFixed gap="10px" align="center">
+                <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
+                <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+                  <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
+                </StyledExternalLink>
+              </RowFixed>
+            </RowBetween>
+            <ResponsiveRow align="flex-end">
+              <AutoColumn gap="md">
+                <RowFixed gap="4px">
+                  <CurrencyLogo address={address} />
+                  <TYPE.label ml={'12px'} fontSize="20px">
+                    {tokenData.name}
+                  </TYPE.label>
+                  <TYPE.main ml={'12px'} fontSize="20px">
+                    ({tokenData.symbol})
+                  </TYPE.main>
+                </RowFixed>
+                <RowFlat style={{ marginTop: '8px' }}>
+                  <PriceText mr="10px"> {formatDollarAmount(tokenData.priceUSD)}</PriceText>
+                  (<Percent value={tokenData.priceUSDChange} />)
+                </RowFlat>
+              </AutoColumn>
+              <RowFixed>
+                <StyledExternalLink href={`https://app.uniswap.org/#/add/${address}`}>
+                  <ButtonGray width="170px" mr="12px" height={'100%'} style={{ height: '44px' }}>
+                    <RowBetween>
+                      <Download size={24} />
+                      <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
+                    </RowBetween>
+                  </ButtonGray>
+                </StyledExternalLink>
+                <StyledExternalLink href={`https://app.uniswap.org/#/swap?inputCurrency=${address}`}>
+                  <ButtonPrimary width="100px" bgColor={backgroundColor} style={{ height: '44px' }}>
+                    Trade
+                  </ButtonPrimary>
+                </StyledExternalLink>
+              </RowFixed>
+            </ResponsiveRow>
+          </AutoColumn>
           <ContentLayout>
             <DarkGreyCard>
               <AutoColumn gap="lg">
@@ -262,11 +269,11 @@ export default function TokenPage({
               ) : null}
             </DarkGreyCard>
           </ContentLayout>
-          <TYPE.main fontSize="24px">Pools</TYPE.main>
+          <TYPE.main>Pools</TYPE.main>
           <DarkGreyCard>
             <PoolTable poolDatas={poolDatas} />
           </DarkGreyCard>
-          <TYPE.main fontSize="24px">Transactions</TYPE.main>
+          <TYPE.main>Transactions</TYPE.main>
           <DarkGreyCard>
             {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
           </DarkGreyCard>

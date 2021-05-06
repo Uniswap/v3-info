@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const PageButtons = styled.div`
   width: 100%;
   display: flex;
+  align-items: center;
   justify-content: center;
   margin-top: 0.2em;
   margin-bottom: 0.5em;
@@ -16,4 +17,10 @@ export const Arrow = styled.div<{ faded: boolean }>`
   :hover {
     cursor: pointer;
   }
+`
+
+export const Break = styled.div`
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg1};
+  width: 100%;
 `

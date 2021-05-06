@@ -99,6 +99,7 @@ const LineChart = ({
             top: 0.1,
             bottom: 0.1,
           },
+          drawTicks: false,
           borderVisible: false,
         },
         timeScale: {

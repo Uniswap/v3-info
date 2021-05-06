@@ -123,10 +123,14 @@ const StyledLink = styled.a`
   cursor: pointer;
   color: ${({ theme }) => theme.primary1};
   font-weight: 500;
+  display: flex;
+  flex-direction: center;
+  align-items: center;
 
   :hover {
     text-decoration: underline;
     text-decoration: none;
+    opacity: 0.7;
   }
 
   :focus {

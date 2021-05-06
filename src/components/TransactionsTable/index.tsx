@@ -10,7 +10,7 @@ import { Transaction, TransactionType } from 'types'
 import { formatTime } from 'utils/date'
 import { RowFixed } from 'components/Row'
 import { ExternalLink, TYPE } from 'theme'
-import { PageButtons, Arrow } from 'components/shared'
+import { PageButtons, Arrow, Break } from 'components/shared'
 import useTheme from 'hooks/useTheme'
 import HoverInlineText from 'components/HoverInlineText'
 
@@ -21,6 +21,7 @@ const Wrapper = styled(DarkGreyCard)`
 const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
+  align-items: center;
 
   grid-template-columns: 1.5fr repeat(5, 1fr);
 
@@ -95,7 +96,7 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
   return (
     <ResponsiveGrid>
       <ExternalLink href={getEtherscanLink(1, transaction.hash, 'transaction')}>
-        <Label color={theme.blue1}>
+        <Label color={theme.blue1} fontWeight={400}>
           {transaction.type === TransactionType.MINT
             ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
             : transaction.type === TransactionType.SWAP
@@ -103,17 +104,23 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
             : `Remove ${transaction.token0Symbol} and ${transaction.token1Symbol}`}
         </Label>
       </ExternalLink>
-      <Label end={1}>{formatDollarAmount(transaction.amountUSD)}</Label>
-      <Label end={1}>
+      <Label end={1} fontWeight={400}>
+        {formatDollarAmount(transaction.amountUSD)}
+      </Label>
+      <Label end={1} fontWeight={400}>
         <HoverInlineText text={`${formatAmount(abs0)}  ${transaction.token0Symbol}`} maxCharacters={16} />
       </Label>
-      <Label end={1}>
+      <Label end={1} fontWeight={400}>
         <HoverInlineText text={`${formatAmount(abs1)}  ${transaction.token1Symbol}`} maxCharacters={16} />
       </Label>
       <ExternalLink href={getEtherscanLink(1, transaction.sender, 'address')}>
-        <Label end={1}>{shortenAddress(transaction.sender)}</Label>
+        <Label end={1} fontWeight={400}>
+          {shortenAddress(transaction.sender)}
+        </Label>
       </ExternalLink>
-      <Label end={1}> {formatTime(transaction.timestamp)}</Label>
+      <Label end={1} fontWeight={400}>
+        {formatTime(transaction.timestamp)}
+      </Label>
     </ResponsiveGrid>
   )
 }
@@ -125,6 +132,9 @@ export default function TransactionTable({
   transactions: Transaction[]
   maxItems?: number
 }) {
+  // theming
+  const theme = useTheme()
+
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.timestamp)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
@@ -185,7 +195,7 @@ export default function TransactionTable({
 
   return (
     <Wrapper>
-      <AutoColumn gap="lg">
+      <AutoColumn gap="16px">
         <ResponsiveGrid>
           <RowFixed>
             <SortText
@@ -221,32 +231,38 @@ export default function TransactionTable({
               Removes
             </SortText>
           </RowFixed>
-          <ClickableText onClick={() => handleSort(SORT_FIELD.amountUSD)} end={1}>
+          <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.amountUSD)} end={1}>
             Total Value {arrow(SORT_FIELD.amountUSD)}
           </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.amountToken0)}>
+          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken0)}>
             Token Amount {arrow(SORT_FIELD.amountToken0)}
           </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.amountToken1)}>
+          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken1)}>
             Token Amount {arrow(SORT_FIELD.amountToken1)}
           </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.sender)}>
+          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.sender)}>
             Account {arrow(SORT_FIELD.sender)}
           </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.timestamp)}>
+          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.timestamp)}>
             Time {arrow(SORT_FIELD.timestamp)}
           </ClickableText>
         </ResponsiveGrid>
+        <Break />
+
         {sortedTransactions.map((t, i) => {
           if (t) {
-            return <DataRow key={i} transaction={t} />
+            return (
+              <>
+                <DataRow key={i} transaction={t} /> <Break />
+              </>
+            )
           }
           return null
         })}
         {sortedTransactions.length === 0 ? <TYPE.main>No Transactions</TYPE.main> : undefined}
         <PageButtons>
           <div
-            onClick={(e) => {
+            onClick={() => {
               setPage(page === 1 ? page : page - 1)
             }}
           >
@@ -254,7 +270,7 @@ export default function TransactionTable({
           </div>
           <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
           <div
-            onClick={(e) => {
+            onClick={() => {
               setPage(page === maxPage ? page : page + 1)
             }}
           >

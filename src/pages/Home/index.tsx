@@ -95,8 +95,8 @@ export default function Home() {
   return (
     <PageWrapper>
       <ThemedBackgroundGlobal backgroundColor={'#fc077d'} />
-      <AutoColumn gap="30px">
-        <TYPE.mediumHeader>Uniswap Overview</TYPE.mediumHeader>
+      <AutoColumn gap="16px">
+        <TYPE.main>Uniswap Overview</TYPE.main>
         <ResponsiveRow>
           <ChartWrapper>
             <LineChart
@@ -155,10 +155,8 @@ export default function Home() {
           </DarkGreyCard>
         </HideSmall>
         <RowBetween>
-          <TYPE.mediumHeader>Top Tokens</TYPE.mediumHeader>
-          <StyledInternalLink to="/tokens" fontSize="20px">
-            Explore
-          </StyledInternalLink>
+          <TYPE.main>Top Tokens</TYPE.main>
+          <StyledInternalLink to="/tokens">Explore</StyledInternalLink>
         </RowBetween>
         {/* <OutlineCard>
           <AutoColumn gap="lg">
@@ -168,10 +166,8 @@ export default function Home() {
         </OutlineCard> */}
         <TokenTable tokenDatas={formattedTokens} />
         <RowBetween>
-          <TYPE.mediumHeader>Top Pools</TYPE.mediumHeader>
-          <StyledInternalLink to="/pools" fontSize="20px">
-            Explore
-          </StyledInternalLink>
+          <TYPE.main>Top Pools</TYPE.main>
+          <StyledInternalLink to="/pools">Explore</StyledInternalLink>
         </RowBetween>
         {/* <OutlineCard>
           <AutoColumn gap="lg">
@@ -181,10 +177,7 @@ export default function Home() {
         </OutlineCard> */}
         <PoolTable poolDatas={poolDatas} />
         <RowBetween>
-          <TYPE.mediumHeader>Transaction</TYPE.mediumHeader>
-          <StyledInternalLink to="/transactions" fontSize="20px">
-            Explore
-          </StyledInternalLink>
+          <TYPE.main>Transactions</TYPE.main>
         </RowBetween>
         {transactions ? <TransactionsTable transactions={transactions} /> : null}
       </AutoColumn>

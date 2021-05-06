@@ -14,6 +14,6 @@ export const formatAmount = (num: number | undefined, digits = 2) => {
   if (num < 0.001) {
     return '<0.001'
   }
-
-  return num.toFixed(digits)
+  const nf = new Intl.NumberFormat()
+  return nf.format(parseFloat(num.toFixed(num > 1000 ? 0 : digits)))
 }

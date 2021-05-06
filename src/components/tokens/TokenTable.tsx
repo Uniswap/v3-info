@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { ExtraSmallOnly, HideExtraSmall, TYPE } from 'theme'
 import { DarkGreyCard } from 'components/Card'
 import { TokenData } from '../../state/tokens/reducer'
-import Loader from 'components/Loader'
+import Loader, { LoadingRows } from 'components/Loader'
 import { Link } from 'react-router-dom'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -24,24 +24,24 @@ const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
 
-  grid-template-columns: 20px 2.5fr repeat(5, 1fr);
+  grid-template-columns: 20px 3fr repeat(4, 1fr);
 
   @media screen and (max-width: 900px) {
-    grid-template-columns: 20px 1.5fr repeat(4, 1fr);
+    grid-template-columns: 20px 1.5fr repeat(3, 1fr);
     & :nth-child(4) {
       display: none;
     }
   }
 
   @media screen and (max-width: 800px) {
-    grid-template-columns: 20px 1.5fr repeat(3, 1fr);
+    grid-template-columns: 20px 1.5fr repeat(2, 1fr);
     & :nth-child(5) {
       display: none;
     }
   }
 
   @media screen and (max-width: 670px) {
-    grid-template-columns: 1.5fr repeat(2, 1fr);
+    grid-template-columns: 1.5fr repeat(1, 1fr);
     > *:first-child {
       display: none;
     }
@@ -101,9 +101,9 @@ const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) 
         <Label end={1} fontWeight={400}>
           <Percent value={tokenData.priceUSDChange} fontWeight={400} />
         </Label>
-        <Label end={1} fontWeight={400}>
+        {/* <Label end={1} fontWeight={400}>
           <Percent value={tokenData.priceUSDChangeWeek} fontWeight={400} />
-        </Label>
+        </Label> */}
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(tokenData.volumeUSD)}
         </Label>
@@ -124,9 +124,11 @@ const SORT_FIELD = {
   priceUSDChangeWeek: 'priceUSDChangeWeek',
 }
 
+const MAX_ITEMS = 10
+
 export default function TokenTable({
   tokenDatas,
-  maxItems = 10,
+  maxItems = MAX_ITEMS,
 }: {
   tokenDatas: TokenData[] | undefined
   maxItems?: number
@@ -186,50 +188,68 @@ export default function TokenTable({
 
   return (
     <Wrapper>
-      <AutoColumn gap="lg">
-        <ResponsiveGrid>
-          <Label>#</Label>
-          <ClickableText onClick={() => handleSort(SORT_FIELD.name)}>Name {arrow(SORT_FIELD.name)}</ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSD)}>
-            Price {arrow(SORT_FIELD.priceUSD)}
-          </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChange)}>
-            24Hr {arrow(SORT_FIELD.priceUSDChange)}
-          </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChangeWeek)}>
+      {sortedTokens.length > 0 ? (
+        <AutoColumn gap="lg">
+          <ResponsiveGrid>
+            <Label>#</Label>
+            <ClickableText onClick={() => handleSort(SORT_FIELD.name)}>Name {arrow(SORT_FIELD.name)}</ClickableText>
+            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSD)}>
+              Price {arrow(SORT_FIELD.priceUSD)}
+            </ClickableText>
+            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChange)}>
+              24Hr {arrow(SORT_FIELD.priceUSDChange)}
+            </ClickableText>
+            {/* <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChangeWeek)}>
             7d {arrow(SORT_FIELD.priceUSDChangeWeek)}
-          </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
-            Volume {arrow(SORT_FIELD.volumeUSD)}
-          </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
-            TVL {arrow(SORT_FIELD.tvlUSD)}
-          </ClickableText>
-        </ResponsiveGrid>
-        {sortedTokens.map((data, i) => {
-          if (data) {
-            return <DataRow index={i} key={i} tokenData={data} />
-          }
-          return null
-        })}
-        <PageButtons>
-          <div
-            onClick={() => {
-              setPage(page === 1 ? page : page - 1)
-            }}
-          >
-            <Arrow faded={page === 1 ? true : false}>←</Arrow>
-          </div>
-          <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
-          <div
-            onClick={() => {
-              setPage(page === maxPage ? page : page + 1)
-            }}
-          >
-            <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-          </div>
-        </PageButtons>
-      </AutoColumn>
+          </ClickableText> */}
+            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+              Volume {arrow(SORT_FIELD.volumeUSD)}
+            </ClickableText>
+            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+              TVL {arrow(SORT_FIELD.tvlUSD)}
+            </ClickableText>
+          </ResponsiveGrid>
+
+          {sortedTokens.map((data, i) => {
+            if (data) {
+              return <DataRow index={(page - 1) * MAX_ITEMS + i} key={i} tokenData={data} />
+            }
+            return null
+          })}
+          <PageButtons>
+            <div
+              onClick={() => {
+                setPage(page === 1 ? page : page - 1)
+              }}
+            >
+              <Arrow faded={page === 1 ? true : false}>←</Arrow>
+            </div>
+            <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
+            <div
+              onClick={() => {
+                setPage(page === maxPage ? page : page + 1)
+              }}
+            >
+              <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+            </div>
+          </PageButtons>
+        </AutoColumn>
+      ) : (
+        <LoadingRows>
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </LoadingRows>
+      )}
     </Wrapper>
   )
 }

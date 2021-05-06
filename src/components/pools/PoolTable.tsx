@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { TYPE } from 'theme'
 import { DarkGreyCard, GreyBadge } from 'components/Card'
-import Loader from 'components/Loader'
+import Loader, { LoadingRows } from 'components/Loader'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import { formatDollarAmount } from 'utils/numbers'
@@ -22,7 +22,7 @@ const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
 
-  grid-template-columns: 20px 1.5fr repeat(3, 1fr);
+  grid-template-columns: 20px 2.5fr repeat(3, 1fr);
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
@@ -42,7 +42,7 @@ const ResponsiveGrid = styled.div`
   }
 
   @media screen and (max-width: 480px) {
-    grid-template-columns: 1.5fr repeat(1, 1fr);
+    grid-template-columns: 2.5fr repeat(1, 1fr);
     > *:nth-child(1) {
       display: none;
     }
@@ -91,7 +91,9 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   )
 }
 
-export default function PoolTable({ poolDatas, maxItems = 10 }: { poolDatas: PoolData[]; maxItems?: number }) {
+const MAX_ITEMS = 10
+
+export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: PoolData[]; maxItems?: number }) {
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
@@ -145,44 +147,63 @@ export default function PoolTable({ poolDatas, maxItems = 10 }: { poolDatas: Poo
 
   return (
     <Wrapper>
-      <AutoColumn gap="lg">
-        <ResponsiveGrid>
-          <Label>#</Label>
-          <ClickableText onClick={() => handleSort(SORT_FIELD.feeTier)}>Pool {arrow(SORT_FIELD.feeTier)}</ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
-            TVL {arrow(SORT_FIELD.tvlUSD)}
-          </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
-            24hr Volume {arrow(SORT_FIELD.volumeUSD)}
-          </ClickableText>
-          <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
-            7d Volume {arrow(SORT_FIELD.volumeUSDWeek)}
-          </ClickableText>
-        </ResponsiveGrid>
-        {sortedPools.map((poolData, i) => {
-          if (poolData) {
-            return <DataRow index={i} key={i} poolData={poolData} />
-          }
-          return null
-        })}
-        <PageButtons>
-          <div
-            onClick={() => {
-              setPage(page === 1 ? page : page - 1)
-            }}
-          >
-            <Arrow faded={page === 1 ? true : false}>←</Arrow>
-          </div>
-          <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
-          <div
-            onClick={() => {
-              setPage(page === maxPage ? page : page + 1)
-            }}
-          >
-            <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-          </div>
-        </PageButtons>
-      </AutoColumn>
+      {sortedPools.length > 0 ? (
+        <AutoColumn gap="lg">
+          <ResponsiveGrid>
+            <Label>#</Label>
+            <ClickableText onClick={() => handleSort(SORT_FIELD.feeTier)}>
+              Pool {arrow(SORT_FIELD.feeTier)}
+            </ClickableText>
+            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+              TVL {arrow(SORT_FIELD.tvlUSD)}
+            </ClickableText>
+            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+              24hr Volume {arrow(SORT_FIELD.volumeUSD)}
+            </ClickableText>
+            <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
+              7d Volume {arrow(SORT_FIELD.volumeUSDWeek)}
+            </ClickableText>
+          </ResponsiveGrid>
+          {sortedPools.map((poolData, i) => {
+            if (poolData) {
+              return <DataRow index={(page - 1) * MAX_ITEMS + i} key={i} poolData={poolData} />
+            }
+            return null
+          })}
+          <PageButtons>
+            <div
+              onClick={() => {
+                setPage(page === 1 ? page : page - 1)
+              }}
+            >
+              <Arrow faded={page === 1 ? true : false}>←</Arrow>
+            </div>
+            <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
+            <div
+              onClick={() => {
+                setPage(page === maxPage ? page : page + 1)
+              }}
+            >
+              <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+            </div>
+          </PageButtons>
+        </AutoColumn>
+      ) : (
+        <LoadingRows>
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </LoadingRows>
+      )}
     </Wrapper>
   )
 }

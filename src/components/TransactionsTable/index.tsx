@@ -12,6 +12,7 @@ import { RowFixed } from 'components/Row'
 import { ExternalLink, TYPE } from 'theme'
 import { PageButtons, Arrow } from 'components/shared'
 import useTheme from 'hooks/useTheme'
+import HoverInlineText from 'components/HoverInlineText'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -104,10 +105,10 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
       </ExternalLink>
       <Label end={1}>{formatDollarAmount(transaction.amountUSD)}</Label>
       <Label end={1}>
-        {formatAmount(abs0)} {transaction.token0Symbol}
+        <HoverInlineText text={`${formatAmount(abs0)}  ${transaction.token0Symbol}`} maxCharacters={16} />
       </Label>
       <Label end={1}>
-        {formatAmount(abs1)} {transaction.token1Symbol}
+        <HoverInlineText text={`${formatAmount(abs1)}  ${transaction.token1Symbol}`} maxCharacters={16} />
       </Label>
       <ExternalLink href={getEtherscanLink(1, transaction.sender, 'address')}>
         <Label end={1}>{shortenAddress(transaction.sender)}</Label>
@@ -242,6 +243,7 @@ export default function TransactionTable({
           }
           return null
         })}
+        {sortedTransactions.length === 0 ? <TYPE.main>No Transactions</TYPE.main> : undefined}
         <PageButtons>
           <div
             onClick={(e) => {

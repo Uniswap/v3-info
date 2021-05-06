@@ -104,7 +104,7 @@ export function useTokenDatas(
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)
-  const anyLoading = Boolean(loading || loading24 || loading48 || loadingWeek)
+  const anyLoading = Boolean(loading || loading24 || loading48 || loadingWeek || !blocks)
 
   if (!ethPrices) {
     return {
@@ -177,12 +177,15 @@ export function useTokenDatas(
     const priceUSD = current ? parseFloat(current.derivedETH) * ethPrices.current : 0
     const priceUSDOneDay = oneDay ? parseFloat(oneDay.derivedETH) * ethPrices.oneDay : 0
     const priceUSDWeek = week ? parseFloat(week.derivedETH) * ethPrices.week : 0
+
     const priceUSDChange =
       priceUSD && priceUSDOneDay ? getPercentChange(priceUSD.toString(), priceUSDOneDay.toString()) : 0
+
     const priceUSDChangeWeek =
       priceUSD && priceUSDWeek ? getPercentChange(priceUSD.toString(), priceUSDWeek.toString()) : 0
 
-    const txCount = current && oneDay ? parseFloat(current.txCount) - parseFloat(oneDay.txCount) : 0
+    const txCount =
+      current && oneDay ? parseFloat(current.txCount) - parseFloat(oneDay.txCount) : parseFloat(current.txCount)
 
     if (current) {
       accum[address] = {

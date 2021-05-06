@@ -5,7 +5,7 @@ import { formatTokenSymbol } from 'utils/tokens'
 
 const POOL_TRANSACTIONS = gql`
   query transactions($address: Bytes!) {
-    mints(first: 500, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
+    mints(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
       timestamp
       transaction {
         id
@@ -27,7 +27,7 @@ const POOL_TRANSACTIONS = gql`
       amount1
       amountUSD
     }
-    swaps(first: 500, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
+    swaps(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
       timestamp
       transaction {
         id
@@ -47,7 +47,7 @@ const POOL_TRANSACTIONS = gql`
       amount1
       amountUSD
     }
-    burns(first: 500, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
+    burns(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
       timestamp
       transaction {
         id
@@ -177,7 +177,7 @@ export async function fetchPoolTransactions(
   })
   const burns = data.burns.map((m) => {
     return {
-      type: TransactionType.MINT,
+      type: TransactionType.BURN,
       hash: m.transaction.id,
       timestamp: m.timestamp,
       sender: m.owner,
@@ -193,7 +193,7 @@ export async function fetchPoolTransactions(
 
   const swaps = data.swaps.map((m) => {
     return {
-      type: TransactionType.MINT,
+      type: TransactionType.SWAP,
       hash: m.transaction.id,
       timestamp: m.timestamp,
       sender: m.origin,

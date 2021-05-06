@@ -1,4 +1,4 @@
-import { get2DayChange, getPercentChange } from '../../utils/data'
+import { getPercentChange } from '../../utils/data'
 import { ProtocolData } from '../../state/protocol/reducer'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
@@ -58,26 +58,18 @@ export function useFetchProtocolData(): {
   data: ProtocolData | undefined
 } {
   // get blocks from historic timestamps
-  const [t24, t48, tWeek] = useDeltaTimestamps()
-  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek])
-  const [block24, block48, blockWeek] = blocks ?? []
+  const [t24, t48] = useDeltaTimestamps()
+  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48])
+  const [block24, block48] = blocks ?? []
 
   // fetch all data
-  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), {
-    fetchPolicy: 'network-only',
-  })
+  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA())
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block24?.number ?? undefined),
-    {
-      fetchPolicy: 'network-only',
-    }
+    GLOBAL_DATA(block24?.number ?? undefined)
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block48?.number ?? undefined),
-    {
-      fetchPolicy: 'network-only',
-    }
+    GLOBAL_DATA(block48?.number ?? undefined)
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError)
@@ -88,32 +80,39 @@ export function useFetchProtocolData(): {
   const parsed48 = data48?.factories?.[0]
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
-    if (anyError || anyLoading || !parsed) {
+    if (anyError || anyLoading || !parsed || !blocks) {
       return undefined
     }
 
-    // case where hasnt existed yet
-    const [volumeUSD, volumeUSDChange] =
-      parsed && parsed24 && parsed48
-        ? get2DayChange(parsed.totalVolumeUSD, parsed24.totalVolumeUSD, parsed48.totalVolumeUSD)
-        : [parseFloat(parsed.totalVolumeUSD), 0]
-    const tvlUSDChange = parsed24 ? getPercentChange(parsed.totalValueLockedUSD, parsed24.totalValueLockedUSD) : 0
-    const [txCount, txCountChange] =
-      parsed24 && parsed48
-        ? get2DayChange(parsed.txCount, parsed24.txCount, parsed48.txCount)
-        : [parseFloat(parsed.txCount), 0]
+    // volume data
+    const volumeUSD =
+      parsed && parsed24
+        ? parseFloat(parsed.totalVolumeUSD) - parseFloat(parsed24.totalVolumeUSD)
+        : parseFloat(parsed.totalVolumeUSD)
 
-    console.log(volumeUSD)
+    const volumeUSDChange =
+      parsed && parsed24 && parsed48 && volumeUSD
+        ? (volumeUSD / (parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed24.totalVolumeUSD))) * 100
+        : 0
+
+    // total value locked
+    const tvlUSDChange = getPercentChange(parsed?.totalValueLockedUSD, parsed24?.totalValueLockedUSD)
+
+    // 24H transactions
+    const txCount =
+      parsed && parsed24 ? parseFloat(parsed.txCount) - parseFloat(parsed24.txCount) : parseFloat(parsed.txCount)
+
+    const txCountChange = getPercentChange(parsed.txCount, parsed24?.txCount)
 
     return {
-      volumeUSD: parseFloat(parsed?.totalVolumeUSD),
+      volumeUSD,
       volumeUSDChange,
       tvlUSD: parseFloat(parsed.totalValueLockedUSD),
       tvlUSDChange,
       txCount,
       txCountChange,
     }
-  }, [anyError, anyLoading, parsed, parsed24, parsed48])
+  }, [anyError, anyLoading, blocks, parsed, parsed24, parsed48])
 
   return {
     loading: anyLoading,

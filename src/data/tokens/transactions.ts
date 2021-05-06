@@ -316,7 +316,7 @@ export async function fetchTokenTransactions(
 
     const burns0 = data.burnsAs0.map((m) => {
       return {
-        type: TransactionType.MINT,
+        type: TransactionType.BURN,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.owner,
@@ -331,7 +331,7 @@ export async function fetchTokenTransactions(
     })
     const burns1 = data.burnsAs1.map((m) => {
       return {
-        type: TransactionType.MINT,
+        type: TransactionType.BURN,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.owner,
@@ -347,7 +347,7 @@ export async function fetchTokenTransactions(
 
     const swaps0 = data.swapsAs0.map((m) => {
       return {
-        type: TransactionType.MINT,
+        type: TransactionType.SWAP,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.origin,
@@ -363,7 +363,7 @@ export async function fetchTokenTransactions(
 
     const swaps1 = data.swapsAs1.map((m) => {
       return {
-        type: TransactionType.MINT,
+        type: TransactionType.SWAP,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.origin,

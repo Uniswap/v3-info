@@ -123,7 +123,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
   try {
     const { data, error, loading } = await client.query<TransactionResults>({
       query: GLOBAL_TRANSACTIONS,
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'network-only',
     })
 
     if (error || loading || !data) {

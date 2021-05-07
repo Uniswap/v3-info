@@ -182,10 +182,10 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
           {sortedPools.map((poolData, i) => {
             if (poolData) {
               return (
-                <>
-                  <DataRow index={(page - 1) * MAX_ITEMS + i} key={i + 'poolItem'} poolData={poolData} />
+                <React.Fragment key={i}>
+                  <DataRow index={(page - 1) * MAX_ITEMS + i} poolData={poolData} />
                   <Break />
-                </>
+                </React.Fragment>
               )
             }
             return null

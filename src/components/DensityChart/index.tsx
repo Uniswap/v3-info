@@ -1,6 +1,6 @@
 import { fetchTicksSurroundingPrice } from 'data/pools/tickData'
 import React, { useEffect, useMemo } from 'react'
-import { BarChart, Bar, Cell, ReferenceLine, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, Brush, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import Loader from 'components/Loader'
 import styled from 'styled-components'
 import { LightCard } from 'components/Card'
@@ -25,6 +25,13 @@ const TooltipWrapper = styled(LightCard)`
 
 interface DensityChartProps {
   address: string
+}
+
+interface ChartEntry {
+  index: number
+  activeLiquidity: number
+  price0: number
+  price1: number
 }
 
 export default function DensityChart({ address }: DensityChartProps) {
@@ -75,16 +82,34 @@ export default function DensityChart({ address }: DensityChartProps) {
     }
   }, [address, poolTickData, updatePoolTickData])
 
+  const TICKS_PER_GROUP = 2
+
   const formattedData = useMemo(() => {
     if (poolTickData) {
-      return poolTickData.ticksProcessed.map((t) => {
-        return {
-          index: t.tickIdx,
-          activeLiquidity: parseFloat(t.liquidityActive.toString()),
-          price0: parseFloat(t.price0),
-          price1: parseFloat(t.price1),
+      let currentGroup = 1
+      let currentEntry: ChartEntry = {
+        index: 0,
+        activeLiquidity: 0,
+        price0: 0,
+        price1: 0,
+      }
+      return poolTickData.ticksProcessed.reduce((grouped: ChartEntry[], t, i) => {
+        // check if need to update current entry
+        if (i % TICKS_PER_GROUP === 0 && i !== 0) {
+          currentGroup = currentGroup + 1
+          grouped.push(currentEntry)
+          currentEntry = {
+            index: currentEntry.index + 1,
+            activeLiquidity: 0,
+            price0: 0,
+            price1: 0,
+          }
         }
-      })
+        currentEntry.activeLiquidity = currentEntry.activeLiquidity + parseFloat(t.liquidityActive.toString())
+        currentEntry.price0 = currentEntry.price0 + parseFloat(t.price0)
+        currentEntry.price1 = currentEntry.price1 + parseFloat(t.price1)
+        return grouped
+      }, [])
     }
     return undefined
   }, [poolTickData])
@@ -93,7 +118,7 @@ export default function DensityChart({ address }: DensityChartProps) {
     const index = props.label as number
     const price0 = poolTickData?.ticksProcessed[index]?.price0
     const price1 = poolTickData?.ticksProcessed[index]?.price1
-    // const liquidity = poolTickData?.ticksProcessed[index]?.liquidityActive ?? undefined
+    const liquidity = poolTickData?.ticksProcessed[index]?.liquidityActive ?? undefined
 
     return (
       <TooltipWrapper>
@@ -111,6 +136,10 @@ export default function DensityChart({ address }: DensityChartProps) {
               {price1 ?? ''} {poolData?.token0?.symbol}
             </TYPE.label>
           </RowBetween>
+          {/* <RowBetween>
+            <TYPE.label>Liquidity : </TYPE.label>
+            <TYPE.label>{liquidity}</TYPE.label>
+          </RowBetween> */}
         </AutoColumn>
       </TooltipWrapper>
     )

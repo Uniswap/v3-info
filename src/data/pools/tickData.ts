@@ -104,7 +104,7 @@ const fetchInitializedTicks = async (
       },
     })
 
-    console.log({ data, error, loading }, 'Result. Skip: ' + skip)
+    // console.log({ data, error, loading }, 'Result. Skip: ' + skip)
 
     if (loading) {
       continue

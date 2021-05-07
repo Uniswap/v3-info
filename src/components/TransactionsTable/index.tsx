@@ -252,9 +252,10 @@ export default function TransactionTable({
         {sortedTransactions.map((t, i) => {
           if (t) {
             return (
-              <>
-                <DataRow key={i} transaction={t} /> <Break />
-              </>
+              <React.Fragment key={i}>
+                <DataRow transaction={t} />
+                <Break />
+              </React.Fragment>
             )
           }
           return null

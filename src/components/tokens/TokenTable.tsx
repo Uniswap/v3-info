@@ -220,10 +220,10 @@ export default function TokenTable({
           {sortedTokens.map((data, i) => {
             if (data) {
               return (
-                <>
-                  <DataRow index={(page - 1) * MAX_ITEMS + i} key={i} tokenData={data} />
+                <React.Fragment key={i}>
+                  <DataRow index={(page - 1) * MAX_ITEMS + i} tokenData={data} />
                   <Break />
-                </>
+                </React.Fragment>
               )
             }
             return null

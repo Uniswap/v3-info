@@ -92,7 +92,7 @@ export function useFetchProtocolData(): {
 
     const volumeUSDChange =
       parsed && parsed24 && parsed48 && volumeUSD
-        ? (volumeUSD / (parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed24.totalVolumeUSD))) * 100
+        ? (volumeUSD / (parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed48.totalVolumeUSD))) * 100
         : 0
 
     // total value locked
@@ -106,7 +106,7 @@ export function useFetchProtocolData(): {
 
     return {
       volumeUSD,
-      volumeUSDChange,
+      volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
       tvlUSD: parseFloat(parsed.totalValueLockedUSD),
       tvlUSDChange,
       txCount,

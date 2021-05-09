@@ -201,7 +201,7 @@ export default function DensityChart({ address }: DensityChartProps) {
           <XAxis reversed={true} tick={false}>
             <Label value="Liquidity Range" offset={0} position="insideBottom" fill={theme.text3} />
           </XAxis>
-          <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} />
+          {/* <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} /> */}
           <Bar dataKey="activeLiquidity" fill="#2172E5">
             {poolTickData.ticksProcessed.map((entry, index) => {
               const active = entry.tickIdx === poolTickData.activeTickIdx

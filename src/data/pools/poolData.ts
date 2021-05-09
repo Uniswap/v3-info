@@ -187,7 +187,11 @@ export function usePoolDatas(
     const tvlUSD = current ? parseFloat(current.totalValueLockedUSD) : 0
 
     const tvlUSDChange =
-      current && oneDay ? parseFloat(current.totalValueLockedUSD) - parseFloat(oneDay.totalValueLockedUSD) : 0
+      current && oneDay
+        ? ((parseFloat(current.totalValueLockedUSD) - parseFloat(oneDay.totalValueLockedUSD)) /
+            parseFloat(oneDay.totalValueLockedUSD)) *
+          100
+        : 0
 
     const tvlToken0 = current ? parseFloat(current.totalValueLockedToken0) : 0
     const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) : 0

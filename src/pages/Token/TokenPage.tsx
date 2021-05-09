@@ -32,7 +32,6 @@ import BarChart from 'components/BarChart'
 import CandleChart from 'components/CandleChart'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedTokens } from 'state/user/hooks'
-import { marginLeft } from 'styled-system'
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;

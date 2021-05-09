@@ -234,8 +234,10 @@ export default function PoolPage({
                   <Percent value={poolData.volumeUSDChange} />
                 </AutoColumn>
                 <AutoColumn gap="4px">
-                  <TYPE.main fontWeight={400}>7d Trading Vol</TYPE.main>
-                  <TYPE.label fontSize="24px">{formatDollarAmount(poolData.volumeUSDWeek)}</TYPE.label>
+                  <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
+                  <TYPE.label fontSize="24px">
+                    {formatDollarAmount(poolData.volumeUSD * (poolData.feeTier / 1000000))}
+                  </TYPE.label>
                 </AutoColumn>
               </AutoColumn>
             </DarkGreyCard>

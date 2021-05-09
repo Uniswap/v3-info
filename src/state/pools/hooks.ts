@@ -92,7 +92,7 @@ export function usePoolChartData(address: string): PoolChartEntry[] | undefined 
 export function usePoolTransactions(address: string): Transaction[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
   const pool = useSelector((state: AppState) => state.pools.byAddress[address])
-  const transactions = pool.transactions
+  const transactions = pool?.transactions
   const [error, setError] = useState(false)
 
   useEffect(() => {

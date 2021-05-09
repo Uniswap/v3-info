@@ -1,6 +1,17 @@
-import { fetchTicksSurroundingPrice } from 'data/pools/tickData'
+import { fetchTicksSurroundingPrice, TickProcessed } from 'data/pools/tickData'
 import React, { useEffect, useMemo } from 'react'
-import { BarChart, Bar, Brush, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import {
+  BarChart,
+  Bar,
+  Cell,
+  CartesianGrid,
+  Brush,
+  LabelList,
+  Label,
+  XAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
 import Loader from 'components/Loader'
 import styled from 'styled-components'
 import { LightCard } from 'components/Card'
@@ -29,6 +40,7 @@ interface DensityChartProps {
 
 interface ChartEntry {
   index: number
+  isCurrent: number
   activeLiquidity: number
   price0: number
   price1: number
@@ -82,18 +94,21 @@ export default function DensityChart({ address }: DensityChartProps) {
     }
   }, [address, poolTickData, updatePoolTickData])
 
-  const TICKS_PER_GROUP = 2
+  const TICKS_PER_GROUP = 1
 
   const formattedData = useMemo(() => {
     if (poolTickData) {
       let currentGroup = 1
       let currentEntry: ChartEntry = {
         index: 0,
+        isCurrent: 0,
         activeLiquidity: 0,
         price0: 0,
         price1: 0,
       }
-      return poolTickData.ticksProcessed.reduce((grouped: ChartEntry[], t, i) => {
+      return poolTickData.ticksProcessed.reduce((grouped: ChartEntry[], t: TickProcessed, i) => {
+        const active = t.tickIdx === poolTickData.activeTickIdx
+
         // check if need to update current entry
         if (i % TICKS_PER_GROUP === 0 && i !== 0) {
           currentGroup = currentGroup + 1
@@ -101,11 +116,15 @@ export default function DensityChart({ address }: DensityChartProps) {
           currentEntry = {
             index: currentEntry.index + 1,
             activeLiquidity: 0,
+            isCurrent: 0,
             price0: 0,
             price1: 0,
           }
         }
-        currentEntry.activeLiquidity = currentEntry.activeLiquidity + parseFloat(t.liquidityActive.toString())
+        currentEntry.isCurrent = active ? parseFloat(t.liquidityActive.toString()) : 0
+        currentEntry.activeLiquidity = active
+          ? 0
+          : currentEntry.activeLiquidity + parseFloat(t.liquidityActive.toString())
         currentEntry.price0 = currentEntry.price0 + parseFloat(t.price0)
         currentEntry.price1 = currentEntry.price1 + parseFloat(t.price1)
         return grouped
@@ -127,13 +146,23 @@ export default function DensityChart({ address }: DensityChartProps) {
           <RowBetween>
             <TYPE.label>{poolData?.token0?.symbol} Price: </TYPE.label>
             <TYPE.label>
-              {price0 ?? ''} {poolData?.token1?.symbol}
+              {price0
+                ? Number(price0).toLocaleString(undefined, {
+                    minimumSignificantDigits: 1,
+                  })
+                : ''}{' '}
+              {poolData?.token1?.symbol}
             </TYPE.label>
           </RowBetween>
           <RowBetween>
             <TYPE.label>{poolData?.token1?.symbol} Price: </TYPE.label>
             <TYPE.label>
-              {price1 ?? ''} {poolData?.token0?.symbol}
+              {price1
+                ? Number(price1).toLocaleString(undefined, {
+                    minimumSignificantDigits: 1,
+                  })
+                : ''}{' '}
+              {poolData?.token0?.symbol}
             </TYPE.label>
           </RowBetween>
           {/* <RowBetween>
@@ -147,6 +176,10 @@ export default function DensityChart({ address }: DensityChartProps) {
 
   if (!poolTickData) {
     return <Loader />
+  }
+
+  const CurrentLabel = () => {
+    return <TYPE.main>hey</TYPE.main>
   }
 
   return (
@@ -165,12 +198,18 @@ export default function DensityChart({ address }: DensityChartProps) {
         >
           <CartesianGrid strokeDasharray="4 4 4" stroke="#2C2F36" />
           <Tooltip content={CustomToolTip} />
+          <XAxis reversed={true} tick={false}>
+            <Label value="Liquidity Range" offset={0} position="insideBottom" fill={theme.text3} />
+          </XAxis>
           {/* <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} /> */}
           <Bar dataKey="activeLiquidity" fill="#2172E5">
-            {/* {poolTickData.ticksProcessed.map((entry, index) => {
+            {poolTickData.ticksProcessed.map((entry, index) => {
               const active = entry.tickIdx === poolTickData.activeTickIdx
               return <Cell key={`cell-${index}`} fill={active ? theme.blue2 : theme.blue1} />
-            })} */}
+            })}
+          </Bar>
+          <Bar dataKey="isCurrent" fill={theme.pink1} isAnimationActive={false}>
+            <LabelList dataKey="isCurrent" position="top" content={() => <CurrentLabel />} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

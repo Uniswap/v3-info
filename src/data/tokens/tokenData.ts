@@ -171,7 +171,11 @@ export function useTokenDatas(
 
     const tvlUSD = current ? parseFloat(current.totalValueLockedUSD) : 0
     const tvlUSDChange =
-      current && oneDay ? parseFloat(current.totalValueLockedUSD) - parseFloat(oneDay.totalValueLockedUSD) : 0
+      current && oneDay
+        ? ((parseFloat(current.totalValueLockedUSD) - parseFloat(oneDay.totalValueLockedUSD)) /
+            parseFloat(oneDay.totalValueLockedUSD)) *
+          100
+        : 0
     const tvlToken = current ? parseFloat(current.totalValueLocked) : 0
 
     const priceUSD = current ? parseFloat(current.derivedETH) * ethPrices.current : 0

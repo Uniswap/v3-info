@@ -87,13 +87,13 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.tvlUSD)}
+          {formatDollarAmount(poolData.volumeUSDWeek)}
         </Label>
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(poolData.volumeUSD)}
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.volumeUSDWeek)}
+          {formatDollarAmount(poolData.tvlUSD)}
         </Label>
       </ResponsiveGrid>
     </LinkWrapper>

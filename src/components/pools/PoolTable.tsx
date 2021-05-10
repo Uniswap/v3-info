@@ -24,7 +24,7 @@ const ResponsiveGrid = styled.div`
   grid-gap: 1em;
   align-items: center;
 
-  grid-template-columns: 20px 2.5fr repeat(3, 1fr);
+  grid-template-columns: 20px 3.5fr repeat(3, 1fr);
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
@@ -166,19 +166,17 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
             <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
               Pool {arrow(SORT_FIELD.feeTier)}
             </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
+              Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+              Volume 24H {arrow(SORT_FIELD.volumeUSD)}
+            </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
-              24hr Volume {arrow(SORT_FIELD.volumeUSD)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
-              7d Volume {arrow(SORT_FIELD.volumeUSDWeek)}
-            </ClickableText>
           </ResponsiveGrid>
-
           <Break />
-
           {sortedPools.map((poolData, i) => {
             if (poolData) {
               return (

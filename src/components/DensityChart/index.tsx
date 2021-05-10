@@ -3,10 +3,10 @@ import React, { useEffect, useMemo } from 'react'
 import {
   BarChart,
   Bar,
-  Cell,
+  // Cell,
   CartesianGrid,
-  Brush,
-  LabelList,
+  // Brush,
+  // LabelList,
   Label,
   XAxis,
   Tooltip,
@@ -137,7 +137,7 @@ export default function DensityChart({ address }: DensityChartProps) {
     const index = props.label as number
     const price0 = poolTickData?.ticksProcessed[index]?.price0
     const price1 = poolTickData?.ticksProcessed[index]?.price1
-    const liquidity = poolTickData?.ticksProcessed[index]?.liquidityActive ?? undefined
+    // const liquidity = poolTickData?.ticksProcessed[index]?.liquidityActive ?? undefined
 
     return (
       <TooltipWrapper>
@@ -178,10 +178,6 @@ export default function DensityChart({ address }: DensityChartProps) {
     return <Loader />
   }
 
-  const CurrentLabel = () => {
-    return <TYPE.main>hey</TYPE.main>
-  }
-
   return (
     <Wrapper>
       <ResponsiveContainer width="100%" height="100%">
@@ -203,14 +199,12 @@ export default function DensityChart({ address }: DensityChartProps) {
           </XAxis>
           {/* <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} /> */}
           <Bar dataKey="activeLiquidity" fill="#2172E5">
-            {poolTickData.ticksProcessed.map((entry, index) => {
+            {/* {poolTickData.ticksProcessed.map((entry, index) => {
               const active = entry.tickIdx === poolTickData.activeTickIdx
               return <Cell key={`cell-${index}`} fill={active ? theme.blue2 : theme.blue1} />
-            })}
+            })} */}
           </Bar>
-          <Bar dataKey="isCurrent" fill={theme.pink1} isAnimationActive={false}>
-            <LabelList dataKey="isCurrent" position="top" content={() => <CurrentLabel />} />
-          </Bar>
+          <Bar dataKey="isCurrent" fill={theme.pink1} isAnimationActive={false}></Bar>
         </BarChart>
       </ResponsiveContainer>
     </Wrapper>

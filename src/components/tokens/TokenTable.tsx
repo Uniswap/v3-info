@@ -203,13 +203,13 @@ export default function TokenTable({
               Price {arrow(SORT_FIELD.priceUSD)}
             </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChange)}>
-              24Hr {arrow(SORT_FIELD.priceUSDChange)}
+              Price Change {arrow(SORT_FIELD.priceUSDChange)}
             </ClickableText>
             {/* <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChangeWeek)}>
             7d {arrow(SORT_FIELD.priceUSDChangeWeek)}
           </ClickableText> */}
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
-              Volume {arrow(SORT_FIELD.volumeUSD)}
+              Volume 24H {arrow(SORT_FIELD.volumeUSD)}
             </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}

@@ -122,7 +122,7 @@ export default function Home() {
               setValue={setVolumeHover}
               topLeft={
                 <AutoColumn gap="md">
-                  <TYPE.mediumHeader fontSize="16px">24HR Volume</TYPE.mediumHeader>
+                  <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">{formatDollarAmount(volumeHover, 2, true)}</TYPE.largeHeader>
                 </AutoColumn>
               }
@@ -134,18 +134,18 @@ export default function Home() {
             <RowBetween>
               <RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">24HR USD: </TYPE.main>
+                  <TYPE.main mr="4px">Volume 24H: </TYPE.main>
                   <TYPE.label mr="4px">{formatDollarAmount(protocolData?.volumeUSD)}</TYPE.label>
                   <Percent value={protocolData?.volumeUSDChange} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">24HR Transactions: </TYPE.main>
+                  <TYPE.main mr="4px">Transactions 24H: </TYPE.main>
                   <TYPE.label mr="4px">{protocolData?.txCount?.toLocaleString()}</TYPE.label>
                   <Percent value={protocolData?.txCountChange} wrap={true} />
                 </RowFixed>
                 <HideMedium>
                   <RowFixed mr="20px">
-                    <TYPE.main mr="4px">TVL USD: </TYPE.main>
+                    <TYPE.main mr="4px">TVL: </TYPE.main>
                     <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
                     <Percent value={protocolData?.tvlUSDChange} wrap={true} />
                   </RowFixed>

@@ -85,7 +85,7 @@ const SORT_FIELD = {
   amountToken1: 'amountToken1',
 }
 
-const DataRow = ({ transaction }: { transaction: Transaction }) => {
+const DataRow = ({ transaction, color }: { transaction: Transaction; color?: string }) => {
   const abs0 = Math.abs(transaction.amountToken0)
   const abs1 = Math.abs(transaction.amountToken1)
   const outputTokenSymbol = transaction.amountToken0 < 0 ? transaction.token0Symbol : transaction.token1Symbol
@@ -96,7 +96,7 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
   return (
     <ResponsiveGrid>
       <ExternalLink href={getEtherscanLink(1, transaction.hash, 'transaction')}>
-        <Label color={theme.blue1} fontWeight={400}>
+        <Label color={color ?? theme.blue1} fontWeight={400}>
           {transaction.type === TransactionType.MINT
             ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
             : transaction.type === TransactionType.SWAP
@@ -113,11 +113,11 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
       <Label end={1} fontWeight={400}>
         <HoverInlineText text={`${formatAmount(abs1)}  ${transaction.token1Symbol}`} maxCharacters={16} />
       </Label>
-      <ExternalLink href={getEtherscanLink(1, transaction.sender, 'address')}>
-        <Label end={1} fontWeight={400}>
+      <Label end={1} fontWeight={400}>
+        <ExternalLink href={getEtherscanLink(1, transaction.sender, 'address')} style={{ color: color ?? theme.blue1 }}>
           {shortenAddress(transaction.sender)}
-        </Label>
-      </ExternalLink>
+        </ExternalLink>
+      </Label>
       <Label end={1} fontWeight={400}>
         {formatTime(transaction.timestamp)}
       </Label>
@@ -128,9 +128,11 @@ const DataRow = ({ transaction }: { transaction: Transaction }) => {
 export default function TransactionTable({
   transactions,
   maxItems = 10,
+  color,
 }: {
   transactions: Transaction[]
   maxItems?: number
+  color?: string
 }) {
   // theming
   const theme = useTheme()
@@ -253,7 +255,7 @@ export default function TransactionTable({
           if (t) {
             return (
               <React.Fragment key={i}>
-                <DataRow transaction={t} />
+                <DataRow transaction={t} color={color} />
                 <Break />
               </React.Fragment>
             )

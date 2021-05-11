@@ -36,24 +36,17 @@ const ResponsiveGrid = styled.div`
 
   @media screen and (max-width: 800px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
-    & :nth-child(5) {
-      display: none;
-    }
-  }
-
-  @media screen and (max-width: 670px) {
-    grid-template-columns: 1.5fr repeat(1, 1fr);
-    > *:first-child {
-      display: none;
-    }
-    & :nth-child(7) {
+    & :nth-child(6) {
       display: none;
     }
   }
 
   @media screen and (max-width: 670px) {
     grid-template-columns: repeat(2, 1fr);
-    > *:nth-child(6) {
+    > *:first-child {
+      display: none;
+    }
+    > *:nth-child(3) {
       display: none;
     }
   }

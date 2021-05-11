@@ -189,7 +189,11 @@ export function useTokenDatas(
       priceUSD && priceUSDWeek ? getPercentChange(priceUSD.toString(), priceUSDWeek.toString()) : 0
 
     const txCount =
-      current && oneDay ? parseFloat(current.txCount) - parseFloat(oneDay.txCount) : parseFloat(current.txCount)
+      current && oneDay
+        ? parseFloat(current.txCount) - parseFloat(oneDay.txCount)
+        : current
+        ? parseFloat(current.txCount)
+        : 0
 
     if (current) {
       accum[address] = {

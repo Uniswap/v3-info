@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom'
 import { useTokenDatas } from 'state/tokens/hooks'
 import { usePoolDatas } from 'state/pools/hooks'
 import HoverInlineText from 'components/HoverInlineText'
+import { TOKEN_HIDE, POOL_HIDE } from '../../constants/index'
 
 const Container = styled.div`
   position: relative;
@@ -274,39 +275,42 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                 </TYPE.main>
               </HideSmall>
             </ResponsiveGrid>
-            {tokensForList.slice(0, tokensShown).map((t, i) => {
-              return (
-                <HoverRowLink onClick={() => handleNav('/tokens/' + t.address)} key={i}>
-                  <ResponsiveGrid>
-                    <RowFixed>
-                      <CurrencyLogo address={t.address} />
-                      <TYPE.label ml="10px">
-                        <HoverInlineText text={`${t.name} (${t.symbol})`} />{' '}
-                      </TYPE.label>
-                      <SavedIcon
-                        id="watchlist-icon"
-                        size={'16px'}
-                        style={{ marginLeft: '8px' }}
-                        fill={savedTokens.includes(t.address)}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          addSavedToken(t.address)
-                        }}
-                      />
-                    </RowFixed>
-                    <HideSmall>
-                      <TYPE.label textAlign="end">{formatDollarAmount(t.volumeUSD)}</TYPE.label>
-                    </HideSmall>
-                    <HideSmall>
-                      <TYPE.label textAlign="end">{formatDollarAmount(t.tvlUSD)}</TYPE.label>
-                    </HideSmall>
-                    <HideSmall>
-                      <TYPE.label textAlign="end">{formatDollarAmount(t.priceUSD)}</TYPE.label>
-                    </HideSmall>
-                  </ResponsiveGrid>
-                </HoverRowLink>
-              )
-            })}
+            {tokensForList
+              .filter((t) => !TOKEN_HIDE.includes(t.address))
+              .slice(0, tokensShown)
+              .map((t, i) => {
+                return (
+                  <HoverRowLink onClick={() => handleNav('/tokens/' + t.address)} key={i}>
+                    <ResponsiveGrid>
+                      <RowFixed>
+                        <CurrencyLogo address={t.address} />
+                        <TYPE.label ml="10px">
+                          <HoverInlineText text={`${t.name} (${t.symbol})`} />{' '}
+                        </TYPE.label>
+                        <SavedIcon
+                          id="watchlist-icon"
+                          size={'16px'}
+                          style={{ marginLeft: '8px' }}
+                          fill={savedTokens.includes(t.address)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            addSavedToken(t.address)
+                          }}
+                        />
+                      </RowFixed>
+                      <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(t.volumeUSD)}</TYPE.label>
+                      </HideSmall>
+                      <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(t.tvlUSD)}</TYPE.label>
+                      </HideSmall>
+                      <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(t.priceUSD)}</TYPE.label>
+                      </HideSmall>
+                    </ResponsiveGrid>
+                  </HoverRowLink>
+                )
+              })}
             {tokensForList.length === 0 ? (
               <TYPE.main>{showWatchlist ? 'Saved tokens will appear here' : 'No results'}</TYPE.main>
             ) : null}
@@ -338,40 +342,43 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                 </TYPE.main>
               </HideSmall>
             </ResponsiveGrid>
-            {poolForList.slice(0, poolsShown).map((p, i) => {
-              return (
-                <HoverRowLink onClick={() => handleNav('/pools/' + p.address)} key={i}>
-                  <ResponsiveGrid key={i}>
-                    <RowFixed>
-                      <DoubleCurrencyLogo address0={p.token0.address} address1={p.token1.address} />
-                      <TYPE.label ml="10px" style={{ whiteSpace: 'nowrap' }}>
-                        <HoverInlineText maxCharacters={12} text={`${p.token0.symbol} / ${p.token1.symbol}`} />
-                      </TYPE.label>
-                      <GreyBadge ml="10px">{feeTierPercent(p.feeTier)}</GreyBadge>
-                      <SavedIcon
-                        id="watchlist-icon"
-                        size={'16px'}
-                        style={{ marginLeft: '10px' }}
-                        fill={savedPools.includes(p.address)}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          addSavedPool(p.address)
-                        }}
-                      />
-                    </RowFixed>
-                    <HideSmall>
-                      <TYPE.label textAlign="end">{formatDollarAmount(p.volumeUSD)}</TYPE.label>
-                    </HideSmall>
-                    <HideSmall>
-                      <TYPE.label textAlign="end">{formatDollarAmount(p.tvlUSD)}</TYPE.label>
-                    </HideSmall>
-                    <HideSmall>
-                      <TYPE.label textAlign="end">{formatDollarAmount(p.token0Price)}</TYPE.label>
-                    </HideSmall>
-                  </ResponsiveGrid>
-                </HoverRowLink>
-              )
-            })}
+            {poolForList
+              .filter((p) => !POOL_HIDE.includes(p.address))
+              .slice(0, poolsShown)
+              .map((p, i) => {
+                return (
+                  <HoverRowLink onClick={() => handleNav('/pools/' + p.address)} key={i}>
+                    <ResponsiveGrid key={i}>
+                      <RowFixed>
+                        <DoubleCurrencyLogo address0={p.token0.address} address1={p.token1.address} />
+                        <TYPE.label ml="10px" style={{ whiteSpace: 'nowrap' }}>
+                          <HoverInlineText maxCharacters={12} text={`${p.token0.symbol} / ${p.token1.symbol}`} />
+                        </TYPE.label>
+                        <GreyBadge ml="10px">{feeTierPercent(p.feeTier)}</GreyBadge>
+                        <SavedIcon
+                          id="watchlist-icon"
+                          size={'16px'}
+                          style={{ marginLeft: '10px' }}
+                          fill={savedPools.includes(p.address)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            addSavedPool(p.address)
+                          }}
+                        />
+                      </RowFixed>
+                      <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(p.volumeUSD)}</TYPE.label>
+                      </HideSmall>
+                      <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(p.tvlUSD)}</TYPE.label>
+                      </HideSmall>
+                      <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(p.token0Price)}</TYPE.label>
+                      </HideSmall>
+                    </ResponsiveGrid>
+                  </HoverRowLink>
+                )
+              })}
             {poolForList.length === 0 ? (
               <TYPE.main>{showWatchlist ? 'Saved pools will appear here' : 'No results'}</TYPE.main>
             ) : null}

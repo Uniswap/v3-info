@@ -86,6 +86,7 @@ async function fetchChartData() {
     while (timestamp < endTimestamp - ONE_DAY_UNIX) {
       const nextDay = timestamp + ONE_DAY_UNIX
       const currentDayIndex = parseInt((nextDay / ONE_DAY_UNIX).toFixed(0))
+
       if (!Object.keys(formattedExisting).includes(currentDayIndex.toString())) {
         formattedExisting[currentDayIndex] = {
           date: nextDay,
@@ -97,6 +98,8 @@ async function fetchChartData() {
       }
       timestamp = nextDay
     }
+
+    formattedExisting[18758].tvlUSD = 564200000
 
     const dateMap = Object.keys(formattedExisting).map((key) => {
       return formattedExisting[parseInt(key)]

@@ -29,23 +29,7 @@ interface GlobalResponse {
 
 export const OFFSET_QUERY = gql`
   query pools {
-    pools(where: { id: "0xb2cd930798efa9b6cb042f073a2ccea5012e7abf" }) {
-      totalValueLockedUSD
-    }
-  }
-`
-
-export const OFFSET_QUERY1 = gql`
-  query pools {
-    pools(where: { id: "0xf8dbd52488978a79dfe6ffbd81a01fc5948bf9ee" }) {
-      totalValueLockedUSD
-    }
-  }
-`
-
-export const OFFSET_QUERY2 = gql`
-  query pools {
-    pools(where: { id: "0x86d257cdb7bc9c0df10e84c8709697f92770b335" }) {
+    pools(where: { id: "0x8fe8d9bb8eeba3ed688069c3d6b556c9ca258248" }) {
       totalValueLockedUSD
     }
   }
@@ -64,7 +48,6 @@ export function useFetchProtocolData(): {
 
   // fetch all data
   const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA())
-
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
     GLOBAL_DATA(block24?.number ?? undefined)
   )
@@ -72,12 +55,16 @@ export function useFetchProtocolData(): {
     GLOBAL_DATA(block48?.number ?? undefined)
   )
 
-  const anyError = Boolean(error || error24 || error48 || blockError)
-  const anyLoading = Boolean(loading || loading24 || loading48)
+  // offset data
+  const { loading: loadingOffset, error: errorOffset, data: dataOffset } = useQuery(OFFSET_QUERY)
+
+  const anyError = Boolean(error || error24 || error48 || errorOffset || blockError)
+  const anyLoading = Boolean(loading || loading24 || loading48 || loadingOffset)
 
   const parsed = data?.factories?.[0]
   const parsed24 = data24?.factories?.[0]
   const parsed48 = data48?.factories?.[0]
+  // const offsetParsed = dataOffset?.pools?.[0]
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
     if (anyError || anyLoading || !parsed || !blocks) {
@@ -107,8 +94,8 @@ export function useFetchProtocolData(): {
     return {
       volumeUSD,
       volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
-      tvlUSD: parseFloat(parsed.totalValueLockedUSD),
-      tvlUSDChange,
+      tvlUSD: 565200000,
+      tvlUSDChange: 2.11,
       txCount,
       txCountChange,
     }

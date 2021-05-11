@@ -88,8 +88,16 @@ export const NETWORK_ONLY = {
 }
 
 // temporary! fixing USD accounting on subgraph
-export const TOKEN_HIDE = ['0x7d29a64504629172a429e64183d6673b9dacbfce', '0xd46ba6d942050d489dbd938a2c909a5d5039a161']
-export const POOL_HIDE = ['0x86d257cdb7bc9c0df10e84c8709697f92770b335', '0xf8dbd52488978a79dfe6ffbd81a01fc5948bf9ee']
+export const TOKEN_HIDE = [
+  '0x7d29a64504629172a429e64183d6673b9dacbfce',
+  '0xd46ba6d942050d489dbd938a2c909a5d5039a161',
+  '0x7dfb72a2aad08c937706f21421b15bfc34cba9ca',
+]
+export const POOL_HIDE = [
+  '0x86d257cdb7bc9c0df10e84c8709697f92770b335',
+  '0xf8dbd52488978a79dfe6ffbd81a01fc5948bf9ee',
+  '0x8fe8d9bb8eeba3ed688069c3d6b556c9ca258248',
+]
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   [ChainId.MAINNET]: [

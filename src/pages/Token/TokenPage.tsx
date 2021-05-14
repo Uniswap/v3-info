@@ -10,7 +10,7 @@ import {
 import styled from 'styled-components'
 import { useColor } from 'hooks/useColor'
 import { ThemedBackground, PageWrapper } from 'pages/styled'
-import { shortenAddress, getEtherscanLink } from 'utils'
+import { shortenAddress, getEtherscanLink, currentTimestamp } from 'utils'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed, AutoRow, RowFlat } from 'components/Row'
 import { TYPE, StyledInternalLink } from 'theme'
@@ -116,8 +116,9 @@ export default function TokenPage({
   const [latestValue, setLatestValue] = useState<number | undefined>()
 
   const priceData = useTokenPriceData(address, 3600)
+
   const formattedPriceData = useMemo(() => {
-    if (priceData) {
+    if (priceData && tokenData) {
       return priceData.map((day) => {
         return {
           time: parseFloat(day.timestamp),
@@ -130,7 +131,23 @@ export default function TokenPage({
     } else {
       return []
     }
-  }, [priceData])
+  }, [priceData, tokenData])
+
+  const adjustedToCurrent = useMemo(() => {
+    if (priceData && formattedPriceData && tokenData) {
+      const adjusted = formattedPriceData
+      adjusted.push({
+        time: currentTimestamp() / 1000,
+        open: tokenData?.priceUSD,
+        close: tokenData?.priceUSD,
+        high: tokenData?.priceUSD,
+        low: tokenData?.priceUSD,
+      })
+      return adjusted
+    } else {
+      return undefined
+    }
+  }, [formattedPriceData, priceData, tokenData])
 
   // watchlist
   const [savedTokens, addSavedToken] = useSavedTokens()
@@ -220,16 +237,17 @@ export default function TokenPage({
             </DarkGreyCard>
             <DarkGreyCard>
               <RowBetween>
-                <AutoColumn>
-                  <TYPE.main>{view === ChartView.VOL ? '24H Volume' : 'TVL'}</TYPE.main>
+                <RowFixed>
                   <TYPE.label fontSize="24px" height="30px">
                     {latestValue
-                      ? formatDollarAmount(latestValue)
+                      ? formatDollarAmount(latestValue, 8)
                       : view === ChartView.VOL
                       ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-                      : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}
+                      : view === ChartView.TVL
+                      ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
+                      : formatDollarAmount(tokenData.priceUSD, 6)}
                   </TYPE.label>
-                </AutoColumn>
+                </RowFixed>
                 <ToggleWrapper width="160px">
                   <ToggleElementFree
                     isActive={view === ChartView.VOL}
@@ -245,13 +263,13 @@ export default function TokenPage({
                   >
                     TVL
                   </ToggleElementFree>
-                  {/* <ToggleElementFree
+                  <ToggleElementFree
                     isActive={view === ChartView.PRICE}
                     fontSize="12px"
                     onClick={() => setView(ChartView.PRICE)}
                   >
                     Price
-                  </ToggleElementFree> */}
+                  </ToggleElementFree>
                 </ToggleWrapper>
               </RowBetween>
               {view === ChartView.TVL ? (
@@ -264,7 +282,11 @@ export default function TokenPage({
                   setValue={setLatestValue}
                 />
               ) : view === ChartView.PRICE ? (
-                <CandleChart data={formattedPriceData} />
+                adjustedToCurrent ? (
+                  <CandleChart data={adjustedToCurrent} setValue={setLatestValue} color={backgroundColor} />
+                ) : (
+                  <LocalLoader fill={false} />
+                )
               ) : null}
             </DarkGreyCard>
           </ContentLayout>

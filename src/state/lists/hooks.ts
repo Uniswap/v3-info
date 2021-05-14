@@ -1,6 +1,6 @@
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
-import { ChainId, Token } from '@uniswap/sdk'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -30,7 +30,7 @@ export class WrappedTokenInfo extends Token {
 }
 
 export type TokenAddressMap = Readonly<
-  { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
+  { [chainId in ChainId | number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
 >
 
 /**
@@ -61,11 +61,14 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
+      if (tokenMap[token.chainId][token.address] !== undefined) {
+        console.error(new Error(`Duplicate token! ${token.address}`))
+        return tokenMap
+      }
       return {
         ...tokenMap,
         [token.chainId]: {
-          ...tokenMap[token.chainId],
+          ...tokenMap[token.chainId as ChainId],
           [token.address]: {
             token,
             list: list,
@@ -78,6 +81,8 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   listCache?.set(list, map)
   return map
 }
+
+const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
 
 export function useAllLists(): {
   readonly [url: string]: {
@@ -92,21 +97,19 @@ export function useAllLists(): {
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
-    1: { ...map1[1], ...map2[1] },
-    3: { ...map1[3], ...map2[3] },
-    4: { ...map1[4], ...map2[4] },
-    5: { ...map1[5], ...map2[5] },
-    42: { ...map1[42], ...map2[42] },
+    [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
+    [ChainId.RINKEBY]: { ...map1[ChainId.RINKEBY], ...map2[ChainId.RINKEBY] },
+    [ChainId.ROPSTEN]: { ...map1[ChainId.ROPSTEN], ...map2[ChainId.ROPSTEN] },
+    [ChainId.KOVAN]: { ...map1[ChainId.KOVAN], ...map2[ChainId.KOVAN] },
+    [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] },
   }
 }
 
 // merge tokens contained within lists from urls
 function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
-
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
-
     return (
       urls
         .slice()
@@ -144,19 +147,13 @@ export function useInactiveListUrls(): string[] {
 export function useCombinedActiveList(): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  const defaultTokenMap = listToTokenMap(DEFAULT_TOKEN_LIST)
-  return combineMaps(activeTokens, defaultTokenMap)
+  return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
 }
 
 // all tokens from inactive lists
 export function useCombinedInactiveList(): TokenAddressMap {
   const allInactiveListUrls: string[] = useInactiveListUrls()
   return useCombinedTokenMapFromUrls(allInactiveListUrls)
-}
-
-// used to hide warnings on import for default tokens
-export function useDefaultTokenList(): TokenAddressMap {
-  return listToTokenMap(DEFAULT_TOKEN_LIST)
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds

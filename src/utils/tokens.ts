@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk-core'
 import { WETH_ADDRESS } from '../constants/index'
 
 export interface SerializedToken {

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { TYPE, ExternalLink } from '../../theme'
 
-import { useBlockNumber } from '../../state/application/hooks'
+import { useSubgraphStatus } from '../../state/application/hooks'
 import { getEtherscanLink } from '../../utils'
-import { useActiveWeb3React } from '../../hooks'
 
 const StyledPolling = styled.div`
   position: fixed;
@@ -63,11 +62,11 @@ const Spinner = styled.div`
 `
 
 export default function Polling() {
-  const { chainId } = useActiveWeb3React()
-
-  const blockNumber = useBlockNumber()
+  const [status] = useSubgraphStatus()
 
   const [isMounted, setIsMounted] = useState(true)
+
+  const latestBlock = status.syncedBlock
 
   useEffect(
     () => {
@@ -79,14 +78,14 @@ export default function Polling() {
         clearTimeout(timer1)
       }
     },
-    [blockNumber] //useEffect will run only one time
+    [status] //useEffect will run only one time
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
   return (
-    <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
+    <ExternalLink href={latestBlock ? getEtherscanLink(1, latestBlock.toString(), 'block') : ''}>
       <StyledPolling>
-        <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{blockNumber}</TYPE.small>
+        <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{latestBlock}</TYPE.small>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
       </StyledPolling>
     </ExternalLink>

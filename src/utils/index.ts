@@ -5,7 +5,8 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { ROUTER_ADDRESS } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk'
+import { ChainId, Percent, Token, CurrencyAmount, Fraction, Currency } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -70,16 +71,11 @@ export function basisPointsToPercent(num: number): Percent {
   return new Percent(JSBI.BigInt(num), JSBI.BigInt(10000))
 }
 
-export function calculateSlippageAmount(value: CurrencyAmount, slippage: number): [JSBI, JSBI] {
-  if (slippage < 0 || slippage > 10000) {
-    throw Error(`Unexpected slippage value: ${slippage}`)
-  }
-  return [
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 - slippage)), JSBI.BigInt(10000)),
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 + slippage)), JSBI.BigInt(10000)),
-  ]
+const ONE = new Fraction(1, 1)
+export function calculateSlippageAmount(value: CurrencyAmount<Currency>, slippage: Percent): [JSBI, JSBI] {
+  if (slippage.lessThan(0) || slippage.greaterThan(ONE)) throw new Error('Unexpected slippage')
+  return [value.multiply(ONE.subtract(slippage)).quotient, value.multiply(ONE.add(slippage)).quotient]
 }
-
 // account is not optional
 export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
   return library.getSigner(account).connectUnchecked()
@@ -108,9 +104,8 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency === ETHER) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): boolean {
+  return Boolean(token?.isToken && tokenAddressMap[token.chainId as ChainId]?.[token.address])
 }
 
 export function feeTierPercent(fee: number): string {
@@ -119,4 +114,16 @@ export function feeTierPercent(fee: number): string {
 
 export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   return value !== null && value !== undefined
+}
+
+/**
+ * Returns chain id if chain from chainId supports WETH
+ * if not, return undefined
+ * @param chainId
+ */
+export function supportedChainId(chainId: number): ChainId | undefined {
+  if (chainId in ChainId) {
+    return chainId
+  }
+  return undefined
 }

@@ -80,14 +80,6 @@ const BarChart = ({
     return () => window.removeEventListener('resize', handleResize)
   }, [isClient, chartRef, handleResize]) // Empty array ensures that effect is only run on mount and unmount
 
-  // // reset chart if data changed
-  // const prevData = usePrevious(data)
-  // useEffect(() => {
-  //   if (prevData !== undefined && data !== undefined && prevData !== data) {
-  //     setChart(undefined)
-  //   }
-  // }, [data, prevData])
-
   // if chart not instantiated in canvas, create it
   useEffect(() => {
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
@@ -187,7 +179,7 @@ const BarChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </RowBetween>
-      <div ref={chartRef} id={'line-chart'} {...rest} />
+      <div ref={chartRef} id={'bar-chart'} {...rest} />
       <RowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}

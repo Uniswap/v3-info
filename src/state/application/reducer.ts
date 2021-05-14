@@ -1,5 +1,13 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
-import { addPopup, PopupContent, removePopup, updateBlockNumber, ApplicationModal, setOpenModal } from './actions'
+import {
+  addPopup,
+  PopupContent,
+  removePopup,
+  updateBlockNumber,
+  updateSubgraphStatus,
+  ApplicationModal,
+  setOpenModal,
+} from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
@@ -7,12 +15,20 @@ export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
+  readonly subgraphStatus: {
+    available: boolean | null
+    syncedBlock: number | undefined
+  }
 }
 
 const initialState: ApplicationState = {
   blockNumber: {},
   popupList: [],
   openModal: null,
+  subgraphStatus: {
+    available: null,
+    syncedBlock: undefined,
+  },
 }
 
 export default createReducer(initialState, (builder) =>
@@ -44,5 +60,11 @@ export default createReducer(initialState, (builder) =>
           p.show = false
         }
       })
+    })
+    .addCase(updateSubgraphStatus, (state, { payload: { available, syncedBlock } }) => {
+      state.subgraphStatus = {
+        available,
+        syncedBlock,
+      }
     })
 )

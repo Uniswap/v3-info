@@ -3,6 +3,7 @@ import { createChart, IChartApi } from 'lightweight-charts'
 import { RowBetween } from 'components/Row'
 import Card from '../Card'
 import styled from 'styled-components'
+import dayjs from 'dayjs'
 import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled(Card)`
@@ -149,6 +150,8 @@ const CandleChart = ({
         ) {
           setValue && setValue(undefined)
         } else if (series && param) {
+          const timestamp = param.time as number
+          const time = dayjs.unix(timestamp).format('MM/DD h:mm A')
           const parsed = param.seriesPrices.get(series) as { open: number } | undefined
           setValue && setValue(parsed?.open)
         }

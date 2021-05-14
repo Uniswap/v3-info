@@ -145,8 +145,6 @@ export async function fetchTokenPriceData(
         })
       }
 
-      console.log(formattedHistory)
-
       return formattedHistory
     } else {
       console.log('no price data loaded')

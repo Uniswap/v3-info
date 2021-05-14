@@ -240,12 +240,12 @@ export default function TokenPage({
                 <RowFixed>
                   <TYPE.label fontSize="24px" height="30px">
                     {latestValue
-                      ? formatDollarAmount(latestValue, 8)
+                      ? formatDollarAmount(latestValue, 2)
                       : view === ChartView.VOL
                       ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
                       : view === ChartView.TVL
                       ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-                      : formatDollarAmount(tokenData.priceUSD, 6)}
+                      : formatDollarAmount(tokenData.priceUSD, 2)}
                   </TYPE.label>
                 </RowFixed>
                 <ToggleWrapper width="160px">

@@ -6,6 +6,7 @@ import useTheme from 'hooks/useTheme'
 import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
+import { formatAmount } from 'utils/numbers'
 
 const TooltipWrapper = styled(LightCard)`
   padding: 12px;
@@ -54,7 +55,7 @@ export function CustomToolTip({ chartProps, poolData }: CustomToolTipProps) {
             {poolData?.token0?.symbol}
           </TYPE.label>
         </RowBetween>
-        {/* <RowBetween>
+        <RowBetween>
           <TYPE.label>{poolData?.token0?.symbol} Locked: </TYPE.label>
           <TYPE.label>
             {tvlToken0 ? formatAmount(tvlToken0) : ''} {poolData?.token0?.symbol}
@@ -65,7 +66,7 @@ export function CustomToolTip({ chartProps, poolData }: CustomToolTipProps) {
           <TYPE.label>
             {tvlToken1 ? formatAmount(tvlToken1) : ''} {poolData?.token1?.symbol}
           </TYPE.label>
-        </RowBetween> */}
+        </RowBetween>
       </AutoColumn>
     </TooltipWrapper>
   )

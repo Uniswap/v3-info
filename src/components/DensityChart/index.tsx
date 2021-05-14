@@ -9,12 +9,10 @@ import { MAX_UINT128 } from '../../constants/index'
 import { isAddress } from 'utils'
 import { Pool, TickMath, TICK_SPACINGS, FeeAmount } from '@uniswap/v3-sdk'
 import { PoolData } from 'state/pools/reducer'
-import usePrevious from 'hooks/usePrevious'
 import { CurrentPriceLabel } from './CurrentPriceLabel'
 import CustomToolTip from './CustomToolTip'
 import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { left } from 'styled-system'
 
 const Wrapper = styled.div`
   position: relative;
@@ -156,6 +154,7 @@ export default function DensityChart({ address }: DensityChartProps) {
             const maxAmountToken0 = token0 ? CurrencyAmount.fromRawAmount(token0, MAX_UINT128.toString()) : undefined
             const outputRes0 =
               pool && maxAmountToken0 ? await pool.getOutputAmount(maxAmountToken0, nextSqrtX96) : undefined
+
             const token1Amount = outputRes0?.[0] as CurrencyAmount<Token> | undefined
 
             return {
@@ -164,8 +163,8 @@ export default function DensityChart({ address }: DensityChartProps) {
               activeLiquidity: parseFloat(t.liquidityActive.toString()),
               price0: parseFloat(t.price0),
               price1: parseFloat(t.price1),
-              tvlToken0: token1Amount ? parseFloat(token1Amount.toSignificant(4)) * parseFloat(t.price1) : 0,
-              tvlToken1: token1Amount ? parseFloat(token1Amount.toSignificant(4)) : 0,
+              tvlToken0: token1Amount ? parseFloat(token1Amount.toExact()) * parseFloat(t.price1) : 0,
+              tvlToken1: token1Amount ? parseFloat(token1Amount.toExact()) : 0,
             }
           })
         )

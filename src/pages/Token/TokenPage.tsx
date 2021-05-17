@@ -263,13 +263,13 @@ export default function TokenPage({
                   >
                     TVL
                   </ToggleElementFree>
-                  <ToggleElementFree
+                  {/* <ToggleElementFree
                     isActive={view === ChartView.PRICE}
                     fontSize="12px"
                     onClick={() => setView(ChartView.PRICE)}
                   >
                     Price
-                  </ToggleElementFree>
+                  </ToggleElementFree> */}
                 </ToggleWrapper>
               </RowBetween>
               {view === ChartView.TVL ? (

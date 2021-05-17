@@ -130,6 +130,27 @@ export interface PoolTickData {
   activeTickIdx: number
 }
 
+const poolQuery = gql`
+  query pool($poolAddress: String!) {
+    pool(id: $poolAddress) {
+      tick
+      token0 {
+        symbol
+        id
+        decimals
+      }
+      token1 {
+        symbol
+        id
+        decimals
+      }
+      feeTier
+      sqrtPrice
+      liquidity
+    }
+  }
+`
+
 export const fetchTicksSurroundingPrice = async (
   poolAddress: string,
   numSurroundingTicks = DEFAULT_SURROUNDING_TICKS
@@ -138,26 +159,6 @@ export const fetchTicksSurroundingPrice = async (
   error?: boolean
   data?: PoolTickData
 }> => {
-  const poolQuery = gql`
-    query pool($poolAddress: String!) {
-      pool(id: $poolAddress) {
-        tick
-        token0 {
-          symbol
-          id
-          decimals
-        }
-        token1 {
-          symbol
-          id
-          decimals
-        }
-        feeTier
-        sqrtPrice
-        liquidity
-      }
-    }
-  `
   const { data: poolResult, error, loading } = await client.query<PoolResult>({
     query: poolQuery,
     variables: {
@@ -182,6 +183,7 @@ export const fetchTicksSurroundingPrice = async (
       token1: { id: token1Address, decimals: token1Decimals },
     },
   } = poolResult
+
   const poolCurrentTickIdx = parseInt(poolCurrentTick)
   const tickSpacing = FEE_TIER_TO_TICK_SPACING(feeTier)
 

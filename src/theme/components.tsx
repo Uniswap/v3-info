@@ -123,7 +123,7 @@ const StyledLink = styled.a`
   cursor: pointer;
   color: ${({ theme }) => theme.primary1};
   font-weight: 500;
-  display: flex;
+  display: inline;
   flex-direction: center;
   align-items: center;
 

@@ -14,7 +14,10 @@ import TopBar from 'components/Header/TopBar'
 import { RedirectInvalidToken } from './Token/redirects'
 import { LocalLoader } from 'components/Loader'
 import PoolPage from './Pool/PoolPage'
-import { HideMedium } from 'theme'
+import { ExternalLink, HideMedium, TYPE } from 'theme'
+import { useSubgraphStatus } from 'state/application/hooks'
+import { DarkGreyCard } from 'components/Card'
+// import Polling from 'components/Header/Polling'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -62,10 +65,14 @@ const Marginer = styled.div`
 `
 
 export default function App() {
+  // pretend load buffer
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     setTimeout(() => setLoading(false), 700)
   }, [])
+
+  // subgraph health
+  const [subgraphStatus] = useSubgraphStatus()
 
   return (
     <Suspense fallback={null}>
@@ -73,9 +80,23 @@ export default function App() {
       <Route component={DarkModeQueryParamReader} />
       {loading ? (
         <LocalLoader fill={true} />
+      ) : subgraphStatus.available === false ? (
+        <AppWrapper>
+          <BodyWrapper>
+            <DarkGreyCard style={{ maxWidth: '340px' }}>
+              <TYPE.label>
+                The Graph network which provides data for this site is temporarily down. Check status{' '}
+                <ExternalLink href="https://thegraph.com/explorer/subgraph/ianlapham/uniswap-v3-testing">
+                  here.
+                </ExternalLink>
+              </TYPE.label>
+            </DarkGreyCard>
+          </BodyWrapper>
+        </AppWrapper>
       ) : (
         <AppWrapper>
           <URLWarning />
+          {/* <Polling /> */}
           <HeaderWrapper>
             <HideMedium>
               <TopBar />

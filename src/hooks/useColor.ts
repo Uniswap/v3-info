@@ -2,7 +2,7 @@ import { useState, useLayoutEffect, useMemo } from 'react'
 import { shade } from 'polished'
 import Vibrant from 'node-vibrant'
 import { hex } from 'wcag-contrast'
-import { Token, ChainId } from '@uniswap/sdk'
+import { Token, ChainId } from '@uniswap/sdk-core'
 import uriToHttp from 'utils/uriToHttp'
 import { isAddress } from 'utils'
 

@@ -1,3 +1,4 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import dayjs from 'dayjs'
 
 /**
@@ -8,7 +9,13 @@ import dayjs from 'dayjs'
  * @param values - the keys that are used as the values to map over if
  * @param skipCount - amount of entities to skip per query
  */
-export async function splitQuery(query: any, client: any, vars: any[], values: any[], skipCount = 1000) {
+export async function splitQuery<Type>(
+  query: any,
+  client: ApolloClient<NormalizedCacheObject>,
+  vars: any[],
+  values: any[],
+  skipCount = 1000
+) {
   let fetchedData = {}
   let allFound = false
   let skip = 0
@@ -19,7 +26,7 @@ export async function splitQuery(query: any, client: any, vars: any[], values: a
         end = skip + skipCount
       }
       const sliced = values.slice(skip, end)
-      const result = await client.query({
+      const result = await client.query<Type>({
         query: query(...vars, sliced),
         fetchPolicy: 'cache-first',
       })

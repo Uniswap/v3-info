@@ -1,7 +1,8 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 
+import { Pair } from '@uniswap/v2-sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import {

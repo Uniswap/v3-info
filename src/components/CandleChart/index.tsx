@@ -3,6 +3,7 @@ import { createChart, IChartApi } from 'lightweight-charts'
 import { RowBetween } from 'components/Row'
 import Card from '../Card'
 import styled from 'styled-components'
+import dayjs from 'dayjs'
 import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled(Card)`
@@ -137,22 +138,24 @@ const CandleChart = ({
       series.setData(data)
 
       // update the title when hovering on the chart
-      //   chartCreated.subscribeCrosshairMove(function (param) {
-      //     if (
-      //       chartRef?.current &&
-      //       (param === undefined ||
-      //         param.time === undefined ||
-      //         (param && param.point && param.point.x < 0) ||
-      //         (param && param.point && param.point.x > chartRef.current.clientWidth) ||
-      //         (param && param.point && param.point.y < 0) ||
-      //         (param && param.point && param.point.y > height))
-      //     ) {
-      //       setValue && setValue(undefined)
-      //     } else if (series && param) {
-      //       const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? '10')
-      //       setValue && setValue(price)
-      //     }
-      //   })
+      chartCreated.subscribeCrosshairMove(function (param) {
+        if (
+          chartRef?.current &&
+          (param === undefined ||
+            param.time === undefined ||
+            (param && param.point && param.point.x < 0) ||
+            (param && param.point && param.point.x > chartRef.current.clientWidth) ||
+            (param && param.point && param.point.y < 0) ||
+            (param && param.point && param.point.y > height))
+        ) {
+          setValue && setValue(undefined)
+        } else if (series && param) {
+          const timestamp = param.time as number
+          const time = dayjs.unix(timestamp).format('MM/DD h:mm A')
+          const parsed = param.seriesPrices.get(series) as { open: number } | undefined
+          setValue && setValue(parsed?.open)
+        }
+      })
     }
   }, [chartCreated, color, currentValue, data, height, setValue, theme.bg0])
 

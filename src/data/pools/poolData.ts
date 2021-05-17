@@ -5,7 +5,6 @@ import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { PoolData } from 'state/pools/reducer'
 import { get2DayChange } from 'utils/data'
 import { formatTokenName, formatTokenSymbol } from 'utils/tokens'
-import { NETWORK_ONLY } from '../../constants/index'
 
 export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
   let poolString = `[`
@@ -216,7 +215,7 @@ export function usePoolDatas(
           address: current.token1.id,
           name: formatTokenName(current.token1.id, current.token1.name),
           symbol: formatTokenSymbol(current.token1.id, current.token1.symbol),
-          decimals: parseInt(current.token0.decimals),
+          decimals: parseInt(current.token1.decimals),
           derivedETH: parseFloat(current.token1.derivedETH),
         },
         token0Price: parseFloat(current.token0Price),

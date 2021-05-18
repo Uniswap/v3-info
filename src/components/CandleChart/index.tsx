@@ -44,12 +44,9 @@ const CandleChart = ({
   ...rest
 }: LineChartProps) => {
   const theme = useTheme()
-  const textColor = theme.text2
+  const textColor = theme.text3
   const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
-
-  // for reseting value on hover exit
-  const currentValue = 10
 
   const handleResize = useCallback(() => {
     if (chartCreated && chartRef?.current?.parentElement) {
@@ -77,8 +74,8 @@ const CandleChart = ({
         width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: 'transparent',
-          textColor: textColor,
           fontFamily: 'Inter',
+          textColor: '#565A69',
         },
         rightPriceScale: {
           scaleMargins: {
@@ -89,9 +86,13 @@ const CandleChart = ({
         },
         timeScale: {
           borderVisible: false,
+          secondsVisible: true,
+          tickMarkFormatter: (unixTime: number) => {
+            return dayjs.unix(unixTime).format('MM/DD h:mm')
+          },
         },
         watermark: {
-          color: 'rgba(0, 0, 0, 0)',
+          visible: false,
         },
         grid: {
           horzLines: {
@@ -103,14 +104,13 @@ const CandleChart = ({
         },
         crosshair: {
           horzLine: {
-            visible: true,
-            style: 3,
-            width: 1,
-            color: '#505050',
-            labelBackgroundColor: color,
+            visible: false,
+            labelVisible: false,
           },
+          mode: 1,
           vertLine: {
             visible: true,
+            labelVisible: false,
             style: 3,
             width: 1,
             color: '#505050',
@@ -122,7 +122,7 @@ const CandleChart = ({
       chart.timeScale().fitContent()
       setChart(chart)
     }
-  }, [color, chartCreated, currentValue, data, height, setValue, textColor, theme])
+  }, [color, chartCreated, data, height, setValue, textColor, theme])
 
   useEffect(() => {
     if (chartCreated && data) {
@@ -157,7 +157,7 @@ const CandleChart = ({
         }
       })
     }
-  }, [chartCreated, color, currentValue, data, height, setValue, theme.bg0])
+  }, [chartCreated, color, data, height, setValue, theme.bg0])
 
   return (
     <Wrapper minHeight={minHeight}>

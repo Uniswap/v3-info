@@ -114,18 +114,19 @@ export default function TokenPage({
 
   const [view, setView] = useState(ChartView.TVL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
+  // const [latestTime, setLatestTime] = useState<string | undefined>()
 
   const priceData = useTokenPriceData(address, 3600)
 
   const formattedPriceData = useMemo(() => {
     if (priceData && tokenData) {
-      return priceData.map((day) => {
+      return priceData.map((entry) => {
         return {
-          time: parseFloat(day.timestamp),
-          open: day.open,
-          close: day.close,
-          high: day.close,
-          low: day.open,
+          time: parseFloat(entry.timestamp),
+          open: entry.open,
+          close: entry.close,
+          high: entry.close,
+          low: entry.open,
         }
       })
     } else {
@@ -272,12 +273,12 @@ export default function TokenPage({
                       TVL
                     </ToggleElementFree>
                     {/* <ToggleElementFree
-                    isActive={view === ChartView.PRICE}
-                    fontSize="12px"
-                    onClick={() => setView(ChartView.PRICE)}
-                  >
-                    Price
-                  </ToggleElementFree> */}
+                      isActive={view === ChartView.PRICE}
+                      fontSize="12px"
+                      onClick={() => setView(ChartView.PRICE)}
+                    >
+                      Price
+                    </ToggleElementFree> */}
                   </ToggleWrapper>
                 </RowBetween>
                 {view === ChartView.TVL ? (

@@ -66,10 +66,11 @@ export function useFetchProtocolData(): {
         ? parseFloat(parsed.totalVolumeUSD) - parseFloat(parsed24.totalVolumeUSD)
         : parseFloat(parsed.totalVolumeUSD)
 
+    const volumeOneWindowAgo =
+      parsed24 && parsed48 ? parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed48.totalVolumeUSD) : undefined
+
     const volumeUSDChange =
-      parsed && parsed24 && parsed48 && volumeUSD
-        ? (volumeUSD / (parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed48.totalVolumeUSD))) * 100
-        : 0
+      volumeUSD && volumeOneWindowAgo ? ((volumeUSD - volumeOneWindowAgo) / volumeOneWindowAgo) * 100 : 0
 
     // total value locked
     const tvlUSDChange = getPercentChange(parsed?.totalValueLockedUSD, parsed24?.totalValueLockedUSD)
@@ -78,7 +79,11 @@ export function useFetchProtocolData(): {
     const txCount =
       parsed && parsed24 ? parseFloat(parsed.txCount) - parseFloat(parsed24.txCount) : parseFloat(parsed.txCount)
 
-    const txCountChange = getPercentChange(parsed.txCount, parsed24?.txCount)
+    const txCountOneWindowAgo =
+      parsed24 && parsed48 ? parseFloat(parsed24.txCount) - parseFloat(parsed48.txCount) : undefined
+
+    const txCountChange =
+      txCount && txCountOneWindowAgo ? getPercentChange(txCount.toString(), txCountOneWindowAgo.toString()) : 0
 
     return {
       volumeUSD,

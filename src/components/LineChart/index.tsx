@@ -91,7 +91,7 @@ const LineChart = ({
         width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: 'transparent',
-          textColor: textColor,
+          textColor: '#565A69',
           fontFamily: 'Inter var',
         },
         rightPriceScale: {
@@ -118,18 +118,15 @@ const LineChart = ({
         },
         crosshair: {
           horzLine: {
-            visible: true,
-            style: 3,
-            width: 1,
-            color: '#505050',
-            labelBackgroundColor: color,
+            visible: false,
+            labelVisible: false,
           },
           vertLine: {
             visible: true,
-            style: 3,
-            width: 1,
+            style: 0,
+            width: 2,
             color: '#505050',
-            labelBackgroundColor: color,
+            labelVisible: false,
           },
         },
       })
@@ -142,7 +139,7 @@ const LineChart = ({
     if (chartCreated && data) {
       const series = chartCreated.addAreaSeries({
         lineColor: color,
-        topColor: darken(0.3, color),
+        topColor: darken(0.36, color),
         bottomColor: theme.bg0,
         lineWidth: 2,
         priceLineVisible: false,

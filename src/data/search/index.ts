@@ -1,6 +1,6 @@
 import { useAllTokenData } from 'state/tokens/hooks'
 import { TokenData } from 'state/tokens/reducer'
-import { useTokenDatas } from 'data/tokens/tokenData'
+import { useFetchedTokenDatas } from 'data/tokens/tokenData'
 import gql from 'graphql-tag'
 import { useState, useEffect, useMemo } from 'react'
 import { client } from 'apollo/client'
@@ -182,7 +182,7 @@ export function useFetchSearchResults(
   }, [poolData])
 
   // format as token and pool datas
-  const { data: tokenFullDatas, loading: tokenFullLoading } = useTokenDatas(allFetchedTokens.map((t) => t.id))
+  const { data: tokenFullDatas, loading: tokenFullLoading } = useFetchedTokenDatas(allFetchedTokens.map((t) => t.id))
   const poolDatasFull = usePoolDatas(allFetchedPools.map((p) => p.id))
   const formattedTokens = useMemo(() => (tokenFullDatas ? Object.values(tokenFullDatas) : []), [tokenFullDatas])
 

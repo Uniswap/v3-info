@@ -4,19 +4,22 @@ import { TYPE, ExternalLink } from '../../theme'
 
 import { useSubgraphStatus } from '../../state/application/hooks'
 import { getEtherscanLink } from '../../utils'
+import useTheme from 'hooks/useTheme'
 
 const StyledPolling = styled.div`
-  position: fixed;
   display: flex;
-  right: 0;
-  bottom: 0;
-  padding: 1rem;
   color: white;
+  margin-right: 1rem;
+  border-radius: 4px;
+  width: 192px;
+  padding: 4px;
+  background-color: ${({ theme }) => theme.bg2};
   transition: opacity 0.25s ease;
   color: ${({ theme }) => theme.green1};
   :hover {
     opacity: 1;
   }
+  z-index: 9999;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
@@ -27,7 +30,7 @@ const StyledPollingDot = styled.div`
   height: 8px;
   min-height: 8px;
   min-width: 8px;
-  margin-left: 0.5rem;
+  margin-left: 0.4rem;
   margin-top: 3px;
   border-radius: 50%;
   position: relative;
@@ -46,7 +49,6 @@ const rotate360 = keyframes`
 const Spinner = styled.div`
   animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   transform: translateZ(0);
-
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
@@ -56,12 +58,13 @@ const Spinner = styled.div`
   height: 14px;
   border-radius: 50%;
   position: relative;
-
   left: -3px;
   top: -3px;
 `
 
 export default function Polling() {
+  const theme = useTheme()
+
   const [status] = useSubgraphStatus()
 
   const [isMounted, setIsMounted] = useState(true)
@@ -85,7 +88,10 @@ export default function Polling() {
   return (
     <ExternalLink href={latestBlock ? getEtherscanLink(1, latestBlock.toString(), 'block') : ''}>
       <StyledPolling>
-        <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{latestBlock}</TYPE.small>
+        <TYPE.small mr="4px" color={theme.text3}>
+          Latest synced block:{' '}
+        </TYPE.small>
+        <TYPE.small style={{ opacity: isMounted ? '0.6' : '0.8' }}>{latestBlock}</TYPE.small>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
       </StyledPolling>
     </ExternalLink>

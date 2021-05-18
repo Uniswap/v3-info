@@ -11,6 +11,9 @@ import { createReducer } from '@reduxjs/toolkit'
 import { Transaction } from 'types'
 
 export type TokenData = {
+  // token is in some pool on uniswap
+  exists: boolean
+
   // basic token info
   name: string
   symbol: string

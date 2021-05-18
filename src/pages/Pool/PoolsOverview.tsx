@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { PageWrapper } from 'pages/styled'
 import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
@@ -9,6 +9,10 @@ import { useSavedPools } from 'state/user/hooks'
 import { DarkGreyCard } from 'components/Card'
 
 export default function PoolPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // get all the pool datas that exist
   const allPoolData = useAllPoolData()
   const poolDatas = useMemo(() => {

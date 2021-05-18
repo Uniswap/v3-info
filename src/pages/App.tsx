@@ -17,7 +17,6 @@ import PoolPage from './Pool/PoolPage'
 import { ExternalLink, HideMedium, TYPE } from 'theme'
 import { useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
-// import Polling from 'components/Header/Polling'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -48,9 +47,8 @@ const BodyWrapper = styled.div`
   z-index: 10;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 16px;
     padding-top: 2rem;
-    margin-top: 140px;
+    margin-top: 100px;
   `};
 
   z-index: 1;
@@ -96,7 +94,6 @@ export default function App() {
       ) : (
         <AppWrapper>
           <URLWarning />
-          {/* <Polling /> */}
           <HeaderWrapper>
             <HideMedium>
               <TopBar />

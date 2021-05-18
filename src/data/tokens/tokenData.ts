@@ -62,7 +62,7 @@ interface TokenDataResponse {
 /**
  * Fetch top addresses by volume
  */
-export function useTokenDatas(
+export function useFetchedTokenDatas(
   tokenAddresses: string[]
 ): {
   loading: boolean
@@ -195,22 +195,21 @@ export function useTokenDatas(
         ? parseFloat(current.txCount)
         : 0
 
-    if (current) {
-      accum[address] = {
-        address,
-        name: formatTokenName(address, current.name),
-        symbol: formatTokenSymbol(address, current.symbol),
-        volumeUSD,
-        volumeUSDChange,
-        volumeUSDWeek,
-        txCount,
-        tvlUSD,
-        tvlUSDChange,
-        tvlToken,
-        priceUSD,
-        priceUSDChange,
-        priceUSDChangeWeek,
-      }
+    accum[address] = {
+      exists: !!current,
+      address,
+      name: current ? formatTokenName(address, current.name) : '',
+      symbol: current ? formatTokenSymbol(address, current.symbol) : '',
+      volumeUSD,
+      volumeUSDChange,
+      volumeUSDWeek,
+      txCount,
+      tvlUSD,
+      tvlUSDChange,
+      tvlToken,
+      priceUSD,
+      priceUSDChange,
+      priceUSDChangeWeek,
     }
 
     return accum

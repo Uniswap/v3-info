@@ -4,6 +4,7 @@ import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { TYPE, ExternalLink } from 'theme'
 import { useEthPrices } from 'hooks/useEthPrices'
 import { formatDollarAmount } from 'utils/numbers'
+import Polling from './Polling'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -25,6 +26,7 @@ const TopBar = () => {
   return (
     <Wrapper>
       <RowBetween>
+        <Polling />
         <AutoRow gap="6px">
           <RowFixed>
             <Item>ETH Price:</Item>

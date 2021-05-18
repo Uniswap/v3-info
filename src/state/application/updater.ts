@@ -5,7 +5,7 @@ import { useFetchedSubgraphStatus } from '../../data/application'
 export default function Updater(): null {
   // subgraph status
   const [status, updateStatus] = useSubgraphStatus()
-  const { available } = useFetchedSubgraphStatus()
+  const { available, syncedBlock: newSyncedBlock } = useFetchedSubgraphStatus()
 
   const syncedBlock = status.syncedBlock
 
@@ -13,7 +13,10 @@ export default function Updater(): null {
     if (status.available === null && available !== null) {
       updateStatus(available, syncedBlock)
     }
-  }, [available, status.available, syncedBlock, updateStatus])
+    if (!status.syncedBlock || (status.syncedBlock !== newSyncedBlock && syncedBlock)) {
+      updateStatus(status.available, newSyncedBlock)
+    }
+  }, [available, newSyncedBlock, status.available, status.syncedBlock, syncedBlock, updateStatus])
 
   return null
 }

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { PageWrapper } from 'pages/styled'
 import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
@@ -9,6 +9,10 @@ import { useSavedTokens } from 'state/user/hooks'
 import { DarkGreyCard } from 'components/Card'
 
 export default function TokensOverview() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const allTokens = useAllTokenData()
 
   const formattedTokens = useMemo(() => {

@@ -91,7 +91,7 @@ const LineChart = ({
         width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: 'transparent',
-          textColor: textColor,
+          textColor: '#565A69',
           fontFamily: 'Inter var',
         },
         rightPriceScale: {
@@ -104,7 +104,6 @@ const LineChart = ({
         },
         timeScale: {
           borderVisible: false,
-          visible: false,
         },
         watermark: {
           color: 'rgba(0, 0, 0, 0)',

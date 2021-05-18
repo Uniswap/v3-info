@@ -88,7 +88,7 @@ const BarChart = ({
         width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: 'transparent',
-          textColor: textColor,
+          textColor: '#565A69',
           fontFamily: 'Inter var',
         },
         rightPriceScale: {
@@ -115,11 +115,8 @@ const BarChart = ({
         },
         crosshair: {
           horzLine: {
-            visible: true,
-            style: 3,
-            width: 1,
-            color: '#505050',
-            labelBackgroundColor: color,
+            visible: false,
+            labelVisible: false,
           },
           vertLine: {
             visible: true,
@@ -127,6 +124,7 @@ const BarChart = ({
             width: 1,
             color: '#505050',
             labelBackgroundColor: color,
+            labelVisible: false,
           },
         },
       })

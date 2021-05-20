@@ -8,7 +8,7 @@ import {
   updateTransactions,
 } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
-import { Transaction } from 'types'
+import { PriceChartEntry, Transaction } from 'types'
 
 export type TokenData = {
   // token is in some pool on uniswap
@@ -41,12 +41,6 @@ export interface TokenChartEntry {
   totalValueLockedUSD: number
 }
 
-export interface TokenPriceEntry {
-  timestamp: string
-  open: number
-  close: number
-}
-
 export interface TokensState {
   // analytics data from
   byAddress: {
@@ -55,7 +49,7 @@ export interface TokensState {
       poolAddresses: string[] | undefined
       chartData: TokenChartEntry[] | undefined
       priceData: {
-        [secondsInterval: number]: TokenPriceEntry[] | undefined
+        [secondsInterval: number]: PriceChartEntry[] | undefined
       }
       transactions: Transaction[] | undefined
       lastUpdated: number | undefined

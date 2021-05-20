@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
-import { TokenData, TokenChartEntry, TokenPriceEntry } from './reducer'
-import { Transaction } from 'types'
+import { TokenData, TokenChartEntry } from './reducer'
+import { PriceChartEntry, Transaction } from 'types'
 
 // protocol wide info
 export const updateTokenData = createAction<{ tokens: TokenData[] }>('tokens/updateTokenData')
@@ -27,5 +27,5 @@ export const updateTransactions = createAction<{ tokenAddress: string; transacti
 export const updatePriceData = createAction<{
   tokenAddress: string
   secondsInterval: number
-  priceData: TokenPriceEntry[]
+  priceData: PriceChartEntry[]
 }>('tokens/updatePriceData')

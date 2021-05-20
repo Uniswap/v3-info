@@ -28,7 +28,7 @@ export async function splitQuery<Type>(
       const sliced = values.slice(skip, end)
       const result = await client.query<Type>({
         query: query(...vars, sliced),
-        fetchPolicy: 'cache-first',
+        fetchPolicy: 'network-only',
       })
       fetchedData = {
         ...fetchedData,

@@ -5,6 +5,7 @@ import gql from 'graphql-tag'
 import { client } from 'apollo/client'
 import { getBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { splitQuery } from 'utils/queries'
+import { PriceChartEntry } from 'types'
 
 export const OLDEST_DAY_QUERY = gql`
   query oldestDayDatas($tokenAddress: Bytes!) {
@@ -49,14 +50,10 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
 export async function fetchTokenPriceData(
   address: string,
   interval: number
-): Promise<
-  | {
-      timestamp: string
-      open: number
-      close: number
-    }[]
-  | undefined
-> {
+): Promise<{
+  data: PriceChartEntry[]
+  error: boolean
+}> {
   // start and end bounds
 
   try {
@@ -67,16 +64,30 @@ export async function fetchTokenPriceData(
       },
     })
 
-    if (!data || loading || error) {
-      console.log('bad oldest day query ')
-      return undefined
+    if (!data || loading) {
+      return {
+        data: [],
+        error: false,
+      }
+    }
+
+    if (error) {
+      console.log(error)
+      return {
+        data: [],
+        error: true,
+      }
     }
 
     const endTimestamp = dayjs.utc().unix()
     const startTimestamp = parseFloat(data.tokenDayDatas[0]?.date ?? 0)
 
     if (!startTimestamp) {
-      return []
+      console.log('Error fetching token price: no start timestamp')
+      return {
+        data: [],
+        error: false,
+      }
     }
 
     // create an array of hour start times until we reach current hour
@@ -89,18 +100,23 @@ export async function fetchTokenPriceData(
 
     // backout if invalid timestamp format
     if (timestamps.length === 0) {
-      console.log('no timestamps')
-      return []
+      return {
+        data: [],
+        error: false,
+      }
     }
 
     // fetch blocks based on timestamp
     const blocks = await getBlocksFromTimestamps(timestamps, 1000)
     if (!blocks || blocks.length === 0) {
       console.log('no blocks')
-      return []
+      return {
+        data: [],
+        error: false,
+      }
     }
 
-    const prices: any | undefined = await splitQuery(PRICES_BY_BLOCK, client, [address], blocks, 1000)
+    const prices: any | undefined = await splitQuery(PRICES_BY_BLOCK, client, [address], blocks, 200)
     const pricesCopy = Object.assign([], prices)
 
     if (prices && pricesCopy) {
@@ -139,19 +155,27 @@ export async function fetchTokenPriceData(
       // for each hour, construct the open and close price
       for (let i = 0; i < values.length - 1; i++) {
         formattedHistory.push({
-          timestamp: values[i].timestamp,
+          time: parseFloat(values[i].timestamp),
           open: values[i].priceUSD,
           close: values[i + 1].priceUSD,
+          high: values[i + 1].priceUSD,
+          low: values[i].priceUSD,
         })
       }
 
-      return formattedHistory
+      return { data: formattedHistory, error: false }
     } else {
       console.log('no price data loaded')
-      return undefined
+      return {
+        data: [],
+        error: false,
+      }
     }
   } catch (e) {
     console.log(e)
-    return undefined
+    return {
+      data: [],
+      error: true,
+    }
   }
 }

@@ -207,7 +207,5 @@ export async function fetchPoolTransactions(
     }
   })
 
-  console.log(swaps)
-
   return { data: [...mints, ...burns, ...swaps], error: false, loading: false }
 }

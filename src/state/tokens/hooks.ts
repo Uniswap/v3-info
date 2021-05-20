@@ -1,5 +1,5 @@
 import { AppState, AppDispatch } from './../index'
-import { TokenData, TokenChartEntry, TokenPriceEntry } from './reducer'
+import { TokenData, TokenChartEntry } from './reducer'
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -15,7 +15,7 @@ import { fetchPoolsForToken } from 'data/tokens/poolsForToken'
 import { fetchTokenChartData } from 'data/tokens/chartData'
 import { fetchTokenPriceData } from 'data/tokens/priceData'
 import { fetchTokenTransactions } from 'data/tokens/transactions'
-import { Transaction } from 'types'
+import { PriceChartEntry, Transaction } from 'types'
 import { notEmpty } from 'utils'
 
 export function useAllTokenData(): {
@@ -148,7 +148,7 @@ export function useTokenChartData(address: string): TokenChartEntry[] | undefine
  * If not loaded, fetch and store
  * @param address
  */
-export function useTokenPriceData(address: string, interval: number): TokenPriceEntry[] | undefined {
+export function useTokenPriceData(address: string, interval: number): PriceChartEntry[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
   const token = useSelector((state: AppState) => state.tokens.byAddress[address])
   const priceData = token.priceData[interval]
@@ -156,19 +156,18 @@ export function useTokenPriceData(address: string, interval: number): TokenPrice
 
   useEffect(() => {
     async function fetch() {
-      const priceData = await fetchTokenPriceData(address, interval)
-
-      if (priceData) {
+      const { data, error: fetchingError } = await fetchTokenPriceData(address, interval)
+      if (data) {
         dispatch(
           updatePriceData({
             tokenAddress: address,
             secondsInterval: interval,
-            priceData: priceData as TokenPriceEntry[],
+            priceData: data,
           })
         )
       }
-      if (error) {
-        setError(error)
+      if (fetchingError) {
+        setError(true)
       }
     }
     if (!priceData && !error) {

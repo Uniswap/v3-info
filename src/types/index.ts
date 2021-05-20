@@ -28,3 +28,14 @@ export type Transaction = {
   amountToken0: number
   amountToken1: number
 }
+
+/**
+ * Formatted type for Candlestick charts
+ */
+export type PriceChartEntry = {
+  time: number // unix timestamp
+  open: number
+  close: number
+  high: number
+  low: number
+}

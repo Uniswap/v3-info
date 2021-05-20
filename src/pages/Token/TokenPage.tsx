@@ -32,6 +32,7 @@ import BarChart from 'components/BarChart'
 import CandleChart from 'components/CandleChart'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedTokens } from 'state/user/hooks'
+import { ONE_HOUR_SECONDS } from 'constants/intervals'
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;
@@ -116,27 +117,11 @@ export default function TokenPage({
   const [latestValue, setLatestValue] = useState<number | undefined>()
   // const [latestTime, setLatestTime] = useState<string | undefined>()
 
-  const priceData = useTokenPriceData(address, 3600)
-
-  const formattedPriceData = useMemo(() => {
-    if (priceData && tokenData) {
-      return priceData.map((entry) => {
-        return {
-          time: parseFloat(entry.timestamp),
-          open: entry.open,
-          close: entry.close,
-          high: entry.close,
-          low: entry.open,
-        }
-      })
-    } else {
-      return []
-    }
-  }, [priceData, tokenData])
+  const priceData = useTokenPriceData(address, ONE_HOUR_SECONDS)
 
   const adjustedToCurrent = useMemo(() => {
-    if (priceData && formattedPriceData && tokenData) {
-      const adjusted = formattedPriceData
+    if (priceData && tokenData && priceData.length > 0) {
+      const adjusted = priceData
       adjusted.push({
         time: currentTimestamp() / 1000,
         open: tokenData?.priceUSD,
@@ -148,7 +133,7 @@ export default function TokenPage({
     } else {
       return undefined
     }
-  }, [formattedPriceData, priceData, tokenData])
+  }, [priceData, tokenData])
 
   // watchlist
   const [savedTokens, addSavedToken] = useSavedTokens()

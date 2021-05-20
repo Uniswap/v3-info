@@ -63,7 +63,7 @@ export function useFetchProtocolData(): {
     // volume data
     const volumeUSD =
       parsed && parsed24
-        ? parseFloat(parsed.totalVolumeUSD) - parseFloat(parsed24.totalVolumeUSD)
+        ? parseFloat(parsed.totalVolumeUSD) - parseFloat(parsed24.totalVolumeUSD) - 56759017308.90606
         : parseFloat(parsed.totalVolumeUSD)
 
     const volumeOneWindowAgo =

@@ -102,11 +102,6 @@ async function fetchChartData() {
       return formattedExisting[parseInt(key)]
     })
 
-    dateMap[dateMap.length - 1] = {
-      ...dateMap[dateMap.length - 1],
-      volumeUSD: dateMap[dateMap.length - 1].volumeUSD - 56759017308.90606,
-    }
-
     return {
       data: dateMap,
       error: false,

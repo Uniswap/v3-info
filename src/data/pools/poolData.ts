@@ -15,7 +15,7 @@ export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
   const queryString =
     `
     query pools {
-      pools(first: 200, where: {id_in: ${poolString}},` +
+      pools(where: {id_in: ${poolString}},` +
     (block ? `block: {number: ${block}} ,` : ``) +
     ` orderBy: totalValueLockedUSD, orderDirection: desc) {
         id

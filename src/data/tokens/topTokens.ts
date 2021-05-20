@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 
 export const TOP_TOKENS = gql`
   query topPools {
-    tokens(first: 200, orderBy: totalValueLockedUSD, orderDirection: desc) {
+    tokens(first: 100, orderBy: totalValueLockedUSD, orderDirection: desc) {
       id
     }
   }

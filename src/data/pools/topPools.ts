@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 
 export const TOP_POOLS = gql`
   query topPools {
-    pools(first: 200, orderBy: totalValueLockedUSD, orderDirection: desc) {
+    pools(first: 100, orderBy: totalValueLockedUSD, orderDirection: desc) {
       id
     }
   }

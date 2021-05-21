@@ -28,7 +28,7 @@ const ResponsiveGrid = styled.div`
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
-    & :nth-child(3) {
+    & :nth-child(4) {
       display: none;
     }
   }
@@ -78,10 +78,10 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.volumeUSDWeek)}
+          {formatDollarAmount(poolData.volumeUSD)}
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.volumeUSD)}
+          {formatDollarAmount(poolData.volumeUSDWeek)}
         </Label>
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(poolData.tvlUSD)}
@@ -157,11 +157,11 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
             <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
               Pool {arrow(SORT_FIELD.feeTier)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
-              Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
-            </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
               Volume 24H {arrow(SORT_FIELD.volumeUSD)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
+              Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
             </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}

@@ -41,6 +41,8 @@ export default function Home() {
 
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
+  const [leftLabel, setLeftLabel] = useState<string | undefined>()
+  const [rightLabel, setRightLabel] = useState<string | undefined>()
 
   // get all the pool datas that exist
   const allPoolData = useAllPoolData()
@@ -109,10 +111,14 @@ export default function Home() {
               minHeight={332}
               color={theme.pink1}
               setValue={setLiquidityHover}
+              setLabel={setLeftLabel}
               topLeft={
-                <AutoColumn gap="md">
+                <AutoColumn gap="4px">
                   <TYPE.mediumHeader fontSize="16px">TVL</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">{formatDollarAmount(liquidityHover, 2, true)}</TYPE.largeHeader>
+                  <TYPE.main fontSize="12px" height="14px">
+                    {leftLabel ?? ''}
+                  </TYPE.main>
                 </AutoColumn>
               }
             />
@@ -124,10 +130,14 @@ export default function Home() {
               data={formattedVolumeData}
               color={theme.blue1}
               setValue={setVolumeHover}
+              setLabel={setRightLabel}
               topLeft={
-                <AutoColumn gap="md">
+                <AutoColumn gap="4px">
                   <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">{formatDollarAmount(volumeHover, 2, true)}</TYPE.largeHeader>
+                  <TYPE.main fontSize="12px" height="14px">
+                    {rightLabel ?? ''}
+                  </TYPE.main>
                 </AutoColumn>
               }
             />
@@ -151,6 +161,7 @@ export default function Home() {
                   <RowFixed mr="20px">
                     <TYPE.main mr="4px">TVL: </TYPE.main>
                     <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
+                    <TYPE.main></TYPE.main>
                     <Percent value={protocolData?.tvlUSDChange} wrap={true} />
                   </RowFixed>
                 </HideMedium>

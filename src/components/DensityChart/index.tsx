@@ -134,14 +134,14 @@ export default function DensityChart({ address }: DensityChartProps) {
             const feeAmount: FeeAmount = poolData.feeTier
             const mockTicks = [
               {
+                index: t.tickIdx - TICK_SPACINGS[feeAmount],
+                liquidityGross: t.liquidityGross,
+                liquidityNet: JSBI.multiply(t.liquidityNet, JSBI.BigInt('-1')),
+              },
+              {
                 index: t.tickIdx,
                 liquidityGross: t.liquidityGross,
                 liquidityNet: t.liquidityNet,
-              },
-              {
-                index: t.tickIdx + TICK_SPACINGS[feeAmount],
-                liquidityGross: t.liquidityGross,
-                liquidityNet: JSBI.multiply(t.liquidityNet, JSBI.BigInt('-1')),
               },
             ]
             const pool =
@@ -157,17 +157,28 @@ export default function DensityChart({ address }: DensityChartProps) {
 
             const token1Amount = outputRes0?.[0] as CurrencyAmount<Token> | undefined
 
+            const amount0 = token1Amount ? parseFloat(token1Amount.toExact()) * parseFloat(t.price1) : 0
+            const amount1 = token1Amount ? parseFloat(token1Amount.toExact()) : 0
+
             return {
               index: i,
               isCurrent: active,
               activeLiquidity: parseFloat(t.liquidityActive.toString()),
               price0: parseFloat(t.price0),
               price1: parseFloat(t.price1),
-              tvlToken0: token1Amount ? parseFloat(token1Amount.toExact()) * parseFloat(t.price1) : 0,
-              tvlToken1: token1Amount ? parseFloat(token1Amount.toExact()) : 0,
+              tvlToken0: amount0,
+              tvlToken1: amount1,
             }
           })
         )
+        // offset the values to line off bars with TVL used to swap across bar
+        newData?.map((entry, i) => {
+          if (i > 0) {
+            newData[i - 1].tvlToken0 = entry.tvlToken0
+            newData[i - 1].tvlToken1 = entry.tvlToken1
+          }
+        })
+
         if (newData) {
           if (loading) {
             setLoading(false)

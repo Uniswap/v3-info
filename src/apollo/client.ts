@@ -3,10 +3,14 @@ import { ApolloClient, InMemoryCache } from '@apollo/client'
 export const client = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-testing',
   cache: new InMemoryCache(),
-  queryDeduplication: false,
+  queryDeduplication: true,
   defaultOptions: {
     watchQuery: {
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'network-only',
+    },
+    query: {
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all',
     },
   },
 })
@@ -19,4 +23,14 @@ export const healthClient = new ApolloClient({
 export const blockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
   cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'network-only',
+    },
+    query: {
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all',
+    },
+  },
 })

@@ -7,20 +7,6 @@ import { getBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { splitQuery } from 'utils/queries'
 import { PriceChartEntry } from 'types'
 
-export const OLDEST_DAY_QUERY = gql`
-  query oldestDayDatas($tokenAddress: Bytes!) {
-    tokenDayDatas(first: 1, where: { token: $tokenAddress }, orderBy: date, orderDirection: asc) {
-      date
-    }
-  }
-`
-
-interface OldestDayResponse {
-  tokenDayDatas: {
-    date: string
-  }[]
-}
-
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
@@ -49,7 +35,8 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
 
 export async function fetchTokenPriceData(
   address: string,
-  interval: number
+  interval: number,
+  startTimestamp: number
 ): Promise<{
   data: PriceChartEntry[]
   error: boolean
@@ -57,33 +44,10 @@ export async function fetchTokenPriceData(
   // start and end bounds
 
   try {
-    const { data, loading, error } = await client.query<OldestDayResponse>({
-      query: OLDEST_DAY_QUERY,
-      variables: {
-        tokenAddress: address,
-      },
-    })
-
-    if (!data || loading) {
-      return {
-        data: [],
-        error: false,
-      }
-    }
-
-    if (error) {
-      console.log(error)
-      return {
-        data: [],
-        error: true,
-      }
-    }
-
     const endTimestamp = dayjs.utc().unix()
-    const startTimestamp = parseFloat(data.tokenDayDatas[0]?.date ?? 0)
 
     if (!startTimestamp) {
-      console.log('Error fetching token price: no start timestamp')
+      console.log('Error constructing price start timestamp')
       return {
         data: [],
         error: false,
@@ -107,9 +71,9 @@ export async function fetchTokenPriceData(
     }
 
     // fetch blocks based on timestamp
-    const blocks = await getBlocksFromTimestamps(timestamps, 1000)
+    const blocks = await getBlocksFromTimestamps(timestamps, 500)
     if (!blocks || blocks.length === 0) {
-      console.log('no blocks')
+      console.log('Error fetching blocks')
       return {
         data: [],
         error: false,
@@ -162,6 +126,8 @@ export async function fetchTokenPriceData(
           low: values[i].priceUSD,
         })
       }
+
+      console.log(formattedHistory)
 
       return { data: formattedHistory, error: false }
     } else {

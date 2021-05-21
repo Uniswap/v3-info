@@ -17,6 +17,10 @@ import { fetchTokenPriceData } from 'data/tokens/priceData'
 import { fetchTokenTransactions } from 'data/tokens/transactions'
 import { PriceChartEntry, Transaction } from 'types'
 import { notEmpty } from 'utils'
+import dayjs, { OpUnitType } from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+// format dayjs with the libraries that we need
+dayjs.extend(utc)
 
 export function useAllTokenData(): {
   [address: string]: { data: TokenData | undefined; lastUpdated: number | undefined }
@@ -148,21 +152,31 @@ export function useTokenChartData(address: string): TokenChartEntry[] | undefine
  * If not loaded, fetch and store
  * @param address
  */
-export function useTokenPriceData(address: string, interval: number): PriceChartEntry[] | undefined {
+export function useTokenPriceData(
+  address: string,
+  interval: number,
+  timeWindow: OpUnitType
+): PriceChartEntry[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
   const token = useSelector((state: AppState) => state.tokens.byAddress[address])
   const priceData = token.priceData[interval]
   const [error, setError] = useState(false)
 
+  // construct timestamps and check if we need to fetch more data
+  const oldestTimestampFetched = token.priceData.oldestFetchedTimestamp
+  const utcCurrentTime = dayjs()
+  const startTimestamp = utcCurrentTime.subtract(1, timeWindow).startOf('hour').unix()
+
   useEffect(() => {
     async function fetch() {
-      const { data, error: fetchingError } = await fetchTokenPriceData(address, interval)
+      const { data, error: fetchingError } = await fetchTokenPriceData(address, interval, startTimestamp)
       if (data) {
         dispatch(
           updatePriceData({
             tokenAddress: address,
             secondsInterval: interval,
             priceData: data,
+            oldestFetchedTimestamp: startTimestamp,
           })
         )
       }
@@ -173,7 +187,7 @@ export function useTokenPriceData(address: string, interval: number): PriceChart
     if (!priceData && !error) {
       fetch()
     }
-  }, [address, dispatch, error, interval, priceData])
+  }, [address, dispatch, error, interval, oldestTimestampFetched, priceData, startTimestamp, timeWindow])
 
   // return data
   return priceData

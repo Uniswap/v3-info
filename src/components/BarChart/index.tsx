@@ -6,6 +6,9 @@ import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
 import usePrevious from 'hooks/usePrevious'
 import { formatDollarAmount } from 'utils/numbers'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -26,6 +29,7 @@ export type LineChartProps = {
   height?: number | undefined
   minHeight?: number
   setValue?: Dispatch<SetStateAction<number | undefined>> // used for value on hover
+  setLabel?: Dispatch<SetStateAction<string | undefined>> // used for label of valye
   topLeft?: ReactNode | undefined
   topRight?: ReactNode | undefined
   bottomLeft?: ReactNode | undefined
@@ -36,6 +40,7 @@ const BarChart = ({
   data,
   color = '#56B2A4',
   setValue,
+  setLabel,
   topLeft,
   topRight,
   bottomLeft,
@@ -163,13 +168,17 @@ const BarChart = ({
             (param && param.point && param.point.y > height))
         ) {
           setValue && setValue(undefined)
+          setLabel && setLabel(undefined)
         } else if (series && param) {
+          const time = param?.time as { day: number; year: number; month: number }
+          const timeString = dayjs(time.year + '-' + time.month + '-' + time.day).format('MMM D, YYYY')
           const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue)
           setValue && setValue(price)
+          setLabel && timeString && setLabel(timeString)
         }
       })
     }
-  }, [chartCreated, color, currentValue, data, height, setValue, theme.bg0])
+  }, [chartCreated, color, currentValue, data, height, setLabel, setValue, theme.bg0])
 
   return (
     <Wrapper minHeight={minHeight}>

@@ -49,6 +49,7 @@ export interface TokensState {
       poolAddresses: string[] | undefined
       chartData: TokenChartEntry[] | undefined
       priceData: {
+        oldestFetchedTimestamp?: number | undefined
         [secondsInterval: number]: PriceChartEntry[] | undefined
       }
       transactions: Transaction[] | undefined
@@ -98,13 +99,17 @@ export default createReducer(initialState, (builder) =>
       state.byAddress[tokenAddress] = { ...state.byAddress[tokenAddress], transactions }
     })
     // update historical price volume based on interval size
-    .addCase(updatePriceData, (state, { payload: { tokenAddress, secondsInterval, priceData } }) => {
-      state.byAddress[tokenAddress] = {
-        ...state.byAddress[tokenAddress],
-        priceData: {
-          ...state.byAddress[tokenAddress].priceData,
-          [secondsInterval]: priceData,
-        },
+    .addCase(
+      updatePriceData,
+      (state, { payload: { tokenAddress, secondsInterval, priceData, oldestFetchedTimestamp } }) => {
+        state.byAddress[tokenAddress] = {
+          ...state.byAddress[tokenAddress],
+          priceData: {
+            ...state.byAddress[tokenAddress].priceData,
+            [secondsInterval]: priceData,
+            oldestFetchedTimestamp,
+          },
+        }
       }
-    })
+    )
 )

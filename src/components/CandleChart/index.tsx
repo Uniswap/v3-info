@@ -4,7 +4,10 @@ import { RowBetween } from 'components/Row'
 import Card from '../Card'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import useTheme from 'hooks/useTheme'
+
+dayjs.extend(utc)
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -25,6 +28,7 @@ export type LineChartProps = {
   height?: number | undefined
   minHeight?: number
   setValue?: Dispatch<SetStateAction<number | undefined>> // used for value on hover
+  setLabel?: Dispatch<SetStateAction<string | undefined>> // used for value label on hover
   topLeft?: ReactNode | undefined
   topRight?: ReactNode | undefined
   bottomLeft?: ReactNode | undefined
@@ -35,6 +39,7 @@ const CandleChart = ({
   data,
   color = '#56B2A4',
   setValue,
+  setLabel,
   topLeft,
   topRight,
   bottomLeft,
@@ -88,7 +93,7 @@ const CandleChart = ({
           borderVisible: false,
           secondsVisible: true,
           tickMarkFormatter: (unixTime: number) => {
-            return dayjs.unix(unixTime).format('MM/DD h:mm')
+            return dayjs.unix(unixTime).format('MM/DD h:mm A')
           },
         },
         watermark: {
@@ -148,16 +153,19 @@ const CandleChart = ({
             (param && param.point && param.point.y < 0) ||
             (param && param.point && param.point.y > height))
         ) {
+          // reset values
           setValue && setValue(undefined)
+          setLabel && setLabel(undefined)
         } else if (series && param) {
           const timestamp = param.time as number
-          const time = dayjs.unix(timestamp).format('MM/DD h:mm A')
+          const time = dayjs.unix(timestamp).utc().format('MMM D, YYYY h:mm A') + ' (UTC)'
           const parsed = param.seriesPrices.get(series) as { open: number } | undefined
           setValue && setValue(parsed?.open)
+          setLabel && setLabel(time)
         }
       })
     }
-  }, [chartCreated, color, data, height, setValue, theme.bg0])
+  }, [chartCreated, color, data, height, setValue, setLabel, theme.bg0])
 
   return (
     <Wrapper minHeight={minHeight}>

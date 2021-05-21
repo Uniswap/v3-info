@@ -27,5 +27,6 @@ export const updateTransactions = createAction<{ tokenAddress: string; transacti
 export const updatePriceData = createAction<{
   tokenAddress: string
   secondsInterval: number
-  priceData: PriceChartEntry[]
+  priceData: PriceChartEntry[] | undefined
+  oldestFetchedTimestamp: number
 }>('tokens/updatePriceData')

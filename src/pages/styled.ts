@@ -15,7 +15,7 @@ export const ThemedBackground = styled.div<{ backgroundColor: string }>`
   mix-blend-mode: color;
   background: ${({ backgroundColor }) =>
     `radial-gradient(50% 50% at 50% 50%, ${backgroundColor} 0%, rgba(255, 255, 255, 0) 100%)`};
-  transform: translateY(-140vh);
+  transform: translateY(-176vh);
 `
 
 export const ThemedBackgroundGlobal = styled.div<{ backgroundColor: string }>`

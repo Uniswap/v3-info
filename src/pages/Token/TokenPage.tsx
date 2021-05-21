@@ -32,7 +32,8 @@ import BarChart from 'components/BarChart'
 import CandleChart from 'components/CandleChart'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedTokens } from 'state/user/hooks'
-import { ONE_HOUR_SECONDS } from 'constants/intervals'
+import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
+// import { SmallOptionButton } from '../../components/Button'
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;
@@ -40,6 +41,7 @@ const PriceText = styled(TYPE.label)`
 `
 
 const ContentLayout = styled.div`
+  margin-top: 16px;
   display: grid;
   grid-template-columns: 260px 1fr;
   grid-gap: 1em;
@@ -64,6 +66,8 @@ enum ChartView {
   VOL,
   PRICE,
 }
+
+const DEFAULT_TIME_WINDOW = TimeWindow.WEEK
 
 export default function TokenPage({
   match: {
@@ -113,21 +117,22 @@ export default function TokenPage({
     }
   }, [chartData])
 
-  const [view, setView] = useState(ChartView.TVL)
+  const [view, setView] = useState(ChartView.PRICE)
   const [latestValue, setLatestValue] = useState<number | undefined>()
-  // const [latestTime, setLatestTime] = useState<string | undefined>()
+  const [valueLabel, setValueLabel] = useState<string | undefined>()
+  const [timeWindow] = useState(DEFAULT_TIME_WINDOW)
 
-  const priceData = useTokenPriceData(address, ONE_HOUR_SECONDS)
+  const priceData = useTokenPriceData(address, ONE_HOUR_SECONDS, timeWindow)
 
   const adjustedToCurrent = useMemo(() => {
     if (priceData && tokenData && priceData.length > 0) {
-      const adjusted = priceData
+      const adjusted = Object.assign([], priceData)
       adjusted.push({
         time: currentTimestamp() / 1000,
-        open: tokenData?.priceUSD,
+        open: priceData[priceData.length - 1].close,
         close: tokenData?.priceUSD,
         high: tokenData?.priceUSD,
-        low: tokenData?.priceUSD,
+        low: priceData[priceData.length - 1].close,
       })
       return adjusted
     } else {
@@ -150,8 +155,8 @@ export default function TokenPage({
             </StyledExternalLink>
           </LightGreyCard>
         ) : (
-          <AutoColumn gap="16px">
-            <AutoColumn gap="lg">
+          <AutoColumn gap="lg">
+            <AutoColumn gap="40px">
               <RowBetween>
                 <AutoRow gap="4px">
                   <StyledInternalLink to={'/'}>
@@ -230,19 +235,24 @@ export default function TokenPage({
                 </AutoColumn>
               </DarkGreyCard>
               <DarkGreyCard>
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.label fontSize="24px" height="30px">
-                      {latestValue
-                        ? formatDollarAmount(latestValue, 2)
-                        : view === ChartView.VOL
-                        ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-                        : view === ChartView.TVL
-                        ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-                        : formatDollarAmount(tokenData.priceUSD, 2)}
-                    </TYPE.label>
-                  </RowFixed>
-                  <ToggleWrapper width="160px">
+                <RowBetween align="flex-start">
+                  <AutoColumn>
+                    <RowFixed>
+                      <TYPE.label fontSize="24px" height="30px">
+                        {latestValue
+                          ? formatDollarAmount(latestValue, 2)
+                          : view === ChartView.VOL
+                          ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                          : view === ChartView.TVL
+                          ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
+                          : formatDollarAmount(tokenData.priceUSD, 2)}
+                      </TYPE.label>
+                    </RowFixed>
+                    <TYPE.main height="20px" fontSize="12px">
+                      {valueLabel ?? ''}
+                    </TYPE.main>
+                  </AutoColumn>
+                  <ToggleWrapper width="180px">
                     <ToggleElementFree
                       isActive={view === ChartView.VOL}
                       fontSize="12px"
@@ -253,17 +263,17 @@ export default function TokenPage({
                     <ToggleElementFree
                       isActive={view === ChartView.TVL}
                       fontSize="12px"
-                      onClick={() => (view === ChartView.VOL ? setView(ChartView.TVL) : setView(ChartView.VOL))}
+                      onClick={() => (view === ChartView.TVL ? setView(ChartView.PRICE) : setView(ChartView.TVL))}
                     >
                       TVL
                     </ToggleElementFree>
-                    {/* <ToggleElementFree
+                    <ToggleElementFree
                       isActive={view === ChartView.PRICE}
                       fontSize="12px"
                       onClick={() => setView(ChartView.PRICE)}
                     >
                       Price
-                    </ToggleElementFree> */}
+                    </ToggleElementFree>
                   </ToggleWrapper>
                 </RowBetween>
                 {view === ChartView.TVL ? (
@@ -272,6 +282,7 @@ export default function TokenPage({
                     color={backgroundColor}
                     minHeight={340}
                     setValue={setLatestValue}
+                    setLabel={setValueLabel}
                   />
                 ) : view === ChartView.VOL ? (
                   <BarChart
@@ -279,14 +290,49 @@ export default function TokenPage({
                     color={backgroundColor}
                     minHeight={340}
                     setValue={setLatestValue}
+                    setLabel={setValueLabel}
                   />
                 ) : view === ChartView.PRICE ? (
                   adjustedToCurrent ? (
-                    <CandleChart data={adjustedToCurrent} setValue={setLatestValue} color={backgroundColor} />
+                    <CandleChart
+                      data={adjustedToCurrent}
+                      setValue={setLatestValue}
+                      setLabel={setValueLabel}
+                      color={backgroundColor}
+                    />
                   ) : (
                     <LocalLoader fill={false} />
                   )
                 ) : null}
+                {/* <RowBetween width="100%">
+                  <div> </div>
+                  <AutoRow gap="4px" width="fit-content">
+                    <SmallOptionButton
+                      active={timeWindow === TimeWindow.DAY}
+                      onClick={() => setTimeWindow(TimeWindow.DAY)}
+                    >
+                      24H
+                    </SmallOptionButton>
+                    <SmallOptionButton
+                      active={timeWindow === TimeWindow.WEEK}
+                      onClick={() => setTimeWindow(TimeWindow.WEEK)}
+                    >
+                      1W
+                    </SmallOptionButton>
+                    <SmallOptionButton
+                      active={timeWindow === TimeWindow.MONTH}
+                      onClick={() => setTimeWindow(TimeWindow.MONTH)}
+                    >
+                      1M
+                    </SmallOptionButton>
+                    <SmallOptionButton
+                      active={timeWindow === TimeWindow.DAY}
+                      onClick={() => setTimeWindow(TimeWindow.DAY)}
+                    >
+                      All
+                    </SmallOptionButton>
+                  </AutoRow>
+                </RowBetween> */}
               </DarkGreyCard>
             </ContentLayout>
             <TYPE.main>Pools</TYPE.main>

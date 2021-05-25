@@ -178,7 +178,7 @@ export default function Home() {
         </HideSmall>
         <HideSmall>
           <OutlineCard style={{ paddingTop: '12px' }}>
-            <AutoColumn gap="md" ref={scrollDivRef}>
+            <AutoColumn gap="md">
               <TYPE.mediumHeader fontSize="16px">Top Movers 🔥</TYPE.mediumHeader>
               <TopTokenMovers />
             </AutoColumn>

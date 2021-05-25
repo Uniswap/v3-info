@@ -1,4 +1,4 @@
-import React, { useMemo, RefObject } from 'react'
+import React, { useMemo } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { GreyCard } from 'components/Card'
@@ -71,7 +71,7 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
   )
 }
 
-export default function TopTokenMovers({ parentRef }: { parentRef: RefObject<HTMLDivElement> }) {
+export default function TopTokenMovers() {
   const allTokens = useAllTokenData()
 
   const topPriceIncrease = useMemo(() => {

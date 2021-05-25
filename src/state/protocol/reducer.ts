@@ -12,6 +12,10 @@ export interface ProtocolData {
   tvlUSD: number
   tvlUSDChange: number
 
+  // fees
+  feesUSD: number
+  feeChange: number
+
   // transactions
   txCount: number
   txCountChange: number

@@ -6,7 +6,7 @@ import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart'
 import useTheme from 'hooks/useTheme'
 import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
-import { DarkGreyCard } from 'components/Card'
+import { DarkGreyCard, OutlineCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { HideMedium, HideSmall, StyledInternalLink } from '../../theme/components'
@@ -20,6 +20,7 @@ import { notEmpty } from 'utils'
 import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
+import TopTokenMovers from 'components/tokens/TopTokenMovers'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -158,9 +159,9 @@ export default function Home() {
                   <Percent value={protocolData?.volumeUSDChange} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">Transactions 24H: </TYPE.main>
-                  <TYPE.label mr="4px">{protocolData?.txCount?.toLocaleString()}</TYPE.label>
-                  <Percent value={protocolData?.txCountChange} wrap={true} />
+                  <TYPE.main mr="4px">Fees 24H: </TYPE.main>
+                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.feesUSD)}</TYPE.label>
+                  <Percent value={protocolData?.feeChange} wrap={true} />
                 </RowFixed>
                 <HideMedium>
                   <RowFixed mr="20px">
@@ -174,27 +175,23 @@ export default function Home() {
             </RowBetween>
           </DarkGreyCard>
         </HideSmall>
+        <HideSmall>
+          <OutlineCard style={{ paddingTop: '12px' }}>
+            <AutoColumn gap="md">
+              <TYPE.mediumHeader fontSize="16px">Top Movers</TYPE.mediumHeader>
+              <TopTokenMovers />
+            </AutoColumn>
+          </OutlineCard>
+        </HideSmall>
         <RowBetween>
           <TYPE.main>Top Tokens</TYPE.main>
           <StyledInternalLink to="/tokens">Explore</StyledInternalLink>
         </RowBetween>
-        {/* <OutlineCard>
-          <AutoColumn gap="lg">
-            <TYPE.mediumHeader>Top Movers</TYPE.mediumHeader>
-            <TopTokenMovers />
-          </AutoColumn>
-        </OutlineCard> */}
         <TokenTable tokenDatas={formattedTokens} />
         <RowBetween>
           <TYPE.main>Top Pools</TYPE.main>
           <StyledInternalLink to="/pools">Explore</StyledInternalLink>
         </RowBetween>
-        {/* <OutlineCard>
-          <AutoColumn gap="lg">
-            <TYPE.mediumHeader>Top Movers</TYPE.mediumHeader>
-            <TopPoolMovers />
-          </AutoColumn>
-        </OutlineCard> */}
         <PoolTable poolDatas={poolDatas} />
         <RowBetween>
           <TYPE.main>Transactions</TYPE.main>

@@ -28,6 +28,7 @@ export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
         volume
         txCount
         totalValueLocked
+        feesUSD
         totalValueLockedUSD
       }
     }
@@ -42,6 +43,7 @@ interface TokenFields {
   derivedETH: string
   volumeUSD: string
   volume: string
+  feesUSD: string
   txCount: string
   totalValueLocked: string
   totalValueLockedUSD: string
@@ -170,6 +172,8 @@ export function useFetchedTokenDatas(
         : current
         ? parseFloat(current.txCount)
         : 0
+    const feesUSD =
+      current && oneDay ? parseFloat(current.feesUSD) - parseFloat(oneDay.feesUSD) : parseFloat(current.feesUSD) ?? 0
 
     accum[address] = {
       exists: !!current,
@@ -181,6 +185,7 @@ export function useFetchedTokenDatas(
       volumeUSDWeek,
       txCount,
       tvlUSD,
+      feesUSD,
       tvlUSDChange,
       tvlToken,
       priceUSD,

@@ -83,15 +83,13 @@ export default function TokenPage({
     window.scrollTo(0, 0)
   }, [])
 
-  // token data
   const tokenData = useTokenData(address)
-
-  // get the data for the pools this token is a part of
   const poolsForToken = usePoolsForToken(address)
   const poolDatas = usePoolDatas(poolsForToken ?? [])
   const transactions = useTokenTransactions(address)
   const chartData = useTokenChartData(address)
 
+  // format for chart component
   const formattedTvlData = useMemo(() => {
     if (chartData) {
       return chartData.map((day) => {
@@ -104,7 +102,6 @@ export default function TokenPage({
       return []
     }
   }, [chartData])
-
   const formattedVolumeData = useMemo(() => {
     if (chartData) {
       return chartData.map((day) => {
@@ -118,13 +115,14 @@ export default function TokenPage({
     }
   }, [chartData])
 
+  // chart labels
   const [view, setView] = useState(ChartView.PRICE)
   const [latestValue, setLatestValue] = useState<number | undefined>()
   const [valueLabel, setValueLabel] = useState<string | undefined>()
   const [timeWindow] = useState(DEFAULT_TIME_WINDOW)
 
+  // pricing data
   const priceData = useTokenPriceData(address, ONE_HOUR_SECONDS, timeWindow)
-
   const adjustedToCurrent = useMemo(() => {
     if (priceData && tokenData && priceData.length > 0) {
       const adjusted = Object.assign([], priceData)
@@ -230,8 +228,8 @@ export default function TokenPage({
                     <TYPE.label fontSize="24px">{formatDollarAmount(tokenData.volumeUSDWeek)}</TYPE.label>
                   </AutoColumn>
                   <AutoColumn gap="4px">
-                    <TYPE.main fontWeight={400}>24h Txns</TYPE.main>
-                    <TYPE.label fontSize="24px">{tokenData.txCount ?? 0}</TYPE.label>
+                    <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
+                    <TYPE.label fontSize="24px">{formatDollarAmount(tokenData.feesUSD)}</TYPE.label>
                   </AutoColumn>
                 </AutoColumn>
               </DarkGreyCard>

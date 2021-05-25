@@ -13,6 +13,7 @@ export const GLOBAL_DATA = (block?: string) => {
        first: 1) {
         txCount
         totalVolumeUSD
+        totalFeesUSD
         totalValueLockedUSD
       }
     }`
@@ -23,6 +24,7 @@ interface GlobalResponse {
   factories: {
     txCount: string
     totalVolumeUSD: string
+    totalFeesUSD: string
     totalValueLockedUSD: string
   }[]
 }
@@ -85,11 +87,24 @@ export function useFetchProtocolData(): {
     const txCountChange =
       txCount && txCountOneWindowAgo ? getPercentChange(txCount.toString(), txCountOneWindowAgo.toString()) : 0
 
+    const feesOneWindowAgo =
+      parsed24 && parsed48 ? parseFloat(parsed24.totalFeesUSD) - parseFloat(parsed48.totalFeesUSD) : undefined
+
+    const feesUSD =
+      parsed && parsed24
+        ? parseFloat(parsed.totalFeesUSD) - parseFloat(parsed24.totalFeesUSD)
+        : parseFloat(parsed.totalFeesUSD)
+
+    const feeChange =
+      feesUSD && feesOneWindowAgo ? getPercentChange(feesUSD.toString(), feesOneWindowAgo.toString()) : 0
+
     return {
       volumeUSD,
       volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
       tvlUSD: parseFloat(parsed.totalValueLockedUSD),
       tvlUSDChange,
+      feesUSD,
+      feeChange,
       txCount,
       txCountChange,
     }

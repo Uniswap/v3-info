@@ -65,43 +65,42 @@ export default function TopTokenMovers() {
         return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? 1 : -1) : 1
       })
       .slice(0, Math.min(20, Object.values(allTokens).length))
-      .reverse()
   }, [allTokens])
 
   const increaseRef = useRef<HTMLDivElement>(null)
-  const [increaseSet, setIncreaseSet] = useState(false)
-  useEffect(() => {
-    if (!increaseSet && increaseRef && increaseRef.current) {
-      setInterval(() => {
-        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
-          increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
-        }
-      }, 130)
-      setIncreaseSet(true)
-    }
-  }, [increaseRef, increaseSet])
+  // const [increaseSet, setIncreaseSet] = useState(false)
+  // useEffect(() => {
+  //   if (!increaseSet && increaseRef && increaseRef.current) {
+  //     setInterval(() => {
+  //       if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+  //         increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
+  //       }
+  //     }, 30)
+  //     setIncreaseSet(true)
+  //   }
+  // }, [increaseRef, increaseSet])
 
   const decreaseRef = useRef<HTMLDivElement>(null)
-  const [decreaseSet, setDecreaseSet] = useState(false)
-  useEffect(() => {
-    if (!decreaseSet && decreaseRef?.current) {
-      setInterval(() => {
-        if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
-          decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
-        }
-      }, 130)
-      setDecreaseSet(true)
-    }
-  }, [decreaseSet])
+  // const [decreaseSet, setDecreaseSet] = useState(false)
+  // useEffect(() => {
+  //   if (!decreaseSet && decreaseRef?.current) {
+  //     setInterval(() => {
+  //       if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
+  //         decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
+  //       }
+  //     }, 30)
+  //     setDecreaseSet(true)
+  //   }
+  // }, [decreaseSet])
 
   // auto scroll bottom to end
-  const [scrolled, setScrolled] = useState(false)
-  useEffect(() => {
-    if (decreaseRef && decreaseRef.current && !scrolled) {
-      decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
-      setScrolled(true)
-    }
-  }, [decreaseRef, scrolled])
+  // const [scrolled, setScrolled] = useState(false)
+  // useEffect(() => {
+  //   if (decreaseRef && decreaseRef.current && !scrolled) {
+  //     decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
+  //     setScrolled(true)
+  //   }
+  // }, [decreaseRef, scrolled])
 
   return (
     <AutoColumn gap="md">

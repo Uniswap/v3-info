@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react'
+import React, { useMemo, useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { ScrollableX, GreyCard } from 'components/Card'
@@ -68,51 +68,49 @@ export default function TopTokenMovers() {
       .reverse()
   }, [allTokens])
 
-  const increaseContainer = document.getElementById('increaseContainer')
-  const increaseContainerWidth = increaseContainer?.scrollWidth
+  const increaseRef = useRef<HTMLDivElement>(null)
   const [increaseSet, setIncreaseSet] = useState(false)
   useEffect(() => {
-    if (!increaseSet && increaseContainer) {
-      self.setInterval(() => {
-        if (increaseContainer.scrollLeft !== increaseContainerWidth) {
-          increaseContainer.scrollTo(increaseContainer.scrollLeft + 1, 0)
+    if (!increaseSet && increaseRef && increaseRef.current) {
+      setInterval(() => {
+        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+          increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
         }
       }, 80)
       setIncreaseSet(true)
     }
-  }, [increaseContainer, increaseContainerWidth, increaseSet])
+  }, [increaseRef, increaseSet])
 
-  const decreaseContainer = document.getElementById('decreaseContainer')
-  const decreaseContainerWidth = increaseContainer?.scrollWidth
+  const decreaseRef = useRef<HTMLDivElement>(null)
   const [decreaseSet, setDecreaseSet] = useState(false)
   useEffect(() => {
-    if (!decreaseSet && decreaseContainer) {
-      self.setInterval(() => {
-        if (decreaseContainer.scrollLeft !== decreaseContainerWidth) {
-          decreaseContainer.scrollTo(decreaseContainer.scrollLeft - 1, 0)
+    if (!decreaseSet && decreaseRef?.current) {
+      setInterval(() => {
+        if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
+          decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
         }
-      }, 80)
+      }, 120)
       setDecreaseSet(true)
     }
-  }, [decreaseContainer, increaseSet, decreaseContainerWidth, decreaseSet])
+  }, [decreaseSet])
 
   // auto scroll bottom to end
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
-    if (decreaseContainer && decreaseContainerWidth && !scrolled) {
-      decreaseContainer.scrollTo(decreaseContainerWidth - 1, 0)
+    if (decreaseRef && decreaseRef.current && !scrolled) {
+      decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
       setScrolled(true)
     }
-  }, [decreaseContainer, decreaseContainerWidth, scrolled])
+  }, [decreaseRef, scrolled])
 
   return (
     <AutoColumn gap="md">
-      <ScrollableX id="increaseContainer">
+      <ScrollableX ref={increaseRef}>
         {topPriceIncrease.map((entry) =>
           entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
         )}
       </ScrollableX>
-      <ScrollableX id="decreaseContainer">
+      <ScrollableX ref={decreaseRef}>
         {topPriceDecrease.map((entry) =>
           entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
         )}

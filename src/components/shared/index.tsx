@@ -1,3 +1,5 @@
+import Row from 'components/Row'
+import React from 'react'
 import styled from 'styled-components'
 
 export const PageButtons = styled.div`
@@ -23,4 +25,12 @@ export const Break = styled.div`
   height: 1px;
   background-color: ${({ theme }) => theme.bg1};
   width: 100%;
+`
+
+export const FixedSpan = styled.span<{ width?: string | null }>`
+  width: ${({ width }) => width ?? ''};
+`
+
+export const MonoSpace = styled.span`
+  font-variant-numeric: tabular-nums;
 `

@@ -25,6 +25,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedPools } from 'state/user/hooks'
 import DensityChart from 'components/DensityChart'
+import { MonoSpace } from 'components/shared'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -82,6 +83,7 @@ export default function PoolPage({
 
   const [view, setView] = useState(ChartView.VOL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
+  const [valueLabel, setValueLabel] = useState<string | undefined>()
 
   const formattedTvlData = useMemo(() => {
     if (chartData) {
@@ -244,18 +246,20 @@ export default function PoolPage({
             <DarkGreyCard>
               <RowBetween align="flex-start">
                 <AutoColumn>
-                  <TYPE.main>
-                    {view === ChartView.VOL ? '24H Volume' : view === ChartView.TVL ? 'TVL' : 'Liquidity Distribution'}
-                  </TYPE.main>
                   <TYPE.label fontSize="24px" height="30px">
-                    {latestValue
-                      ? formatDollarAmount(latestValue)
-                      : view === ChartView.VOL
-                      ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-                      : view === ChartView.DENSITY
-                      ? ''
-                      : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}
+                    <MonoSpace>
+                      {latestValue
+                        ? formatDollarAmount(latestValue)
+                        : view === ChartView.VOL
+                        ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                        : view === ChartView.DENSITY
+                        ? ''
+                        : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}{' '}
+                    </MonoSpace>
                   </TYPE.label>
+                  <TYPE.main height="20px" fontSize="12px">
+                    {valueLabel ? <MonoSpace>{valueLabel}</MonoSpace> : ''}
+                  </TYPE.main>
                 </AutoColumn>
                 <ToggleWrapper width="200px">
                   <ToggleElementFree
@@ -282,13 +286,20 @@ export default function PoolPage({
                 </ToggleWrapper>
               </RowBetween>
               {view === ChartView.TVL ? (
-                <LineChart data={formattedTvlData} color={backgroundColor} minHeight={340} setValue={setLatestValue} />
+                <LineChart
+                  data={formattedTvlData}
+                  setLabel={setValueLabel}
+                  color={backgroundColor}
+                  minHeight={340}
+                  setValue={setLatestValue}
+                />
               ) : view === ChartView.VOL ? (
                 <BarChart
                   data={formattedVolumeData}
                   color={backgroundColor}
                   minHeight={340}
                   setValue={setLatestValue}
+                  setLabel={setValueLabel}
                 />
               ) : (
                 <DensityChart address={address} />

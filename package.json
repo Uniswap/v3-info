@@ -129,6 +129,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.15",
     "@data-ui/histogram": "^0.0.84",
+    "@types/numeral": "^2.0.1",
     "@uniswap/default-token-list": "^2.0.0",
     "@uniswap/sdk-core": "^3.0.0-alpha.1",
     "@uniswap/v2-sdk": "^3.0.0-alpha.0",

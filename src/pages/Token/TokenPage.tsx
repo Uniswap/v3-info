@@ -33,6 +33,7 @@ import CandleChart from 'components/CandleChart'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedTokens } from 'state/user/hooks'
 import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
+import { MonoSpace } from 'components/shared'
 // import { SmallOptionButton } from '../../components/Button'
 
 const PriceText = styled(TYPE.label)`
@@ -239,17 +240,19 @@ export default function TokenPage({
                   <AutoColumn>
                     <RowFixed>
                       <TYPE.label fontSize="24px" height="30px">
-                        {latestValue
-                          ? formatDollarAmount(latestValue, 2)
-                          : view === ChartView.VOL
-                          ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-                          : view === ChartView.TVL
-                          ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-                          : formatDollarAmount(tokenData.priceUSD, 2)}
+                        <MonoSpace>
+                          {latestValue
+                            ? formatDollarAmount(latestValue, 2)
+                            : view === ChartView.VOL
+                            ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                            : view === ChartView.TVL
+                            ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
+                            : formatDollarAmount(tokenData.priceUSD, 2)}
+                        </MonoSpace>
                       </TYPE.label>
                     </RowFixed>
                     <TYPE.main height="20px" fontSize="12px">
-                      {valueLabel ?? ''}
+                      {valueLabel ? <MonoSpace>{valueLabel}</MonoSpace> : ''}
                     </TYPE.main>
                   </AutoColumn>
                   <ToggleWrapper width="180px">

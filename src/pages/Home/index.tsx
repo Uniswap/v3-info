@@ -19,6 +19,7 @@ import { useAllPoolData } from 'state/pools/hooks'
 import { notEmpty } from 'utils'
 import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
+import { MonoSpace } from 'components/shared'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -115,9 +116,11 @@ export default function Home() {
               topLeft={
                 <AutoColumn gap="4px">
                   <TYPE.mediumHeader fontSize="16px">TVL</TYPE.mediumHeader>
-                  <TYPE.largeHeader fontSize="32px">{formatDollarAmount(liquidityHover, 2, true)}</TYPE.largeHeader>
+                  <TYPE.largeHeader fontSize="32px">
+                    <MonoSpace>{formatDollarAmount(liquidityHover, 2, true)} </MonoSpace>
+                  </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
-                    {leftLabel ?? ''}
+                    {leftLabel ? <MonoSpace>{leftLabel}</MonoSpace> : ''}
                   </TYPE.main>
                 </AutoColumn>
               }
@@ -134,9 +137,11 @@ export default function Home() {
               topLeft={
                 <AutoColumn gap="4px">
                   <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>
-                  <TYPE.largeHeader fontSize="32px">{formatDollarAmount(volumeHover, 2, true)}</TYPE.largeHeader>
+                  <TYPE.largeHeader fontSize="32px">
+                    <MonoSpace> {formatDollarAmount(volumeHover, 2)}</MonoSpace>
+                  </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
-                    {rightLabel ?? ''}
+                    {rightLabel ? <MonoSpace>{rightLabel}</MonoSpace> : ''}
                   </TYPE.main>
                 </AutoColumn>
               }

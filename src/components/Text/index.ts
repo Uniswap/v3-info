@@ -8,6 +8,7 @@ export const Label = styled(TYPE.label)<{ end?: number }>`
   font-weight: 400;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
   align-items: center;
+  font-variant-numeric: tabular-nums;
   @media screen and (max-width: 640px) {
     font-size: 14px;
   }

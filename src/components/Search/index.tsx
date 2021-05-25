@@ -151,7 +151,7 @@ const OptionButton = styled.div<{ enabled: boolean }>`
   }
 `
 
-const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
+const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
   const history = useHistory()
 
   const ref = useRef<HTMLInputElement>(null)
@@ -213,16 +213,14 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
 
   // filter on view
   const [showWatchlist, setShowWatchlist] = useState(false)
-  const tokensForList = useMemo(() => (showWatchlist ? watchListTokenData ?? [] : tokens), [
-    showWatchlist,
-    tokens,
-    watchListTokenData,
-  ])
-  const poolForList = useMemo(() => (showWatchlist ? watchListPoolData ?? [] : pools), [
-    pools,
-    showWatchlist,
-    watchListPoolData,
-  ])
+  const tokensForList = useMemo(
+    () => (showWatchlist ? watchListTokenData ?? [] : tokens.sort((t0, t1) => (t0.volumeUSD > t1.volumeUSD ? -1 : 1))),
+    [showWatchlist, tokens, watchListTokenData]
+  )
+  const poolForList = useMemo(
+    () => (showWatchlist ? watchListPoolData ?? [] : pools.sort((p0, p1) => (p0.volumeUSD > p1.volumeUSD ? -1 : 1))),
+    [pools, showWatchlist, watchListPoolData]
+  )
 
   return (
     <Hotkeys keyName="command+/" onKeyDown={handleDown}>
@@ -393,12 +391,9 @@ const SearchSmall = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
             </HoverText>
           </AutoColumn>
         </Menu>
-        {/* <BelowMedium>
-          <MobileMenu>hey</MobileMenu>
-        </BelowMedium> */}
       </Container>
     </Hotkeys>
   )
 }
 
-export default SearchSmall
+export default Search

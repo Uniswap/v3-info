@@ -6,10 +6,10 @@ export const client = new ApolloClient({
   queryDeduplication: true,
   defaultOptions: {
     watchQuery: {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'no-cache',
     },
     query: {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'no-cache',
       errorPolicy: 'all',
     },
   },

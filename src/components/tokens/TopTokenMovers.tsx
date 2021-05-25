@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { ScrollableX, GreyCard } from 'components/Card'
@@ -51,7 +51,7 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
 export default function TopTokenMovers() {
   const allTokens = useAllTokenData()
 
-  const topPriceChange = useMemo(() => {
+  const topPriceIncrease = useMemo(() => {
     return Object.values(allTokens)
       .sort(({ data: a }, { data: b }) => {
         return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? -1 : 1) : -1
@@ -59,11 +59,58 @@ export default function TopTokenMovers() {
       .slice(0, Math.min(20, Object.values(allTokens).length))
   }, [allTokens])
 
+  const topPriceDecrease = useMemo(() => {
+    return Object.values(allTokens)
+      .sort(({ data: a }, { data: b }) => {
+        return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? 1 : -1) : 1
+      })
+      .slice(0, Math.min(20, Object.values(allTokens).length))
+      .reverse()
+  }, [allTokens])
+
+  const increaseContainer = document.getElementById('increaseContainer')
+  const increaseContainerWidth = increaseContainer?.scrollWidth
+  useEffect(() => {
+    self.setInterval(() => {
+      if (increaseContainer) {
+        if (increaseContainer.scrollLeft !== increaseContainerWidth) {
+          increaseContainer.scrollTo(increaseContainer.scrollLeft + 1, 0)
+        }
+      }
+    }, 80)
+  }, [increaseContainer, increaseContainerWidth])
+
+  const decreaseContainer = document.getElementById('decreaseContainer')
+  const decreaseContainerWidth = increaseContainer?.scrollWidth
+  useEffect(() => {
+    self.setInterval(() => {
+      if (decreaseContainer) {
+        if (decreaseContainer.scrollLeft !== decreaseContainerWidth) {
+          decreaseContainer.scrollTo(decreaseContainer.scrollLeft - 1, 0)
+        }
+      }
+    }, 80)
+  }, [decreaseContainer, decreaseContainerWidth])
+
+  // auto scroll bottom to end
+  useEffect(() => {
+    if (decreaseContainer && decreaseContainerWidth) {
+      decreaseContainer.scrollTo(decreaseContainerWidth - 1, 0)
+    }
+  }, [decreaseContainer, decreaseContainerWidth])
+
   return (
-    <ScrollableX>
-      {topPriceChange.map((entry) =>
-        entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
-      )}
-    </ScrollableX>
+    <AutoColumn gap="md">
+      <ScrollableX id="increaseContainer">
+        {topPriceIncrease.map((entry) =>
+          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
+        )}
+      </ScrollableX>
+      <ScrollableX id="decreaseContainer">
+        {topPriceDecrease.map((entry) =>
+          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
+        )}
+      </ScrollableX>
+    </AutoColumn>
   )
 }

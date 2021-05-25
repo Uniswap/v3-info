@@ -144,6 +144,10 @@ export function useFetchedTokenDatas(
     const twoDay: TokenFields | undefined = parsed48[address]
     const week: TokenFields | undefined = parsedWeek[address]
 
+    if (address === '0xDe30da39c46104798bB5aA3fe8B9e0e1F348163F') {
+      console.log(current)
+    }
+
     const [volumeUSD, volumeUSDChange] =
       current && oneDay && twoDay
         ? get2DayChange(current.volumeUSD, oneDay.volumeUSD, twoDay.volumeUSD)
@@ -173,7 +177,11 @@ export function useFetchedTokenDatas(
         ? parseFloat(current.txCount)
         : 0
     const feesUSD =
-      current && oneDay ? parseFloat(current.feesUSD) - parseFloat(oneDay.feesUSD) : parseFloat(current.feesUSD) ?? 0
+      current && oneDay
+        ? parseFloat(current.feesUSD) - parseFloat(oneDay.feesUSD)
+        : current
+        ? parseFloat(current.feesUSD)
+        : 0
 
     accum[address] = {
       exists: !!current,

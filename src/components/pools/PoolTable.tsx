@@ -11,7 +11,7 @@ import { PoolData } from 'state/pools/reducer'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { feeTierPercent } from 'utils'
 import { Label, ClickableText } from 'components/Text'
-import { PageButtons, Arrow, Break } from 'components/shared'
+import { PageButtons, Arrow, Break, MonoSpace } from 'components/shared'
 import { POOL_HIDE } from '../../constants/index'
 import useTheme from 'hooks/useTheme'
 

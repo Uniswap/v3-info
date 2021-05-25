@@ -68,39 +68,39 @@ export default function TopTokenMovers() {
   }, [allTokens])
 
   const increaseRef = useRef<HTMLDivElement>(null)
-  // const [increaseSet, setIncreaseSet] = useState(false)
-  // useEffect(() => {
-  //   if (!increaseSet && increaseRef && increaseRef.current) {
-  //     setInterval(() => {
-  //       if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
-  //         increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
-  //       }
-  //     }, 30)
-  //     setIncreaseSet(true)
-  //   }
-  // }, [increaseRef, increaseSet])
+  const [increaseSet, setIncreaseSet] = useState(false)
+  useEffect(() => {
+    if (!increaseSet && increaseRef && increaseRef.current) {
+      setInterval(() => {
+        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+          increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
+        }
+      }, 80)
+      setIncreaseSet(true)
+    }
+  }, [increaseRef, increaseSet])
 
   const decreaseRef = useRef<HTMLDivElement>(null)
-  // const [decreaseSet, setDecreaseSet] = useState(false)
-  // useEffect(() => {
-  //   if (!decreaseSet && decreaseRef?.current) {
-  //     setInterval(() => {
-  //       if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
-  //         decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
-  //       }
-  //     }, 30)
-  //     setDecreaseSet(true)
-  //   }
-  // }, [decreaseSet])
+  const [decreaseSet, setDecreaseSet] = useState(false)
+  useEffect(() => {
+    if (!decreaseSet && decreaseRef?.current) {
+      setInterval(() => {
+        if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
+          decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
+        }
+      }, 80)
+      setDecreaseSet(true)
+    }
+  }, [decreaseSet])
 
   // auto scroll bottom to end
-  // const [scrolled, setScrolled] = useState(false)
-  // useEffect(() => {
-  //   if (decreaseRef && decreaseRef.current && !scrolled) {
-  //     decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
-  //     setScrolled(true)
-  //   }
-  // }, [decreaseRef, scrolled])
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    if (decreaseRef && decreaseRef.current && !scrolled) {
+      decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
+      setScrolled(true)
+    }
+  }, [decreaseRef, scrolled])
 
   return (
     <AutoColumn gap="md">

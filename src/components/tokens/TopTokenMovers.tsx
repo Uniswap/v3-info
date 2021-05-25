@@ -1,7 +1,7 @@
-import React, { useMemo, useEffect, useState, useRef } from 'react'
-import styled from 'styled-components'
+import React, { useMemo } from 'react'
+import styled, { keyframes } from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
-import { ScrollableX, GreyCard } from 'components/Card'
+import { GreyCard } from 'components/Card'
 import { TokenData } from 'state/tokens/reducer'
 import { AutoColumn } from 'components/Column'
 import { RowFixed, RowFlat } from 'components/Row'
@@ -10,6 +10,11 @@ import { TYPE, StyledInternalLink } from 'theme'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import HoverInlineText from 'components/HoverInlineText'
+
+const scroll = keyframes`
+  0% { margin-left: -98%; }
+  100% { margin-left: 0%; }
+`
 
 const Container = styled(StyledInternalLink)`
   min-width: 190px;
@@ -23,6 +28,21 @@ const Container = styled(StyledInternalLink)`
 
 const Wrapper = styled(GreyCard)`
   padding: 10px;
+`
+
+export const ScrollableRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  white-space: nowrap;
+  max-width: 1200px;
+  animation: 10s ${scroll} linear infinite;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
@@ -68,53 +88,18 @@ export default function TopTokenMovers() {
       .reverse()
   }, [allTokens])
 
-  const increaseRef = useRef<HTMLDivElement>(null)
-  const [increaseSet, setIncreaseSet] = useState(false)
-  useEffect(() => {
-    if (!increaseSet && increaseRef && increaseRef.current) {
-      setInterval(() => {
-        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
-          increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
-        }
-      }, 80)
-      setIncreaseSet(true)
-    }
-  }, [increaseRef, increaseSet])
-
-  const decreaseRef = useRef<HTMLDivElement>(null)
-  const [decreaseSet, setDecreaseSet] = useState(false)
-  useEffect(() => {
-    if (!decreaseSet && decreaseRef?.current) {
-      setInterval(() => {
-        if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
-          decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
-        }
-      }, 80)
-      setDecreaseSet(true)
-    }
-  }, [decreaseSet])
-
-  // auto scroll bottom to end
-  const [scrolled, setScrolled] = useState(false)
-  useEffect(() => {
-    if (decreaseRef && decreaseRef.current && !scrolled) {
-      decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
-      setScrolled(true)
-    }
-  }, [decreaseRef, scrolled])
-
   return (
-    <AutoColumn gap="md">
-      <ScrollableX ref={increaseRef}>
+    <AutoColumn gap="md" style={{ overflow: 'hidden' }}>
+      <ScrollableRow>
         {topPriceIncrease.map((entry) =>
           entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
         )}
-      </ScrollableX>
-      <ScrollableX ref={decreaseRef}>
+      </ScrollableRow>
+      <ScrollableRow>
         {topPriceDecrease.map((entry) =>
           entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
         )}
-      </ScrollableX>
+      </ScrollableRow>
     </AutoColumn>
   )
 }

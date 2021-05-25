@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { ScrollableX, GreyCard } from 'components/Card'
@@ -70,34 +70,40 @@ export default function TopTokenMovers() {
 
   const increaseContainer = document.getElementById('increaseContainer')
   const increaseContainerWidth = increaseContainer?.scrollWidth
+  const [increaseSet, setIncreaseSet] = useState(false)
   useEffect(() => {
-    self.setInterval(() => {
-      if (increaseContainer) {
+    if (!increaseSet && increaseContainer) {
+      self.setInterval(() => {
         if (increaseContainer.scrollLeft !== increaseContainerWidth) {
           increaseContainer.scrollTo(increaseContainer.scrollLeft + 1, 0)
         }
-      }
-    }, 80)
-  }, [increaseContainer, increaseContainerWidth])
+      }, 80)
+      setIncreaseSet(true)
+    }
+  }, [increaseContainer, increaseContainerWidth, increaseSet])
 
   const decreaseContainer = document.getElementById('decreaseContainer')
   const decreaseContainerWidth = increaseContainer?.scrollWidth
+  const [decreaseSet, setDecreaseSet] = useState(false)
   useEffect(() => {
-    self.setInterval(() => {
-      if (decreaseContainer) {
+    if (!decreaseSet && decreaseContainer) {
+      self.setInterval(() => {
         if (decreaseContainer.scrollLeft !== decreaseContainerWidth) {
           decreaseContainer.scrollTo(decreaseContainer.scrollLeft - 1, 0)
         }
-      }
-    }, 80)
-  }, [decreaseContainer, decreaseContainerWidth])
+      }, 80)
+      setDecreaseSet(true)
+    }
+  }, [decreaseContainer, increaseSet, decreaseContainerWidth, decreaseSet])
 
   // auto scroll bottom to end
+  const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
-    if (decreaseContainer && decreaseContainerWidth) {
+    if (decreaseContainer && decreaseContainerWidth && !scrolled) {
       decreaseContainer.scrollTo(decreaseContainerWidth - 1, 0)
+      setScrolled(true)
     }
-  }, [decreaseContainer, decreaseContainerWidth])
+  }, [decreaseContainer, decreaseContainerWidth, scrolled])
 
   return (
     <AutoColumn gap="md">

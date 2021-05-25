@@ -58,6 +58,10 @@ export const ScrollableX = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const GreyBadge = styled(Card)`

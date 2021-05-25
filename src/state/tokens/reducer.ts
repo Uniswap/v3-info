@@ -25,6 +25,9 @@ export type TokenData = {
   volumeUSDWeek: number
   txCount: number
 
+  //fees
+  feesUSD: number
+
   // tvl
   tvlToken: number
   tvlUSD: number

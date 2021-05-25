@@ -1,59 +1,69 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { ScrollableX, GreyCard } from 'components/Card'
 import { TokenData } from 'state/tokens/reducer'
-import Loader from 'components/Loader'
 import { AutoColumn } from 'components/Column'
 import { RowFixed, RowFlat } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { TYPE } from 'theme'
+import { TYPE, StyledInternalLink } from 'theme'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
+import HoverInlineText from 'components/HoverInlineText'
+
+const Container = styled(StyledInternalLink)`
+  min-width: 190px;
+  margin-right: 16px;
+
+  :hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+`
 
 const Wrapper = styled(GreyCard)`
-  min-width: 220px;
-  margin-right: 16px;
+  padding: 10px;
 `
 
 const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
   return (
-    <Wrapper>
-      {/* <AutoColumn gap="md">
+    <Container to={'tokens/' + tokenData.address}>
+      <Wrapper>
         <RowFixed>
-          <CurrencyLogo currency={tokenData.token} />
-          <TYPE.label ml="8px">{tokenData.token.symbol}</TYPE.label>
+          <CurrencyLogo address={tokenData.address} size="32px" />
+          <AutoColumn gap="3px" style={{ marginLeft: '12px' }}>
+            <TYPE.label fontSize="14px">
+              <HoverInlineText text={tokenData.symbol} />
+            </TYPE.label>
+            <RowFlat>
+              <TYPE.label fontSize="14px" mr="6px" lineHeight="16px">
+                {formatDollarAmount(tokenData.priceUSD)}
+              </TYPE.label>
+              <Percent fontSize="14px" value={tokenData.priceUSDChange} />
+            </RowFlat>
+          </AutoColumn>
         </RowFixed>
-        <TYPE.main>{tokenData.token.name}</TYPE.main>
-        <RowFlat>
-          <TYPE.label fontSize="24px" mr="6px" lineHeight="20px">
-            {formatDollarAmount(tokenData.priceUSD)}
-          </TYPE.label>
-          <Percent value={tokenData.priceUSDChange} />
-        </RowFlat>
-      </AutoColumn> */}
-    </Wrapper>
+      </Wrapper>
+    </Container>
   )
 }
 
 export default function TopTokenMovers() {
   const allTokens = useAllTokenData()
 
-  if (Object.keys(allTokens).length === 0) {
-    return <Loader />
-  }
+  const topPriceChange = useMemo(() => {
+    return Object.values(allTokens)
+      .sort(({ data: a }, { data: b }) => {
+        return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? -1 : 1) : -1
+      })
+      .slice(0, Math.min(20, Object.values(allTokens).length))
+  }, [allTokens])
 
   return (
     <ScrollableX>
-      {/* {Object.keys(allTokens).map((address: string) => (
-        <DataCard key={'top-card-token-' + address} tokenData={allTokens[address].data} />
-      ))}
-      {Object.keys(allTokens).map((address: string) => (
-        <DataCard key={'top-card-token-' + address} tokenData={allTokens[address].data} />
-      ))}
-      {Object.keys(allTokens).map((address: string) => (
-        <DataCard key={'top-card-token-' + address} tokenData={allTokens[address].data} />
-      ))} */}
+      {topPriceChange.map((entry) =>
+        entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
+      )}
     </ScrollableX>
   )
 }

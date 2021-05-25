@@ -66,7 +66,7 @@ export default function App() {
   // pretend load buffer
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    setTimeout(() => setLoading(false), 700)
+    setTimeout(() => setLoading(false), 1300)
   }, [])
 
   // subgraph health

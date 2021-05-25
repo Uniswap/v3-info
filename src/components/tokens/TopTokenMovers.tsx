@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, RefObject } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { GreyCard } from 'components/Card'
@@ -12,8 +12,8 @@ import Percent from 'components/Percent'
 import HoverInlineText from 'components/HoverInlineText'
 
 const scroll = keyframes`
-  0% { margin-left: -98%; }
-  100% { margin-left: 0%; }
+  0% { margin-left: 0%; }
+  100% { margin-left: -71.5%; }
 `
 
 const Container = styled(StyledInternalLink)`
@@ -35,8 +35,11 @@ export const ScrollableRow = styled.div`
   flex-direction: row;
   width: 100%;
   white-space: nowrap;
-  max-width: 1200px;
-  animation: 10s ${scroll} linear infinite;
+
+  animation: ${scroll};
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-delay: 2s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 
@@ -68,7 +71,7 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
   )
 }
 
-export default function TopTokenMovers() {
+export default function TopTokenMovers({ parentRef }: { parentRef: RefObject<HTMLDivElement> }) {
   const allTokens = useAllTokenData()
 
   const topPriceIncrease = useMemo(() => {
@@ -89,7 +92,7 @@ export default function TopTokenMovers() {
   }, [allTokens])
 
   return (
-    <AutoColumn gap="md" style={{ overflow: 'hidden' }}>
+    <AutoColumn gap="md" style={{ overflow: 'hidden', maxWidth: '1200px' }}>
       <ScrollableRow>
         {topPriceIncrease.map((entry) =>
           entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null

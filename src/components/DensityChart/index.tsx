@@ -247,6 +247,11 @@ export default function DensityChart({ address }: DensityChartProps) {
     return undefined
   }, [formattedData, zoomState.left, zoomState.right])
 
+  // reset data on address change
+  useEffect(() => {
+    setFormattedData(undefined)
+  }, [address])
+
   if (!poolTickData) {
     return <Loader />
   }

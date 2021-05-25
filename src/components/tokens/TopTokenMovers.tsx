@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { ScrollableX, GreyCard } from 'components/Card'
@@ -51,7 +51,7 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
 export default function TopTokenMovers() {
   const allTokens = useAllTokenData()
 
-  const topPriceChange = useMemo(() => {
+  const topPriceIncrease = useMemo(() => {
     return Object.values(allTokens)
       .sort(({ data: a }, { data: b }) => {
         return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? -1 : 1) : -1
@@ -59,11 +59,61 @@ export default function TopTokenMovers() {
       .slice(0, Math.min(20, Object.values(allTokens).length))
   }, [allTokens])
 
+  const topPriceDecrease = useMemo(() => {
+    return Object.values(allTokens)
+      .sort(({ data: a }, { data: b }) => {
+        return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? 1 : -1) : 1
+      })
+      .slice(0, Math.min(20, Object.values(allTokens).length))
+  }, [allTokens])
+
+  const increaseRef = useRef<HTMLDivElement>(null)
+  // const [increaseSet, setIncreaseSet] = useState(false)
+  // useEffect(() => {
+  //   if (!increaseSet && increaseRef && increaseRef.current) {
+  //     setInterval(() => {
+  //       if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+  //         increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
+  //       }
+  //     }, 30)
+  //     setIncreaseSet(true)
+  //   }
+  // }, [increaseRef, increaseSet])
+
+  const decreaseRef = useRef<HTMLDivElement>(null)
+  // const [decreaseSet, setDecreaseSet] = useState(false)
+  // useEffect(() => {
+  //   if (!decreaseSet && decreaseRef?.current) {
+  //     setInterval(() => {
+  //       if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
+  //         decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
+  //       }
+  //     }, 30)
+  //     setDecreaseSet(true)
+  //   }
+  // }, [decreaseSet])
+
+  // auto scroll bottom to end
+  // const [scrolled, setScrolled] = useState(false)
+  // useEffect(() => {
+  //   if (decreaseRef && decreaseRef.current && !scrolled) {
+  //     decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
+  //     setScrolled(true)
+  //   }
+  // }, [decreaseRef, scrolled])
+
   return (
-    <ScrollableX>
-      {topPriceChange.map((entry) =>
-        entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
-      )}
-    </ScrollableX>
+    <AutoColumn gap="md">
+      <ScrollableX ref={increaseRef}>
+        {topPriceIncrease.map((entry) =>
+          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
+        )}
+      </ScrollableX>
+      <ScrollableX ref={decreaseRef}>
+        {topPriceDecrease.map((entry) =>
+          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
+        )}
+      </ScrollableX>
+    </AutoColumn>
   )
 }

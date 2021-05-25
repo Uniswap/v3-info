@@ -21,6 +21,7 @@ import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
 import TopTokenMovers from 'components/tokens/TopTokenMovers'
+import TopPoolMovers from 'components/pools/TopPoolMovers'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -178,7 +179,7 @@ export default function Home() {
         <HideSmall>
           <OutlineCard style={{ paddingTop: '12px' }}>
             <AutoColumn gap="md">
-              <TYPE.mediumHeader fontSize="16px">Top Movers</TYPE.mediumHeader>
+              <TYPE.mediumHeader fontSize="16px">Top Movers 🔥</TYPE.mediumHeader>
               <TopTokenMovers />
             </AutoColumn>
           </OutlineCard>
@@ -188,6 +189,14 @@ export default function Home() {
           <StyledInternalLink to="/tokens">Explore</StyledInternalLink>
         </RowBetween>
         <TokenTable tokenDatas={formattedTokens} />
+        <HideSmall>
+          <OutlineCard style={{ paddingTop: '12px' }}>
+            <AutoColumn gap="md">
+              <TYPE.mediumHeader fontSize="16px">Trending by 24H Volume 🔥</TYPE.mediumHeader>
+              <TopPoolMovers />
+            </AutoColumn>
+          </OutlineCard>
+        </HideSmall>
         <RowBetween>
           <TYPE.main>Top Pools</TYPE.main>
           <StyledInternalLink to="/pools">Explore</StyledInternalLink>

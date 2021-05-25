@@ -24,10 +24,10 @@ interface CustomToolTipProps {
 export function CustomToolTip({ chartProps, poolData }: CustomToolTipProps) {
   const theme = useTheme()
 
-  const price0 = chartProps.payload[0]?.payload.price0
-  const price1 = chartProps.payload[0]?.payload.price1
-  const tvlToken0 = chartProps.payload[0]?.payload.tvlToken0
-  const tvlToken1 = chartProps.payload[0]?.payload.tvlToken1
+  const price0 = chartProps?.payload?.[0]?.payload.price0
+  const price1 = chartProps?.payload?.[0]?.payload.price1
+  const tvlToken0 = chartProps?.payload?.[0]?.payload.tvlToken0
+  const tvlToken1 = chartProps?.payload?.[0]?.payload.tvlToken1
 
   return (
     <TooltipWrapper>

@@ -76,7 +76,7 @@ export default function TopTokenMovers() {
         if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
           increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
         }
-      }, 80)
+      }, 130)
       setIncreaseSet(true)
     }
   }, [increaseRef, increaseSet])
@@ -89,7 +89,7 @@ export default function TopTokenMovers() {
         if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
           decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
         }
-      }, 120)
+      }, 130)
       setDecreaseSet(true)
     }
   }, [decreaseSet])

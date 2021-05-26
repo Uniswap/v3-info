@@ -1,7 +1,7 @@
-import React, { useMemo, useEffect, useState, useRef } from 'react'
+import React, { useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
-import { ScrollableX, GreyCard } from 'components/Card'
+import { GreyCard } from 'components/Card'
 import { TokenData } from 'state/tokens/reducer'
 import { AutoColumn } from 'components/Column'
 import { RowFixed, RowFlat } from 'components/Row'
@@ -11,7 +11,7 @@ import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import HoverInlineText from 'components/HoverInlineText'
 
-const Container = styled(StyledInternalLink)`
+const CardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
   margin-right: 16px;
 
@@ -21,14 +21,24 @@ const Container = styled(StyledInternalLink)`
   }
 `
 
-const Wrapper = styled(GreyCard)`
-  padding: 10px;
+const FixedContainer = styled(AutoColumn)``
+
+export const ScrollableRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
   return (
-    <Container to={'tokens/' + tokenData.address}>
-      <Wrapper>
+    <CardWrapper to={'tokens/' + tokenData.address}>
+      <GreyCard padding="16px">
         <RowFixed>
           <CurrencyLogo address={tokenData.address} size="32px" />
           <AutoColumn gap="3px" style={{ marginLeft: '12px' }}>
@@ -43,8 +53,8 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
             </RowFlat>
           </AutoColumn>
         </RowFixed>
-      </Wrapper>
-    </Container>
+      </GreyCard>
+    </CardWrapper>
   )
 }
 
@@ -54,66 +64,41 @@ export default function TopTokenMovers() {
   const topPriceIncrease = useMemo(() => {
     return Object.values(allTokens)
       .sort(({ data: a }, { data: b }) => {
-        return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? -1 : 1) : -1
-      })
-      .slice(0, Math.min(20, Object.values(allTokens).length))
-  }, [allTokens])
-
-  const topPriceDecrease = useMemo(() => {
-    return Object.values(allTokens)
-      .sort(({ data: a }, { data: b }) => {
-        return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? 1 : -1) : 1
+        return a && b ? (Math.abs(a?.priceUSDChange) > Math.abs(b?.priceUSDChange) ? -1 : 1) : -1
       })
       .slice(0, Math.min(20, Object.values(allTokens).length))
   }, [allTokens])
 
   const increaseRef = useRef<HTMLDivElement>(null)
-  // const [increaseSet, setIncreaseSet] = useState(false)
-  // useEffect(() => {
-  //   if (!increaseSet && increaseRef && increaseRef.current) {
-  //     setInterval(() => {
-  //       if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
-  //         increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
-  //       }
-  //     }, 30)
-  //     setIncreaseSet(true)
-  //   }
-  // }, [increaseRef, increaseSet])
+  const [increaseSet, setIncreaseSet] = useState(false)
+  // const [pauseAnimation, setPauseAnimation] = useState(false)
+  // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
 
-  const decreaseRef = useRef<HTMLDivElement>(null)
-  // const [decreaseSet, setDecreaseSet] = useState(false)
-  // useEffect(() => {
-  //   if (!decreaseSet && decreaseRef?.current) {
-  //     setInterval(() => {
-  //       if (decreaseRef.current && decreaseRef.current.scrollLeft !== decreaseRef.current.scrollWidth) {
-  //         decreaseRef.current.scrollTo(decreaseRef.current.scrollLeft - 1, 0)
-  //       }
-  //     }, 30)
-  //     setDecreaseSet(true)
-  //   }
-  // }, [decreaseSet])
+  useEffect(() => {
+    if (!increaseSet && increaseRef && increaseRef.current) {
+      setInterval(() => {
+        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+          increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
+        }
+      }, 30)
+      setIncreaseSet(true)
+    }
+  }, [increaseRef, increaseSet])
 
-  // auto scroll bottom to end
-  // const [scrolled, setScrolled] = useState(false)
-  // useEffect(() => {
-  //   if (decreaseRef && decreaseRef.current && !scrolled) {
-  //     decreaseRef.current.scrollTo(decreaseRef.current.scrollWidth - 1, 0)
-  //     setScrolled(true)
+  // function handleHover() {
+  //   if (resetInterval) {
+  //     resetInterval()
   //   }
-  // }, [decreaseRef, scrolled])
+  //   setPauseAnimation(true)
+  // }
 
   return (
-    <AutoColumn gap="md">
-      <ScrollableX ref={increaseRef}>
+    <FixedContainer gap="md">
+      <ScrollableRow ref={increaseRef}>
         {topPriceIncrease.map((entry) =>
           entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
         )}
-      </ScrollableX>
-      <ScrollableX ref={decreaseRef}>
-        {topPriceDecrease.map((entry) =>
-          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
-        )}
-      </ScrollableX>
-    </AutoColumn>
+      </ScrollableRow>
+    </FixedContainer>
   )
 }

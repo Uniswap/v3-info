@@ -75,6 +75,7 @@ export default function TokenPage({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  address = address.toLowerCase()
   // theming
   const backgroundColor = useColor(address)
   const theme = useTheme()
@@ -148,7 +149,7 @@ export default function TokenPage({
       {tokenData ? (
         !tokenData.exists ? (
           <LightGreyCard style={{ textAlign: 'center' }}>
-            No pool has been created with this token yet. Creat one
+            No pool has been created with this token yet. Create one
             <StyledExternalLink style={{ marginLeft: '4px' }} href={`https://app.uniswap.org/#/add/${address}`}>
               here.
             </StyledExternalLink>

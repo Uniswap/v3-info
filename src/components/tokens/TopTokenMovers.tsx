@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
-import styled, { keyframes } from 'styled-components'
+import React, { useMemo, useRef, useState, useEffect } from 'react'
+import styled from 'styled-components'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { GreyCard } from 'components/Card'
 import { TokenData } from 'state/tokens/reducer'
@@ -11,12 +11,7 @@ import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import HoverInlineText from 'components/HoverInlineText'
 
-const scroll = keyframes`
-  0% { margin-left: 0%; }
-  100% { margin-left: -71.5%; }
-`
-
-const Container = styled(StyledInternalLink)`
+const CardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
   margin-right: 16px;
 
@@ -26,22 +21,14 @@ const Container = styled(StyledInternalLink)`
   }
 `
 
-const Wrapper = styled(GreyCard)`
-  padding: 10px;
-`
+const FixedContainer = styled(AutoColumn)``
 
 export const ScrollableRow = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  overflow-x: auto;
   white-space: nowrap;
-
-  animation: ${scroll};
-  animation-duration: 10s;
-  animation-timing-function: linear;
-  animation-delay: 2s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
 
   ::-webkit-scrollbar {
     display: none;
@@ -50,8 +37,8 @@ export const ScrollableRow = styled.div`
 
 const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
   return (
-    <Container to={'tokens/' + tokenData.address}>
-      <Wrapper>
+    <CardWrapper to={'tokens/' + tokenData.address}>
+      <GreyCard padding="16px">
         <RowFixed>
           <CurrencyLogo address={tokenData.address} size="32px" />
           <AutoColumn gap="3px" style={{ marginLeft: '12px' }}>
@@ -66,8 +53,8 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
             </RowFlat>
           </AutoColumn>
         </RowFixed>
-      </Wrapper>
-    </Container>
+      </GreyCard>
+    </CardWrapper>
   )
 }
 
@@ -77,32 +64,41 @@ export default function TopTokenMovers() {
   const topPriceIncrease = useMemo(() => {
     return Object.values(allTokens)
       .sort(({ data: a }, { data: b }) => {
-        return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? -1 : 1) : -1
+        return a && b ? (Math.abs(a?.priceUSDChange) > Math.abs(b?.priceUSDChange) ? -1 : 1) : -1
       })
       .slice(0, Math.min(20, Object.values(allTokens).length))
   }, [allTokens])
 
-  const topPriceDecrease = useMemo(() => {
-    return Object.values(allTokens)
-      .sort(({ data: a }, { data: b }) => {
-        return a && b ? (a?.priceUSDChange > b?.priceUSDChange ? 1 : -1) : 1
-      })
-      .slice(0, Math.min(20, Object.values(allTokens).length))
-      .reverse()
-  }, [allTokens])
+  const increaseRef = useRef<HTMLDivElement>(null)
+  const [increaseSet, setIncreaseSet] = useState(false)
+  // const [pauseAnimation, setPauseAnimation] = useState(false)
+  // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
+
+  useEffect(() => {
+    if (!increaseSet && increaseRef && increaseRef.current) {
+      setInterval(() => {
+        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+          increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
+        }
+      }, 30)
+      setIncreaseSet(true)
+    }
+  }, [increaseRef, increaseSet])
+
+  // function handleHover() {
+  //   if (resetInterval) {
+  //     resetInterval()
+  //   }
+  //   setPauseAnimation(true)
+  // }
 
   return (
-    <AutoColumn gap="md" style={{ overflow: 'hidden', maxWidth: '1200px' }}>
-      <ScrollableRow>
+    <FixedContainer gap="md">
+      <ScrollableRow ref={increaseRef}>
         {topPriceIncrease.map((entry) =>
           entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
         )}
       </ScrollableRow>
-      <ScrollableRow>
-        {topPriceDecrease.map((entry) =>
-          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
-        )}
-      </ScrollableRow>
-    </AutoColumn>
+    </FixedContainer>
   )
 }

@@ -176,27 +176,11 @@ export default function Home() {
             </RowBetween>
           </DarkGreyCard>
         </HideSmall>
-        <HideSmall>
-          <OutlineCard style={{ paddingTop: '12px' }}>
-            <AutoColumn gap="md">
-              <TYPE.mediumHeader fontSize="16px">Top Movers 🔥</TYPE.mediumHeader>
-              <TopTokenMovers />
-            </AutoColumn>
-          </OutlineCard>
-        </HideSmall>
         <RowBetween>
           <TYPE.main>Top Tokens</TYPE.main>
           <StyledInternalLink to="/tokens">Explore</StyledInternalLink>
         </RowBetween>
         <TokenTable tokenDatas={formattedTokens} />
-        <HideSmall>
-          <OutlineCard style={{ paddingTop: '12px' }}>
-            <AutoColumn gap="md">
-              <TYPE.mediumHeader fontSize="16px">Trending by 24H Volume 🔥</TYPE.mediumHeader>
-              <TopPoolMovers />
-            </AutoColumn>
-          </OutlineCard>
-        </HideSmall>
         <RowBetween>
           <TYPE.main>Top Pools</TYPE.main>
           <StyledInternalLink to="/pools">Explore</StyledInternalLink>

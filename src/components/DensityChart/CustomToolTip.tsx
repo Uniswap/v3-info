@@ -19,11 +19,11 @@ const TooltipWrapper = styled(LightCard)`
 interface CustomToolTipProps {
   chartProps: any
   poolData: PoolData
+  currentPrice: number | undefined
 }
 
-export function CustomToolTip({ chartProps, poolData }: CustomToolTipProps) {
+export function CustomToolTip({ chartProps, poolData, currentPrice }: CustomToolTipProps) {
   const theme = useTheme()
-
   const price0 = chartProps?.payload?.[0]?.payload.price0
   const price1 = chartProps?.payload?.[0]?.payload.price1
   const tvlToken0 = chartProps?.payload?.[0]?.payload.tvlToken0
@@ -55,18 +55,21 @@ export function CustomToolTip({ chartProps, poolData }: CustomToolTipProps) {
             {poolData?.token0?.symbol}
           </TYPE.label>
         </RowBetween>
-        <RowBetween>
-          <TYPE.label>{poolData?.token0?.symbol} Locked: </TYPE.label>
-          <TYPE.label>
-            {tvlToken0 ? formatAmount(tvlToken0) : ''} {poolData?.token0?.symbol}
-          </TYPE.label>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.label>{poolData?.token1?.symbol} Locked: </TYPE.label>
-          <TYPE.label>
-            {tvlToken1 ? formatAmount(tvlToken1) : ''} {poolData?.token1?.symbol}
-          </TYPE.label>
-        </RowBetween>
+        {currentPrice && price0 && currentPrice > price1 ? (
+          <RowBetween>
+            <TYPE.label>{poolData?.token0?.symbol} Locked: </TYPE.label>
+            <TYPE.label>
+              {tvlToken0 ? formatAmount(tvlToken0) : ''} {poolData?.token0?.symbol}
+            </TYPE.label>
+          </RowBetween>
+        ) : (
+          <RowBetween>
+            <TYPE.label>{poolData?.token1?.symbol} Locked: </TYPE.label>
+            <TYPE.label>
+              {tvlToken1 ? formatAmount(tvlToken1) : ''} {poolData?.token1?.symbol}
+            </TYPE.label>
+          </RowBetween>
+        )}
       </AutoColumn>
     </TooltipWrapper>
   )

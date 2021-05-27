@@ -17,10 +17,10 @@ import Percent from 'components/Percent'
 import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
 import { DarkGreyCard, GreyCard, GreyBadge } from 'components/Card'
 import { usePoolDatas, usePoolChartData, usePoolTransactions } from 'state/pools/hooks'
-import LineChart from 'components/LineChart'
+import LineChart from 'components/LineChart/alt'
 import { unixToDate } from 'utils/date'
 import { ToggleWrapper, ToggleElementFree } from 'components/Toggle/index'
-import BarChart from 'components/BarChart'
+import BarChart from 'components/BarChart/alt'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedPools } from 'state/user/hooks'
@@ -292,6 +292,8 @@ export default function PoolPage({
                   color={backgroundColor}
                   minHeight={340}
                   setValue={setLatestValue}
+                  value={latestValue}
+                  label={valueLabel}
                 />
               ) : view === ChartView.VOL ? (
                 <BarChart
@@ -300,6 +302,8 @@ export default function PoolPage({
                   minHeight={340}
                   setValue={setLatestValue}
                   setLabel={setValueLabel}
+                  value={latestValue}
+                  label={valueLabel}
                 />
               ) : (
                 <DensityChart address={address} />

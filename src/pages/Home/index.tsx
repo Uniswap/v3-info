@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
 import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
-import LineChart from 'components/LineChart'
+import LineChart from 'components/LineChart/alt'
 import useTheme from 'hooks/useTheme'
 import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
-import { DarkGreyCard, OutlineCard } from 'components/Card'
+import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { HideMedium, HideSmall, StyledInternalLink } from '../../theme/components'
@@ -14,14 +14,13 @@ import TokenTable from 'components/tokens/TokenTable'
 import PoolTable from 'components/pools/PoolTable'
 import { PageWrapper, ThemedBackgroundGlobal } from 'pages/styled'
 import { unixToDate } from 'utils/date'
-import BarChart from 'components/BarChart'
+import BarChart from 'components/BarChart/alt'
 import { useAllPoolData } from 'state/pools/hooks'
 import { notEmpty } from 'utils'
 import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
-import TopTokenMovers from 'components/tokens/TopTokenMovers'
-import TopPoolMovers from 'components/pools/TopPoolMovers'
+import dayjs from 'dayjs'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -113,6 +112,8 @@ export default function Home() {
               height={220}
               minHeight={332}
               color={theme.pink1}
+              value={liquidityHover}
+              label={leftLabel}
               setValue={setLiquidityHover}
               setLabel={setLeftLabel}
               topLeft={
@@ -122,7 +123,11 @@ export default function Home() {
                     <MonoSpace>{formatDollarAmount(liquidityHover, 2, true)} </MonoSpace>
                   </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
-                    {leftLabel ? <MonoSpace>{leftLabel}</MonoSpace> : ''}
+                    {leftLabel ? (
+                      <MonoSpace>{leftLabel}</MonoSpace>
+                    ) : (
+                      <MonoSpace>{dayjs.utc().format('MMM D, YYYY')}</MonoSpace>
+                    )}
                   </TYPE.main>
                 </AutoColumn>
               }
@@ -136,6 +141,8 @@ export default function Home() {
               color={theme.blue1}
               setValue={setVolumeHover}
               setLabel={setRightLabel}
+              value={volumeHover}
+              label={rightLabel}
               topLeft={
                 <AutoColumn gap="4px">
                   <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>
@@ -143,7 +150,11 @@ export default function Home() {
                     <MonoSpace> {formatDollarAmount(volumeHover, 2)}</MonoSpace>
                   </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
-                    {rightLabel ? <MonoSpace>{rightLabel}</MonoSpace> : ''}
+                    {rightLabel ? (
+                      <MonoSpace>{rightLabel}</MonoSpace>
+                    ) : (
+                      <MonoSpace>{dayjs.utc().format('MMM D, YYYY')}</MonoSpace>
+                    )}
                   </TYPE.main>
                 </AutoColumn>
               }

@@ -13,6 +13,7 @@ dayjs.extend(utc)
 const Wrapper = styled(Card)`
   width: 100%;
   padding: 1rem;
+  padding-right: 2rem;
   display: flex;
   background-color: ${({ theme }) => theme.bg0}
   flex-direction: column;
@@ -90,7 +91,7 @@ const BarChart = ({
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
         height: height,
-        width: chartRef.current.parentElement.clientWidth - 32,
+        width: chartRef.current.parentElement.clientWidth - 62,
         layout: {
           backgroundColor: 'transparent',
           textColor: '#565A69',
@@ -99,10 +100,12 @@ const BarChart = ({
         rightPriceScale: {
           scaleMargins: {
             top: 0.1,
-            bottom: 0.1,
+            bottom: 0,
           },
+
           drawTicks: false,
           borderVisible: false,
+          visible: false,
         },
         timeScale: {
           borderVisible: false,

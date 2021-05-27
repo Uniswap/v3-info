@@ -1,6 +1,6 @@
 import { fetchTicksSurroundingPrice, TickProcessed } from 'data/pools/tickData'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
-import { BarChart, Bar, CartesianGrid, LabelList, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { BarChart, Bar, LabelList, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import Loader from 'components/Loader'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
@@ -226,20 +226,6 @@ export default function DensityChart({ address }: DensityChartProps) {
     }
   }, [amountTicks, atZoomMin, ticksToFetch, zoomState])
 
-  // const handleMouseUp = useCallback(() => {
-  //   const { refAreaLeft, refAreaRight } = zoomState
-
-  //   if (refAreaLeft === refAreaRight || refAreaRight === '') {
-  //     setZoomState(() => ({
-  //       ...zoomState,
-  //       refAreaLeft: '',
-  //       refAreaRight: '',
-  //     }))
-  //     return
-  //   }
-  //   return
-  // }, [zoomState])
-
   const zoomedData = useMemo(() => {
     if (formattedData) {
       return formattedData.slice(zoomState.left, zoomState.right)
@@ -256,6 +242,25 @@ export default function DensityChart({ address }: DensityChartProps) {
     return <Loader />
   }
 
+  const CustomBar = ({
+    x,
+    y,
+    width,
+    height,
+    fill,
+  }: {
+    x: number
+    y: number
+    width: number
+    height: number
+    fill: string
+  }) => {
+    return (
+      <g>
+        <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
+      </g>
+    )
+  }
   return (
     <Wrapper>
       {!loading ? (
@@ -270,19 +275,22 @@ export default function DensityChart({ address }: DensityChartProps) {
               left: 20,
               bottom: 60,
             }}
-            // onMouseDown={(e: any) => {
-            //   setZoomState({ ...zoomState, refAreaLeft: e.activeLabel })
-            // }}
-            // onMouseMove={(e: any) => {
-            //   zoomState.refAreaLeft && setZoomState({ ...zoomState, refAreaRight: e.activeLabel })
-            // }}
-            // onMouseUp={handleMouseUp}
           >
-            <CartesianGrid strokeDasharray="4 4 4" stroke="#2C2F36" />
-            <Tooltip content={(props) => <CustomToolTip chartProps={props} poolData={poolData} />} />
+            <Tooltip
+              content={(props) => (
+                <CustomToolTip chartProps={props} poolData={poolData} currentPrice={poolData.token0Price} />
+              )}
+            />
             <XAxis reversed={true} tick={false} />
-            {/* <Brush dataKey="index" height={30} stroke={theme.bg3} fill={theme.bg1} /> */}
-            <Bar dataKey="activeLiquidity" fill="#2172E5" isAnimationActive={false}>
+            <Bar
+              dataKey="activeLiquidity"
+              fill="#2172E5"
+              isAnimationActive={false}
+              shape={(props) => {
+                // eslint-disable-next-line react/prop-types
+                return <CustomBar height={props.height} width={props.width} x={props.x} y={props.y} fill={props.fill} />
+              }}
+            >
               {zoomedData?.map((entry, index) => {
                 return <Cell key={`cell-${index}`} fill={entry.isCurrent ? theme.pink1 : theme.blue1} />
               })}
@@ -292,9 +300,6 @@ export default function DensityChart({ address }: DensityChartProps) {
                 content={(props) => <CurrentPriceLabel chartProps={props} poolData={poolData} data={zoomedData} />}
               />
             </Bar>
-            {/* {zoomState && zoomState.refAreaLeft && zoomState.refAreaRight ? (
-            <ReferenceArea yAxisId="1" x1={zoomState.refAreaLeft} x2={zoomState.refAreaRight} strokeOpacity={0.3} />
-          ) : null} */}
           </BarChart>
         </ResponsiveContainer>
       ) : (

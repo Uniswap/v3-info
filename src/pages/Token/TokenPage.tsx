@@ -25,15 +25,16 @@ import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
 import { DarkGreyCard, LightGreyCard } from 'components/Card'
 import { usePoolDatas } from 'state/pools/hooks'
 import PoolTable from 'components/pools/PoolTable'
-import LineChart from 'components/LineChart'
+import LineChart from 'components/LineChart/alt'
 import { unixToDate } from 'utils/date'
 import { ToggleWrapper, ToggleElementFree } from 'components/Toggle/index'
-import BarChart from 'components/BarChart'
+import BarChart from 'components/BarChart/alt'
 import CandleChart from 'components/CandleChart'
 import TransactionTable from 'components/TransactionsTable'
 import { useSavedTokens } from 'state/user/hooks'
 import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
 import { MonoSpace } from 'components/shared'
+import dayjs from 'dayjs'
 // import { SmallOptionButton } from '../../components/Button'
 
 const PriceText = styled(TYPE.label)`
@@ -116,7 +117,7 @@ export default function TokenPage({
   }, [chartData])
 
   // chart labels
-  const [view, setView] = useState(ChartView.PRICE)
+  const [view, setView] = useState(ChartView.VOL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
   const [valueLabel, setValueLabel] = useState<string | undefined>()
   const [timeWindow] = useState(DEFAULT_TIME_WINDOW)
@@ -250,7 +251,11 @@ export default function TokenPage({
                       </TYPE.label>
                     </RowFixed>
                     <TYPE.main height="20px" fontSize="12px">
-                      {valueLabel ? <MonoSpace>{valueLabel}</MonoSpace> : ''}
+                      {valueLabel ? (
+                        <MonoSpace>{valueLabel}</MonoSpace>
+                      ) : (
+                        <MonoSpace>{dayjs.utc().format('MMM D, YYYY')}</MonoSpace>
+                      )}
                     </TYPE.main>
                   </AutoColumn>
                   <ToggleWrapper width="180px">
@@ -282,6 +287,8 @@ export default function TokenPage({
                     data={formattedTvlData}
                     color={backgroundColor}
                     minHeight={340}
+                    value={latestValue}
+                    label={valueLabel}
                     setValue={setLatestValue}
                     setLabel={setValueLabel}
                   />
@@ -290,6 +297,8 @@ export default function TokenPage({
                     data={formattedVolumeData}
                     color={backgroundColor}
                     minHeight={340}
+                    value={latestValue}
+                    label={valueLabel}
                     setValue={setLatestValue}
                     setLabel={setValueLabel}
                   />

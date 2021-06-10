@@ -76,6 +76,7 @@ export default function TokenPage({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  address = address.toLowerCase()
   // theming
   const backgroundColor = useColor(address)
   const theme = useTheme()

@@ -71,7 +71,7 @@ export async function fetchTokenPriceData(
     }
 
     // fetch blocks based on timestamp
-    const blocks = await getBlocksFromTimestamps(timestamps, 500)
+    const blocks = await getBlocksFromTimestamps(timestamps, 200)
     if (!blocks || blocks.length === 0) {
       console.log('Error fetching blocks')
       return {

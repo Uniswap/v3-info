@@ -102,27 +102,16 @@ export function usePoolDatas(
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek])
   const [block24, block48, blockWeek] = blocks ?? []
 
-  const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined, poolAddresses), {
-    fetchPolicy: 'network-only',
-  })
+  const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined, poolAddresses))
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<PoolDataResponse>(
-    POOLS_BULK(block24?.number, poolAddresses),
-    {
-      fetchPolicy: 'network-only',
-    }
+    POOLS_BULK(block24?.number, poolAddresses)
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(
-    POOLS_BULK(block48?.number, poolAddresses),
-    {
-      fetchPolicy: 'network-only',
-    }
+    POOLS_BULK(block48?.number, poolAddresses)
   )
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponse>(
-    POOLS_BULK(blockWeek?.number, poolAddresses),
-    {
-      fetchPolicy: 'network-only',
-    }
+    POOLS_BULK(blockWeek?.number, poolAddresses)
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)

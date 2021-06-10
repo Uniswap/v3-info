@@ -73,7 +73,7 @@ export default function PoolPage({
   }, [])
 
   // theming
-  const backgroundColor = useColor(address)
+  const backgroundColor = useColor()
   const theme = useTheme()
 
   // token data

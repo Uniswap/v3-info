@@ -1,8 +1,8 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
-import { client } from 'apollo/client'
 import { getBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { PriceChartEntry } from 'types'
 
@@ -63,7 +63,9 @@ interface PriceResults {
 export async function fetchTokenPriceData(
   address: string,
   interval: number,
-  startTimestamp: number
+  startTimestamp: number,
+  dataClient: ApolloClient<NormalizedCacheObject>,
+  blockClient: ApolloClient<NormalizedCacheObject>
 ): Promise<{
   data: PriceChartEntry[]
   error: boolean
@@ -98,7 +100,7 @@ export async function fetchTokenPriceData(
     }
 
     // fetch blocks based on timestamp
-    const blocks = await getBlocksFromTimestamps(timestamps, 500)
+    const blocks = await getBlocksFromTimestamps(timestamps, blockClient, 500)
     if (!blocks || blocks.length === 0) {
       console.log('Error fetching blocks')
       return {
@@ -116,7 +118,7 @@ export async function fetchTokenPriceData(
     let skip = 0
     let allFound = false
     while (!allFound) {
-      const { data: priceData, errors, loading } = await client.query<PriceResults>({
+      const { data: priceData, errors, loading } = await dataClient.query<PriceResults>({
         query: PRICE_CHART,
         variables: {
           address: address,

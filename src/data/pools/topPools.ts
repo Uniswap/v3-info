@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
+import { useClients } from 'state/application/hooks'
 
 export const TOP_POOLS = gql`
   query topPools {
@@ -24,7 +25,9 @@ export function useTopPoolAddresses(): {
   error: boolean
   addresses: string[] | undefined
 } {
+  const { dataClient } = useClients()
   const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
+    client: dataClient,
     fetchPolicy: 'network-only',
   })
 

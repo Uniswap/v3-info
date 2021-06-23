@@ -7,6 +7,7 @@ import { get2DayChange } from 'utils/data'
 import { TokenData } from 'state/tokens/reducer'
 import { useEthPrices } from 'hooks/useEthPrices'
 import { formatTokenSymbol, formatTokenName } from 'utils/tokens'
+import { useClients } from 'state/application/hooks'
 
 export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
   let tokenString = `[`
@@ -70,6 +71,8 @@ export function useFetchedTokenDatas(
       }
     | undefined
 } {
+  const { dataClient } = useClients()
+
   // get blocks from historic timestamps
   const [t24, t48, tWeek] = useDeltaTimestamps()
 
@@ -77,17 +80,29 @@ export function useFetchedTokenDatas(
   const [block24, block48, blockWeek] = blocks ?? []
   const ethPrices = useEthPrices()
 
-  const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses))
+  const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses), {
+    client: dataClient,
+  })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(parseInt(block24?.number), tokenAddresses)
+    TOKENS_BULK(parseInt(block24?.number), tokenAddresses),
+    {
+      client: dataClient,
+    }
   )
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(parseInt(block48?.number), tokenAddresses)
+    TOKENS_BULK(parseInt(block48?.number), tokenAddresses),
+    {
+      client: dataClient,
+    }
   )
+
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<TokenDataResponse>(
-    TOKENS_BULK(parseInt(blockWeek?.number), tokenAddresses)
+    TOKENS_BULK(parseInt(blockWeek?.number), tokenAddresses),
+    {
+      client: dataClient,
+    }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)
@@ -141,10 +156,6 @@ export function useFetchedTokenDatas(
     const oneDay: TokenFields | undefined = parsed24[address]
     const twoDay: TokenFields | undefined = parsed48[address]
     const week: TokenFields | undefined = parsedWeek[address]
-
-    if (address === '0xDe30da39c46104798bB5aA3fe8B9e0e1F348163F') {
-      console.log(current)
-    }
 
     const [volumeUSD, volumeUSDChange] =
       current && oneDay && twoDay

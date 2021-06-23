@@ -3,8 +3,12 @@ import { useEffect } from 'react'
 import { useFetchProtocolData } from 'data/protocol/overview'
 import { useFetchGlobalChartData } from 'data/protocol/chart'
 import { fetchTopTransactions } from 'data/protocol/transactions'
+import { useClients } from 'state/application/hooks'
 
 export default function Updater(): null {
+  // client for data fetching
+  const { dataClient } = useClients()
+
   const [protocolData, updateProtocolData] = useProtocolData()
   const { data: fetchedProtocolData, error, loading } = useFetchProtocolData()
 
@@ -29,7 +33,7 @@ export default function Updater(): null {
 
   useEffect(() => {
     async function fetch() {
-      const data = await fetchTopTransactions()
+      const data = await fetchTopTransactions(dataClient)
       if (data) {
         updateTransactions(data)
       }
@@ -37,7 +41,7 @@ export default function Updater(): null {
     if (!transactions) {
       fetch()
     }
-  }, [transactions, updateTransactions])
+  }, [transactions, updateTransactions, dataClient])
 
   return null
 }

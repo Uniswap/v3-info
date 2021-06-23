@@ -1,8 +1,9 @@
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useDeltaTimestamps } from 'utils/queries'
 import { useState, useEffect, useMemo } from 'react'
-import { client } from 'apollo/client'
 import gql from 'graphql-tag'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 
 export interface EthPrices {
   current: number
@@ -44,7 +45,8 @@ interface PricesResponse {
 }
 
 async function fetchEthPrices(
-  blocks: [number, number, number]
+  blocks: [number, number, number],
+  client: ApolloClient<NormalizedCacheObject>
 ): Promise<{ data: EthPrices | undefined; error: boolean }> {
   try {
     const { data, error } = await client.query<PricesResponse>({
@@ -52,7 +54,7 @@ async function fetchEthPrices(
       variables: {
         block24: blocks[0],
         block48: blocks[1],
-        blockWeek: blocks[2],
+        blockWeek: blocks[2] ?? 1,
       },
     })
 
@@ -87,14 +89,19 @@ async function fetchEthPrices(
 }
 
 /**
- * returns eth prices at current, 24h, 48h, and 1k intervals
+ * returns eth prices at current, 24h, 48h, and 1w intervals
  */
 export function useEthPrices(): EthPrices | undefined {
-  const [prices, setPrices] = useState<EthPrices | undefined>()
+  const [prices, setPrices] = useState<{ [network: string]: EthPrices | undefined }>()
   const [error, setError] = useState(false)
+  const { dataClient } = useClients()
 
   const [t24, t48, tWeek] = useDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek])
+
+  // index on active network
+  const [activeNetwork] = useActiveNetworkVersion()
+  const indexedPrices = prices?.[activeNetwork.id]
 
   const formattedBlocks = useMemo(() => {
     if (blocks) {
@@ -105,17 +112,19 @@ export function useEthPrices(): EthPrices | undefined {
 
   useEffect(() => {
     async function fetch() {
-      const { data, error } = await fetchEthPrices(formattedBlocks as [number, number, number])
+      const { data, error } = await fetchEthPrices(formattedBlocks as [number, number, number], dataClient)
       if (error || blockError) {
         setError(true)
       } else if (data) {
-        setPrices(data)
+        setPrices({
+          [activeNetwork.id]: data,
+        })
       }
     }
-    if (!prices && !error && formattedBlocks) {
+    if (!indexedPrices && !error && formattedBlocks) {
       fetch()
     }
-  }, [error, prices, formattedBlocks, blockError])
+  }, [error, prices, formattedBlocks, blockError, dataClient, indexedPrices, activeNetwork.id])
 
-  return prices
+  return prices?.[activeNetwork.id]
 }

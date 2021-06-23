@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client'
 import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
+import { useClients } from 'state/application/hooks'
 
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
@@ -39,15 +40,18 @@ export function useFetchProtocolData(): {
   const [t24, t48] = useDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48])
   const [block24, block48] = blocks ?? []
+  const { dataClient } = useClients()
 
   // fetch all data
-  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA())
+  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), { client: dataClient })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block24?.number ?? undefined)
+    GLOBAL_DATA(block24?.number ?? undefined),
+    { client: dataClient }
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block48?.number ?? undefined)
+    GLOBAL_DATA(block48?.number ?? undefined),
+    { client: dataClient }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError)

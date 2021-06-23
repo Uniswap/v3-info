@@ -1,26 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import { ChainId } from '@uniswap/sdk'
 import React from 'react'
-// import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-
 import styled from 'styled-components'
-
-// import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
-// import { useActiveWeb3React } from '../../hooks'
-// import { useDarkModeManager } from '../../state/user/hooks'
-// import { useETHBalances } from '../../state/wallet/hooks'
-
-// import { YellowCard } from '../Card'
-// import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
-
 import Row, { RowFixed } from '../Row'
-// import Web3Status from '../Web3Status'
 import SearchSmall from 'components/Search'
 import { HideMedium } from 'theme'
+import NetworkDropdown from 'components/Menu/NetworkDropdown'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -63,21 +52,6 @@ const HeaderControls = styled.div`
   `};
 `
 
-// const HeaderElement = styled.div`
-//   display: flex;
-//   align-items: center;
-
-//   /* addresses safari's lack of support for "gap" */
-//   & > *:not(:first-child) {
-//     margin-left: 8px;
-//   }
-
-//   ${({ theme }) => theme.mediaWidth.upToMedium`
-//    flex-direction: row-reverse;
-//     align-items: center;
-//   `};
-// `
-
 const HeaderElementWrap = styled.div`
   display: flex;
   align-items: center;
@@ -96,46 +70,6 @@ const HeaderLinks = styled(Row)`
     justify-content: flex-end;
 `};
 `
-
-// const AccountElement = styled.div<{ active: boolean }>`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg1)};
-//   border-radius: 12px;
-//   white-space: nowrap;
-//   width: 100%;
-//   cursor: pointer;
-
-//   :focus {
-//     border: 1px solid blue;
-//   }
-// `
-
-// const HideSmall = styled.span`
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     display: none;
-//   `};
-// `
-
-// const NetworkCard = styled(YellowCard)`
-//   border-radius: 12px;
-//   padding: 8px 12px;
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     margin: 0;
-//     margin-right: 0.5rem;
-//     width: initial;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//     flex-shrink: 1;
-//   `};
-// `
-
-// const BalanceText = styled(Text)`
-//   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-//     display: none;
-//   `};
-// `
 
 const Title = styled(NavLink)`
   display: flex;
@@ -217,20 +151,7 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-// const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-//   [ChainId.RINKEBY]: 'Rinkeby',
-//   [ChainId.ROPSTEN]: 'Ropsten',
-//   [ChainId.GÖRLI]: 'Görli',
-//   [ChainId.KOVAN]: 'Kovan',
-// }
-
 export default function Header() {
-  // const { account, chainId } = useActiveWeb3React()
-
-  // const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  // const [isDark] = useDarkModeManager()
-  // const [darkMode, toggleDarkMode] = useDarkModeManager()
-
   return (
     <HeaderFrame>
       <HeaderRow>
@@ -243,42 +164,19 @@ export default function Header() {
           <StyledNavLink id={`pool-nav-link`} to={'/'} isActive={(match, { pathname }) => pathname === '/'}>
             Overview
           </StyledNavLink>
-          {/* <StyledNavLink id={`swap-nav-link`} to={'/protocol'}>
-            Protocol
-          </StyledNavLink> */}
           <StyledNavLink id={`stake-nav-link`} to={'/pools'}>
             Pools
           </StyledNavLink>
           <StyledNavLink id={`stake-nav-link`} to={'/tokens'}>
             Tokens
           </StyledNavLink>
-          {/* <StyledNavLink id={`stake-nav-link`} to={'/wallet'}>
-            Wallet
-          </StyledNavLink> */}
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
+        <NetworkDropdown />
         <SearchSmall />
-        {/* <HeaderElement>
-          <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-            )}
-          </HideSmall>
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
-              </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
-        </HeaderElement> */}
         <HideMedium>
           <HeaderElementWrap>
-            {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton> */}
             <Menu />
           </HeaderElementWrap>
         </HideMedium>

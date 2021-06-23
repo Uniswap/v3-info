@@ -1,8 +1,19 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { arbitrumBlockClient, arbitrumClient, blockClient, client } from 'apollo/client'
+import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal, updateSubgraphStatus } from './actions'
+import {
+  addPopup,
+  ApplicationModal,
+  PopupContent,
+  removePopup,
+  setOpenModal,
+  updateActiveNetworkVersion,
+  updateSubgraphStatus,
+} from './actions'
 
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
@@ -86,4 +97,60 @@ export function useSubgraphStatus(): [
     [dispatch]
   )
   return [status, update]
+}
+
+// returns a function that allows adding a popup
+export function useActiveNetworkVersion(): [NetworkInfo, (activeNetworkVersion: NetworkInfo) => void] {
+  const dispatch = useDispatch()
+  const activeNetwork = useSelector((state: AppState) => state.application.activeNetworkVersion)
+  const update = useCallback(
+    (activeNetworkVersion: NetworkInfo) => {
+      dispatch(updateActiveNetworkVersion({ activeNetworkVersion }))
+    },
+    [dispatch]
+  )
+  return [activeNetwork, update]
+}
+
+// get the apollo client related to the active network
+export function useDataClient(): ApolloClient<NormalizedCacheObject> {
+  const [activeNetwork] = useActiveNetworkVersion()
+  switch (activeNetwork.id) {
+    case SupportedNetwork.ETHEREUM:
+      return client
+      break
+    case SupportedNetwork.ARBITRUM:
+      return arbitrumClient
+      break
+    default:
+      return client
+  }
+}
+
+// get the apollo client related to the active network for fetching blocks
+export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
+  const [activeNetwork] = useActiveNetworkVersion()
+  switch (activeNetwork.id) {
+    case SupportedNetwork.ETHEREUM:
+      return blockClient
+      break
+    case SupportedNetwork.ARBITRUM:
+      return arbitrumBlockClient
+      break
+    default:
+      return blockClient
+  }
+}
+
+// Get all required subgraph clients
+export function useClients(): {
+  dataClient: ApolloClient<NormalizedCacheObject>
+  blockClient: ApolloClient<NormalizedCacheObject>
+} {
+  const dataClient = useDataClient()
+  const blockClient = useBlockClient()
+  return {
+    dataClient,
+    blockClient,
+  }
 }

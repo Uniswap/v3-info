@@ -23,7 +23,7 @@ export default function Updater(): null {
   const unfetchedTokenAddresses = useMemo(() => {
     return Object.keys(allTokenData).reduce((accum: string[], key) => {
       const tokenData = allTokenData[key]
-      if (!tokenData.data || !tokenData.lastUpdated) {
+      if (!tokenData || !tokenData.data || !tokenData.lastUpdated) {
         accum.push(key)
       }
       return accum
@@ -34,6 +34,7 @@ export default function Updater(): null {
   const { error: tokenDataError, loading: tokenDataLoading, data: tokenDatas } = useFetchedTokenDatas(
     unfetchedTokenAddresses
   )
+
   useEffect(() => {
     if (tokenDatas && !tokenDataError && !tokenDataLoading) {
       updateTokenDatas(Object.values(tokenDatas))

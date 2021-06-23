@@ -13,6 +13,7 @@ import { CurrentPriceLabel } from './CurrentPriceLabel'
 import CustomToolTip from './CustomToolTip'
 import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
+import { useClients } from 'state/application/hooks'
 
 const Wrapper = styled.div`
   position: relative;
@@ -84,6 +85,7 @@ const initialState = {
 
 export default function DensityChart({ address }: DensityChartProps) {
   const theme = useTheme()
+  const { dataClient } = useClients()
 
   // poolData
   const poolData: PoolData = usePoolDatas([address])[0]
@@ -113,7 +115,7 @@ export default function DensityChart({ address }: DensityChartProps) {
 
   useEffect(() => {
     async function fetch() {
-      const { data } = await fetchTicksSurroundingPrice(address, ticksToFetch)
+      const { data } = await fetchTicksSurroundingPrice(address, dataClient, ticksToFetch)
       if (data) {
         updatePoolTickData(address, data)
       }
@@ -121,7 +123,7 @@ export default function DensityChart({ address }: DensityChartProps) {
     if (!poolTickData || (poolTickData && poolTickData.ticksProcessed.length < amountTicks)) {
       fetch()
     }
-  }, [address, poolTickData, updatePoolTickData, ticksToFetch, amountTicks])
+  }, [address, poolTickData, updatePoolTickData, ticksToFetch, amountTicks, dataClient])
 
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>()
   useEffect(() => {

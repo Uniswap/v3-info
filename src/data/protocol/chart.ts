@@ -4,7 +4,8 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
-import { client } from 'apollo/client'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -30,7 +31,7 @@ interface ChartResults {
   }[]
 }
 
-async function fetchChartData() {
+async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
   let data: {
     date: number
     volumeUSD: string
@@ -121,25 +122,31 @@ export function useFetchGlobalChartData(): {
   error: boolean
   data: ChartDayData[] | undefined
 } {
-  const [data, setData] = useState<ChartDayData[] | undefined>()
+  const [data, setData] = useState<{ [network: string]: ChartDayData[] | undefined }>()
   const [error, setError] = useState(false)
+  const { dataClient } = useClients()
+
+  const [activeNetworkVersion] = useActiveNetworkVersion()
+  const indexedData = data?.[activeNetworkVersion.id]
 
   useEffect(() => {
     async function fetch() {
-      const { data, error } = await fetchChartData()
+      const { data, error } = await fetchChartData(dataClient)
       if (data && !error) {
-        setData(data)
+        setData({
+          [activeNetworkVersion.id]: data,
+        })
       } else if (error) {
         setError(true)
       }
     }
-    if (!data && !error) {
+    if (!indexedData && !error) {
       fetch()
     }
-  }, [data, error])
+  }, [data, error, dataClient, indexedData, activeNetworkVersion.id])
 
   return {
     error,
-    data,
+    data: indexedData,
   }
 }

@@ -21,6 +21,7 @@ import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
 import dayjs from 'dayjs'
+import { useActiveNetworkVersion } from 'state/application/hooks'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -45,6 +46,12 @@ export default function Home() {
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
   const [rightLabel, setRightLabel] = useState<string | undefined>()
+
+  const [activeNetwork] = useActiveNetworkVersion()
+  useEffect(() => {
+    setLiquidityHover(undefined)
+    setVolumeHover(undefined)
+  }, [activeNetwork])
 
   // get all the pool datas that exist
   const allPoolData = useAllPoolData()

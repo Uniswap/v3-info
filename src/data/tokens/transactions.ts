@@ -1,4 +1,4 @@
-import { client } from 'apollo/client'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import gql from 'graphql-tag'
 import { Transaction, TransactionType } from 'types'
 import { formatTokenSymbol } from 'utils/tokens'
@@ -256,7 +256,8 @@ interface TransactionResults {
 }
 
 export async function fetchTokenTransactions(
-  address: string
+  address: string,
+  client: ApolloClient<NormalizedCacheObject>
 ): Promise<{ data: Transaction[] | undefined; error: boolean; loading: boolean }> {
   try {
     const { data, error, loading } = await client.query<TransactionResults>({

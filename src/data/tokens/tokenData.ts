@@ -77,9 +77,7 @@ export function useFetchedTokenDatas(
   const [block24, block48, blockWeek] = blocks ?? []
   const ethPrices = useEthPrices()
 
-  const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses), {
-    fetchPolicy: 'no-cache',
-  })
+  const { loading, error, data } = useQuery<TokenDataResponse>(TOKENS_BULK(undefined, tokenAddresses))
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<TokenDataResponse>(
     TOKENS_BULK(parseInt(block24?.number), tokenAddresses)

@@ -4,7 +4,6 @@ import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
 import { client } from 'apollo/client'
 import { getBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
-import { splitQuery } from 'utils/queries'
 import { PriceChartEntry } from 'types'
 
 // format dayjs with the libraries that we need
@@ -31,6 +30,34 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
 
   queryString += '}'
   return gql(queryString)
+}
+
+const PRICE_CHART = gql`
+  query tokenHourDatas($startTime: Int!, $skip: Int!, $address: Bytes!) {
+    tokenHourDatas(
+      first: 100
+      skip: $skip
+      where: { token: $address, periodStartUnix_gt: $startTime }
+      orderBy: periodStartUnix
+      orderDirection: asc
+    ) {
+      periodStartUnix
+      high
+      low
+      open
+      close
+    }
+  }
+`
+
+interface PriceResults {
+  tokenHourDatas: {
+    periodStartUnix: number
+    high: string
+    low: string
+    open: string
+    close: string
+  }[]
 }
 
 export async function fetchTokenPriceData(
@@ -79,61 +106,49 @@ export async function fetchTokenPriceData(
         error: false,
       }
     }
-
-    const prices: any | undefined = await splitQuery(PRICES_BY_BLOCK, client, [address], blocks, 200)
-    const pricesCopy = Object.assign([], prices)
-
-    if (prices && pricesCopy) {
-      // format token ETH price results
-      const values: {
-        timestamp: string
-        derivedETH: number | undefined
-        priceUSD: number
-      }[] = []
-
-      for (const row in prices) {
-        const timestamp = row.split('t')[1]
-        const derivedETH = prices[row]?.derivedETH ? parseFloat(prices[row]?.derivedETH) : undefined
-        if (timestamp && derivedETH) {
-          values.push({
-            timestamp,
-            derivedETH,
-            priceUSD: 0,
-          })
+    let data: {
+      periodStartUnix: number
+      high: string
+      low: string
+      open: string
+      close: string
+    }[] = []
+    let skip = 0
+    let allFound = false
+    while (!allFound) {
+      const { data: priceData, errors, loading } = await client.query<PriceResults>({
+        query: PRICE_CHART,
+        variables: {
+          address: address,
+          startTime: startTimestamp,
+          skip,
+        },
+        fetchPolicy: 'no-cache',
+      })
+      if (!loading) {
+        skip += 100
+        if ((priceData && priceData.tokenHourDatas.length < 100) || errors) {
+          allFound = true
+        }
+        if (priceData) {
+          data = data.concat(priceData.tokenHourDatas)
         }
       }
+    }
 
-      // go through eth usd prices and assign to original values array
-      let index = 0
-      for (const brow in pricesCopy) {
-        const timestamp = brow.split('b')[1]
-        const derivedETH = values[index]?.derivedETH
-        if (timestamp && derivedETH) {
-          values[index].priceUSD = parseFloat(pricesCopy[brow]?.ethPriceUSD ?? 0) * derivedETH
-          index += 1
-        }
-      }
-
-      const formattedHistory = []
-
-      // for each hour, construct the open and close price
-      for (let i = 0; i < values.length - 1; i++) {
-        formattedHistory.push({
-          time: parseFloat(values[i].timestamp),
-          open: values[i].priceUSD,
-          close: values[i + 1].priceUSD,
-          high: values[i + 1].priceUSD,
-          low: values[i].priceUSD,
-        })
-      }
-
-      return { data: formattedHistory, error: false }
-    } else {
-      console.log('no price data loaded')
+    const formattedHistory = data.map((d) => {
       return {
-        data: [],
-        error: false,
+        time: d.periodStartUnix,
+        open: parseFloat(d.open),
+        close: parseFloat(d.close),
+        high: parseFloat(d.high),
+        low: parseFloat(d.low),
       }
+    })
+
+    return {
+      data: formattedHistory,
+      error: false,
     }
   } catch (e) {
     console.log(e)

@@ -73,7 +73,7 @@ export default function PoolPage({
   }, [])
 
   // theming
-  const backgroundColor = useColor(address)
+  const backgroundColor = useColor()
   const theme = useTheme()
 
   // token data
@@ -156,7 +156,7 @@ export default function PoolPage({
                     <RowFixed>
                       <CurrencyLogo address={poolData.token0.address} size={'20px'} />
                       <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token0.symbol} =  ${formatAmount(poolData.token1Price)} ${
+                        {`1 ${poolData.token0.symbol} =  ${formatAmount(poolData.token1Price, 4)} ${
                           poolData.token1.symbol
                         }`}
                       </TYPE.label>
@@ -168,7 +168,7 @@ export default function PoolPage({
                     <RowFixed>
                       <CurrencyLogo address={poolData.token1.address} size={'20px'} />
                       <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token1.symbol} =  ${formatAmount(poolData.token0Price)} ${
+                        {`1 ${poolData.token1.symbol} =  ${formatAmount(poolData.token0Price, 4)} ${
                           poolData.token0.symbol
                         }`}
                       </TYPE.label>

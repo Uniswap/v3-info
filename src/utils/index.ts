@@ -8,6 +8,7 @@ import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, Percent, Token, CurrencyAmount, Fraction, Currency } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { TokenAddressMap } from '../state/lists/hooks'
+import { ArbitrumNetworkInfo, NetworkInfo } from 'constants/networks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -29,9 +30,31 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
 export function getEtherscanLink(
   chainId: ChainId,
   data: string,
-  type: 'transaction' | 'token' | 'address' | 'block'
+  type: 'transaction' | 'token' | 'address' | 'block',
+  networkVersion: NetworkInfo
 ): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+  const prefix =
+    networkVersion === ArbitrumNetworkInfo
+      ? 'https://explorer.offchainlabs.com'
+      : `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+
+  if (networkVersion === ArbitrumNetworkInfo) {
+    switch (type) {
+      case 'transaction': {
+        return `${prefix}/tx/${data}`
+      }
+      case 'token': {
+        return `${prefix}/address/${data}`
+      }
+      case 'block': {
+        return 'https://explorer.offchainlabs.com'
+      }
+      case 'address':
+      default: {
+        return `${prefix}/address/${data}`
+      }
+    }
+  }
 
   switch (type) {
     case 'transaction': {

@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
@@ -7,7 +7,6 @@ import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
-import Protocol from './Protocol'
 import PoolsOverview from './Pool/PoolsOverview'
 import TokensOverview from './Token/TokensOverview'
 import TopBar from 'components/Header/TopBar'
@@ -15,8 +14,9 @@ import { RedirectInvalidToken } from './Token/redirects'
 import { LocalLoader } from 'components/Loader'
 import PoolPage from './Pool/PoolPage'
 import { ExternalLink, HideMedium, TYPE } from 'theme'
-import { useSubgraphStatus } from 'state/application/hooks'
+import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
+import { ArbitrumNetworkInfo, EthereumNetworkInfo } from 'constants/networks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -72,6 +72,18 @@ export default function App() {
   // subgraph health
   const [subgraphStatus] = useSubgraphStatus()
 
+  // update network based on route
+  // TEMP - find better way to do this
+  const location = useLocation()
+  const [, setActiveNetwork] = useActiveNetworkVersion()
+  useEffect(() => {
+    if (location.pathname.includes('arbitrum')) {
+      setActiveNetwork(ArbitrumNetworkInfo)
+    } else {
+      setActiveNetwork(EthereumNetworkInfo)
+    }
+  }, [location.pathname, setActiveNetwork])
+
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />
@@ -103,12 +115,11 @@ export default function App() {
           <BodyWrapper>
             <Popups />
             <Switch>
-              <Route exact strict path="/" component={Home} />
-              <Route exact strict path="/protocol" component={Protocol} />
-              <Route exact strict path="/pools" component={PoolsOverview} />
-              <Route exact strict path="/tokens" component={TokensOverview} />
-              <Route exact strict path="/tokens/:address" component={RedirectInvalidToken} />
-              <Route exact strict path="/pools/:address" component={PoolPage} />
+              <Route exact strict path="/:networkID?/" component={Home} />
+              <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
+              <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
+              <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
+              <Route exact strict path="/:networkID?/pools/:address" component={PoolPage} />
             </Switch>
             <Marginer />
           </BodyWrapper>

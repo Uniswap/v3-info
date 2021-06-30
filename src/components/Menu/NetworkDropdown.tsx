@@ -5,9 +5,10 @@ import React, { useState, useRef } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import styled from 'styled-components'
-import { TYPE } from 'theme'
+import { StyledInternalLink, TYPE } from 'theme'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { AutoColumn } from 'components/Column'
+import { EthereumNetworkInfo } from '../../constants/networks'
 
 const Container = styled.div`
   position: relative;
@@ -15,7 +16,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
   padding: 6px 8px;
   margin-right: 12px;
 
@@ -25,29 +26,38 @@ const Wrapper = styled.div`
   }
 `
 
+const LogaContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`
+
 const LogoWrapper = styled.img`
-  width: 20px;
-  height: 20px;
-  margin-right: 6px;
+  width: 24px;
+  height: 24px;
 `
 
 const BlackBadge = styled.div`
-  background-color: black;
   border-radius: 10px;
   padding: 4px 8px;
 `
 
 const FlyOut = styled.div`
+  background-color: ${({ theme }) => theme.bg1};
   position: absolute;
   top: 48px;
   left: 0;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.bg1};
   padding: 16px;
   width: 270px;
 `
 
-const NetworkRow = styled(RowBetween)<{ disabled?: boolean }>`
+const NetworkRow = styled(RowBetween)<{ active?: boolean; disabled?: boolean }>`
+padding: 6px 8px;
+background-color: ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
+border-radius: 8px;
 opacity: ${({ disabled }) => (disabled ? '0.5' : 1)}
   :hover {
     cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
@@ -56,11 +66,11 @@ opacity: ${({ disabled }) => (disabled ? '0.5' : 1)}
 `
 
 const LightGreyBadge = styled.div`
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg4};
   border-radius: 6px;
   padding: 2px 6px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
 `
 
 const GreyBadge = styled.div`
@@ -68,20 +78,24 @@ const GreyBadge = styled.div`
   border-radius: 6px;
   padding: 2px 6px;
   font-style: italic;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
 `
 
 const GreenDot = styled.div`
-  height: 8px;
-  width: 8px;
+  height: 12px;
+  width: 12px;
   margin-right: 12px;
   background-color: ${({ theme }) => theme.green1};
   border-radius: 50%;
+  position: absolute;
+  border: 2px solid black;
+  right: -14px;
+  bottom: -2px;
 `
 
 export default function NetworkDropdown() {
-  const [activeNetwork, setActiveNetwork] = useActiveNetworkVersion()
+  const [activeNetwork] = useActiveNetworkVersion()
   const theme = useTheme()
 
   const [showMenu, setShowMenu] = useState(false)
@@ -105,31 +119,41 @@ export default function NetworkDropdown() {
       {showMenu && (
         <FlyOut>
           <AutoColumn gap="16px">
-            <TYPE.main color={theme.text2} fontWeight={600} fontSize="16px">
+            <TYPE.main color={theme.text3} fontWeight={600} fontSize="16px">
               Select network
             </TYPE.main>
             {SUPPORTED_NETWORK_VERSIONS.map((n) => {
               return (
-                <NetworkRow
+                <StyledInternalLink
                   key={n.id}
-                  onClick={() => {
-                    setShowMenu(false)
-                    setActiveNetwork(n)
-                  }}
+                  to={`${n === EthereumNetworkInfo ? '' : '/' + n.name.toLocaleLowerCase()}/`}
                 >
-                  <RowFixed>
-                    {activeNetwork.id === n.id && <GreenDot />}
-                    <LogoWrapper src={n.imageURL} />
-                    <TYPE.main color={theme.white}>{n.name}</TYPE.main>
-                  </RowFixed>
-                  {n.blurb && <LightGreyBadge>{n.blurb}</LightGreyBadge>}
-                </NetworkRow>
+                  <NetworkRow
+                    onClick={() => {
+                      setShowMenu(false)
+                    }}
+                    active={activeNetwork.id === n.id}
+                  >
+                    <RowFixed>
+                      <LogaContainer>
+                        <LogoWrapper src={n.imageURL} />
+                        {activeNetwork.id === n.id && <GreenDot />}
+                      </LogaContainer>
+                      <TYPE.main ml="12px" color={theme.white}>
+                        {n.name}
+                      </TYPE.main>
+                    </RowFixed>
+                    {n.blurb && <LightGreyBadge>{n.blurb}</LightGreyBadge>}
+                  </NetworkRow>
+                </StyledInternalLink>
               )
             })}
             <NetworkRow disabled={true}>
               <RowFixed>
                 <LogoWrapper src={OptimismNetworkInfo.imageURL} />
-                <TYPE.main color={theme.white}>{OptimismNetworkInfo.name}</TYPE.main>
+                <TYPE.main ml="12px" color={theme.white}>
+                  {OptimismNetworkInfo.name}
+                </TYPE.main>
               </RowFixed>
               <GreyBadge>Coming Soon</GreyBadge>
             </NetworkRow>

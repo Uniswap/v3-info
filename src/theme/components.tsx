@@ -100,7 +100,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
 export const StyledInternalLink = styled(Link)<{ fontSize?: string }>`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.primary1};
+  color: inherit;
   font-weight: 500;
   font-size: ${({ fontSize }) => fontSize ?? '16px'};
 

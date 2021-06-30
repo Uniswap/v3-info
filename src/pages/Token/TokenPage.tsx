@@ -35,6 +35,8 @@ import { useSavedTokens } from 'state/user/hooks'
 import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
 import { MonoSpace } from 'components/shared'
 import dayjs from 'dayjs'
+import { useActiveNetworkVersion } from 'state/application/hooks'
+import { networkPrefix } from 'utils/networkPrefix'
 // import { SmallOptionButton } from '../../components/Button'
 
 const PriceText = styled(TYPE.label)`
@@ -76,6 +78,8 @@ export default function TokenPage({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  const [activeNetwork] = useActiveNetworkVersion()
+
   address = address.toLowerCase()
   // theming
   const backgroundColor = useColor(address)
@@ -160,21 +164,21 @@ export default function TokenPage({
             <AutoColumn gap="40px">
               <RowBetween>
                 <AutoRow gap="4px">
-                  <StyledInternalLink to={'/'}>
+                  <StyledInternalLink to={networkPrefix(activeNetwork)}>
                     <TYPE.main>{`Home > `}</TYPE.main>
                   </StyledInternalLink>
-                  <StyledInternalLink to={'/tokens'}>
+                  <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens'}>
                     <TYPE.label>{` Tokens `}</TYPE.label>
                   </StyledInternalLink>
                   <TYPE.main>{` > `}</TYPE.main>
                   <TYPE.label>{` ${tokenData.symbol} `}</TYPE.label>
-                  <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+                  <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
                     <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
                   </StyledExternalLink>
                 </AutoRow>
                 <RowFixed gap="10px" align="center">
                   <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
-                  <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+                  <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
                     <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
                   </StyledExternalLink>
                 </RowFixed>

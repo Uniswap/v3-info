@@ -10,6 +10,8 @@ import Row, { RowFixed } from '../Row'
 import SearchSmall from 'components/Search'
 import { HideMedium } from 'theme'
 import NetworkDropdown from 'components/Menu/NetworkDropdown'
+import { useActiveNetworkVersion } from 'state/application/hooks'
+import { networkPrefix } from 'utils/networkPrefix'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -152,22 +154,28 @@ export const StyledMenuButton = styled.button`
 `
 
 export default function Header() {
+  const [activeNewtork] = useActiveNetworkVersion()
+
   return (
     <HeaderFrame>
       <HeaderRow>
-        <Title to="/">
+        <Title to={networkPrefix(activeNewtork)}>
           <UniIcon>
             <img width={'24px'} src={LogoDark} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`pool-nav-link`} to={'/'} isActive={(match, { pathname }) => pathname === '/'}>
+          <StyledNavLink
+            id={`pool-nav-link`}
+            to={networkPrefix(activeNewtork)}
+            isActive={(match, { pathname }) => pathname === '/'}
+          >
             Overview
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/pools'}>
+          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'pools'}>
             Pools
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/tokens'}>
+          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'tokens'}>
             Tokens
           </StyledNavLink>
         </HeaderLinks>

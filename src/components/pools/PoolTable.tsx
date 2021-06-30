@@ -14,6 +14,8 @@ import { Label, ClickableText } from 'components/Text'
 import { PageButtons, Arrow, Break } from 'components/shared'
 import { POOL_HIDE } from '../../constants/index'
 import useTheme from 'hooks/useTheme'
+import { networkPrefix } from 'utils/networkPrefix'
+import { useActiveNetworkVersion } from 'state/application/hooks'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -64,8 +66,10 @@ const SORT_FIELD = {
 }
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
+  const [activeNetwork] = useActiveNetworkVersion()
+
   return (
-    <LinkWrapper to={'/pools/' + poolData.address}>
+    <LinkWrapper to={networkPrefix(activeNetwork) + 'pools/' + poolData.address}>
       <ResponsiveGrid>
         <Label fontWeight={400}>{index + 1}</Label>
         <Label fontWeight={400}>

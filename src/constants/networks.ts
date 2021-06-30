@@ -23,7 +23,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
 
 export const ArbitrumNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.ARBITRUM,
-  name: 'Abritrum',
+  name: 'Arbitrum',
   imageURL: ARBITRUM_LOGO_URL,
   blurb: 'L2 Beta',
 }

@@ -26,6 +26,8 @@ import TransactionTable from 'components/TransactionsTable'
 import { useSavedPools } from 'state/user/hooks'
 import DensityChart from 'components/DensityChart'
 import { MonoSpace } from 'components/shared'
+import { useActiveNetworkVersion } from 'state/application/hooks'
+import { networkPrefix } from 'utils/networkPrefix'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -68,6 +70,8 @@ export default function PoolPage({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  const [activeNetwork] = useActiveNetworkVersion()
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -121,10 +125,10 @@ export default function PoolPage({
         <AutoColumn gap="32px">
           <RowBetween>
             <AutoRow gap="4px">
-              <StyledInternalLink to="/">
+              <StyledInternalLink to={networkPrefix(activeNetwork)}>
                 <TYPE.main>{`Home > `}</TYPE.main>
               </StyledInternalLink>
-              <StyledInternalLink to="/pools">
+              <StyledInternalLink to={networkPrefix(activeNetwork) + 'pools'}>
                 <TYPE.label>{` Pools `}</TYPE.label>
               </StyledInternalLink>
               <TYPE.main>{` > `}</TYPE.main>
@@ -134,7 +138,7 @@ export default function PoolPage({
             </AutoRow>
             <RowFixed gap="10px" align="center">
               <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
-              <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+              <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
                 <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
               </StyledExternalLink>
             </RowFixed>
@@ -151,7 +155,7 @@ export default function PoolPage({
                 <GreyBadge>{feeTierPercent(poolData.feeTier)}</GreyBadge>
               </RowFixed>
               <ResponsiveRow>
-                <StyledInternalLink to={'/tokens/' + poolData.token0.address}>
+                <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token0.address}>
                   <TokenButton>
                     <RowFixed>
                       <CurrencyLogo address={poolData.token0.address} size={'20px'} />
@@ -163,7 +167,7 @@ export default function PoolPage({
                     </RowFixed>
                   </TokenButton>
                 </StyledInternalLink>
-                <StyledInternalLink to={'/tokens/' + poolData.token1.address}>
+                <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token1.address}>
                   <TokenButton ml="10px">
                     <RowFixed>
                       <CurrencyLogo address={poolData.token1.address} size={'20px'} />

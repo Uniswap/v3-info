@@ -196,12 +196,12 @@ export default function Home() {
         </HideSmall>
         <RowBetween>
           <TYPE.main>Top Tokens</TYPE.main>
-          <StyledInternalLink to="/tokens">Explore</StyledInternalLink>
+          <StyledInternalLink to="tokens">Explore</StyledInternalLink>
         </RowBetween>
         <TokenTable tokenDatas={formattedTokens} />
         <RowBetween>
           <TYPE.main>Top Pools</TYPE.main>
-          <StyledInternalLink to="/pools">Explore</StyledInternalLink>
+          <StyledInternalLink to="pools">Explore</StyledInternalLink>
         </RowBetween>
         <PoolTable poolDatas={poolDatas} />
         <RowBetween>

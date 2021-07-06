@@ -16,7 +16,7 @@ import PoolPage from './Pool/PoolPage'
 import { ExternalLink, HideMedium, TYPE } from 'theme'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
-import { ArbitrumNetworkInfo, EthereumNetworkInfo } from 'constants/networks'
+import { ArbitrumNetworkInfo, EthereumNetworkInfo, OptimismNetworkInfo } from 'constants/networks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -79,6 +79,8 @@ export default function App() {
   useEffect(() => {
     if (location.pathname.includes('arbitrum')) {
       setActiveNetwork(ArbitrumNetworkInfo)
+    } else if (location.pathname.includes('arbitrum')) {
+      setActiveNetwork(OptimismNetworkInfo)
     } else {
       setActiveNetwork(EthereumNetworkInfo)
     }

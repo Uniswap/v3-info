@@ -1,4 +1,4 @@
-import OPTIMISM_LOGO_URL from '../assets/images/optimism.png'
+import OPTIMISM_LOGO_URL from '../assets/images/optimism.svg'
 import ARBITRUM_LOGO_URL from '../assets/images/arbitrum.svg'
 import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
 

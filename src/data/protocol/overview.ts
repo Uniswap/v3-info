@@ -1,11 +1,12 @@
 import { getPercentChange } from '../../utils/data'
 import { ProtocolData } from '../../state/protocol/reducer'
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/client'
+import { useQuery, ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
 import { useClients } from 'state/application/hooks'
+import { client, blockClient, arbitrumClient, arbitrumBlockClient } from 'apollo/client'
 
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
@@ -30,28 +31,34 @@ interface GlobalResponse {
   }[]
 }
 
-// mocked
-export function useFetchProtocolData(): {
+export function useFetchProtocolData(
+  dataClientOverride?: ApolloClient<NormalizedCacheObject>,
+  blockClientOverride?: ApolloClient<NormalizedCacheObject>
+): {
   loading: boolean
   error: boolean
   data: ProtocolData | undefined
 } {
+  // get appropriate clients if override needed
+  const { dataClient, blockClient } = useClients()
+  const activeDataClient = dataClientOverride ?? dataClient
+  const activeBlockClient = blockClientOverride ?? blockClient
+
   // get blocks from historic timestamps
   const [t24, t48] = useDeltaTimestamps()
-  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48])
+  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48], activeBlockClient)
   const [block24, block48] = blocks ?? []
-  const { dataClient } = useClients()
 
   // fetch all data
-  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), { client: dataClient })
+  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), { client: activeDataClient })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
     GLOBAL_DATA(block24?.number ?? undefined),
-    { client: dataClient }
+    { client: activeDataClient }
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
     GLOBAL_DATA(block48?.number ?? undefined),
-    { client: dataClient }
+    { client: activeDataClient }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError)
@@ -118,5 +125,29 @@ export function useFetchProtocolData(): {
     loading: anyLoading,
     error: anyError,
     data: formattedData,
+  }
+}
+
+export function useFetchAggregateProtocolData(): {
+  loading: boolean
+  error: boolean
+  data: ProtocolData | undefined
+} {
+  const { data: ethereumData, loading: loadingEthereum, error: errorEthereum } = useFetchProtocolData(
+    client,
+    blockClient
+  )
+  const { data: arbitrumData, loading: loadingArbitrum, error: errorArbitrum } = useFetchProtocolData(
+    arbitrumClient,
+    arbitrumBlockClient
+  )
+
+  console.log(ethereumData)
+  console.log(arbitrumData)
+
+  return {
+    data: undefined,
+    loading: false,
+    error: false,
   }
 }

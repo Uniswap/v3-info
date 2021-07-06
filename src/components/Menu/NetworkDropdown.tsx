@@ -1,5 +1,5 @@
 import { RowFixed, RowBetween } from 'components/Row'
-import { SUPPORTED_NETWORK_VERSIONS, OptimismNetworkInfo } from 'constants/networks'
+import { SUPPORTED_NETWORK_VERSIONS, OptimismNetworkInfo, ArbitrumNetworkInfo } from 'constants/networks'
 import useTheme from 'hooks/useTheme'
 import React, { useState, useRef } from 'react'
 import { ChevronDown } from 'react-feather'
@@ -150,9 +150,9 @@ export default function NetworkDropdown() {
             })}
             <NetworkRow disabled={true}>
               <RowFixed>
-                <LogoWrapper src={OptimismNetworkInfo.imageURL} />
+                <LogoWrapper src={ArbitrumNetworkInfo.imageURL} />
                 <TYPE.main ml="12px" color={theme.white}>
-                  {OptimismNetworkInfo.name}
+                  {ArbitrumNetworkInfo.name}
                 </TYPE.main>
               </RowFixed>
               <GreyBadge>Coming Soon</GreyBadge>

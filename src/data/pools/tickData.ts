@@ -97,7 +97,7 @@ const fetchInitializedTicks = async (
   do {
     const { data, error, loading } = await client.query<SurroundingTicksResult>({
       query: tickQuery,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
       variables: {
         poolAddress,
         tickIdxLowerBound,

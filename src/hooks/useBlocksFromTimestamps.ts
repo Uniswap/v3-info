@@ -22,7 +22,8 @@ export const GET_BLOCKS = (timestamps: string[]) => {
  * @param timestamps
  */
 export function useBlocksFromTimestamps(
-  timestamps: number[]
+  timestamps: number[],
+  blockClientOverride?: ApolloClient<NormalizedCacheObject>
 ): {
   blocks:
     | {
@@ -37,13 +38,14 @@ export function useBlocksFromTimestamps(
   const [error, setError] = useState(false)
 
   const { blockClient } = useClients()
+  const activeBlockClient = blockClientOverride ?? blockClient
 
   // derive blocks based on active network
   const networkBlocks = blocks?.[activeNetwork.id]
 
   useEffect(() => {
     async function fetchData() {
-      const results = await splitQuery(GET_BLOCKS, blockClient, [], timestamps)
+      const results = await splitQuery(GET_BLOCKS, activeBlockClient, [], timestamps)
       if (results) {
         setBlocks({ ...(blocks ?? {}), [activeNetwork.id]: results })
       } else {

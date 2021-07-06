@@ -127,7 +127,7 @@ export async function fetchTopTransactions(
   try {
     const { data, error, loading } = await client.query<TransactionResults>({
       query: GLOBAL_TRANSACTIONS,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
     })
 
     if (error || loading || !data) {

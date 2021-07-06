@@ -1,5 +1,12 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { arbitrumBlockClient, arbitrumClient, blockClient, client } from 'apollo/client'
+import {
+  arbitrumBlockClient,
+  arbitrumClient,
+  blockClient,
+  client,
+  optimismClient,
+  optimismBlockClient,
+} from 'apollo/client'
 import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -118,10 +125,10 @@ export function useDataClient(): ApolloClient<NormalizedCacheObject> {
   switch (activeNetwork.id) {
     case SupportedNetwork.ETHEREUM:
       return client
-      break
     case SupportedNetwork.ARBITRUM:
       return arbitrumClient
-      break
+    case SupportedNetwork.OPTIMISM:
+      return optimismClient
     default:
       return client
   }
@@ -133,10 +140,10 @@ export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
   switch (activeNetwork.id) {
     case SupportedNetwork.ETHEREUM:
       return blockClient
-      break
     case SupportedNetwork.ARBITRUM:
       return arbitrumBlockClient
-      break
+    case SupportedNetwork.OPTIMISM:
+      return optimismBlockClient
     default:
       return blockClient
   }

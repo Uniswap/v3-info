@@ -5,7 +5,12 @@ import { TYPE } from 'theme'
 import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart/alt'
 import useTheme from 'hooks/useTheme'
-import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
+import {
+  useProtocolData,
+  useProtocolChartData,
+  useProtocolTransactions,
+  useAggregateOverviewData,
+} from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
@@ -38,6 +43,10 @@ export default function Home() {
 
   const theme = useTheme()
 
+  useAggregateOverviewData()
+
+  const [activeNetwork] = useActiveNetworkVersion()
+
   const [protocolData] = useProtocolData()
   const [chartData] = useProtocolChartData()
   const [transactions] = useProtocolTransactions()
@@ -47,7 +56,6 @@ export default function Home() {
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
   const [rightLabel, setRightLabel] = useState<string | undefined>()
 
-  const [activeNetwork] = useActiveNetworkVersion()
   useEffect(() => {
     setLiquidityHover(undefined)
     setVolumeHover(undefined)

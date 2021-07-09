@@ -142,8 +142,18 @@ export function useFetchAggregateProtocolData(): {
     arbitrumBlockClient
   )
 
-  console.log(ethereumData)
-  console.log(arbitrumData)
+  if (!ethereumData && !arbitrumData) {
+    return {
+      data: undefined,
+      loading: false,
+      error: false,
+    }
+  }
+
+  // for now until useMultipleDatas hook just manuall construct ProtocolData object
+
+  // console.log(ethereumData)
+  // console.log(arbitrumData)
 
   return {
     data: undefined,

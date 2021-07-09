@@ -1,5 +1,5 @@
 import { RowFixed, RowBetween } from 'components/Row'
-import { SUPPORTED_NETWORK_VERSIONS, OptimismNetworkInfo, ArbitrumNetworkInfo } from 'constants/networks'
+import { SUPPORTED_NETWORK_VERSIONS, ArbitrumNetworkInfo } from 'constants/networks'
 import useTheme from 'hooks/useTheme'
 import React, { useState, useRef } from 'react'
 import { ChevronDown } from 'react-feather'
@@ -35,13 +35,8 @@ const LogaContainer = styled.div`
 `
 
 const LogoWrapper = styled.img`
-  width: 24px;
-  height: 24px;
-`
-
-const BlackBadge = styled.div`
-  border-radius: 10px;
-  padding: 4px 8px;
+  width: 20px;
+  height: 20px;
 `
 
 const FlyOut = styled.div`
@@ -61,8 +56,16 @@ border-radius: 8px;
 opacity: ${({ disabled }) => (disabled ? '0.5' : 1)}
   :hover {
     cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
-    opacity: 0.7;
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 0.7)}
   }
+`
+
+const BlueBadge = styled.div`
+  background-color: ${({ theme }) => theme.blue1};
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 600;
 `
 
 const LightGreyBadge = styled.div`
@@ -108,11 +111,10 @@ export default function NetworkDropdown() {
       <Wrapper onClick={() => setShowMenu(!showMenu)}>
         <RowFixed>
           <LogoWrapper src={activeNetwork.imageURL} />
-          <BlackBadge>
-            <TYPE.main fontSize="14px" color={theme.white}>
-              {activeNetwork.name}
-            </TYPE.main>
-          </BlackBadge>
+          <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px">
+            {activeNetwork.name}
+          </TYPE.main>
+          {activeNetwork === EthereumNetworkInfo ? null : <BlueBadge style={{ margin: '0 4px' }}>L2</BlueBadge>}
           <ChevronDown size="20px" />
         </RowFixed>
       </Wrapper>

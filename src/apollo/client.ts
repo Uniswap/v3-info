@@ -93,7 +93,20 @@ export const arbitrumBlockClient = new ApolloClient({
 
 export const optimismClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
   queryDeduplication: true,
   defaultOptions: {
     watchQuery: {
@@ -107,7 +120,7 @@ export const optimismClient = new ApolloClient({
 })
 
 export const optimismBlockClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-kovan-blocks',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-blocks',
   cache: new InMemoryCache(),
   queryDeduplication: true,
   defaultOptions: {

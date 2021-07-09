@@ -117,7 +117,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <ThemedBackgroundGlobal backgroundColor={'#fc077d'} />
+      <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor} />
       <AutoColumn gap="16px">
         <TYPE.main>Uniswap Overview</TYPE.main>
         <ResponsiveRow>
@@ -126,7 +126,7 @@ export default function Home() {
               data={formattedTvlData}
               height={220}
               minHeight={332}
-              color={theme.pink1}
+              color={activeNetwork.primaryColor}
               value={liquidityHover}
               label={leftLabel}
               setValue={setLiquidityHover}

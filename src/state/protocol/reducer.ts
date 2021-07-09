@@ -46,6 +46,12 @@ export const initialState: ProtocolState = {
     transactions: undefined,
     lastUpdated: undefined,
   },
+  [SupportedNetwork.OPTIMISM]: {
+    data: undefined,
+    chartData: undefined,
+    transactions: undefined,
+    lastUpdated: undefined,
+  },
 }
 
 export default createReducer(initialState, (builder) =>

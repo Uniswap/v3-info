@@ -1,3 +1,4 @@
+import { OptimismNetworkInfo } from './../constants/networks'
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
@@ -36,7 +37,27 @@ export function getEtherscanLink(
   const prefix =
     networkVersion === ArbitrumNetworkInfo
       ? 'https://explorer.offchainlabs.com'
+      : networkVersion === OptimismNetworkInfo
+      ? 'https://optimistic.etherscan.io'
       : `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+
+  if (networkVersion === OptimismNetworkInfo) {
+    switch (type) {
+      case 'transaction': {
+        return `${prefix}/tx/${data}`
+      }
+      case 'token': {
+        return `${prefix}/address/${data}`
+      }
+      case 'block': {
+        return `https://explorer.offchainlabs.com`
+      }
+      case 'address':
+      default: {
+        return `${prefix}/address/${data}`
+      }
+    }
+  }
 
   if (networkVersion === ArbitrumNetworkInfo) {
     switch (type) {

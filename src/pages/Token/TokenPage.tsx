@@ -35,7 +35,8 @@ import { useSavedTokens } from 'state/user/hooks'
 import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
 import { MonoSpace } from 'components/shared'
 import dayjs from 'dayjs'
-// import { SmallOptionButton } from '../../components/Button'
+import { useCMCLink } from 'hooks/useCMCLink'
+import CMCLogo from '../../assets/images/cmc.png'
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;
@@ -63,6 +64,13 @@ const ResponsiveRow = styled(RowBetween)`
   `};
 `
 
+const StyledCMCLogo = styled.img`
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 enum ChartView {
   TVL,
   VOL,
@@ -81,6 +89,7 @@ export default function TokenPage({
   const backgroundColor = useColor(address)
   const theme = useTheme()
 
+  // scroll on page view
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -90,6 +99,9 @@ export default function TokenPage({
   const poolDatas = usePoolDatas(poolsForToken ?? [])
   const transactions = useTokenTransactions(address)
   const chartData = useTokenChartData(address)
+
+  // check for link to CMC
+  const cmcLink = useCMCLink(address)
 
   // format for chart component
   const formattedTvlData = useMemo(() => {
@@ -172,10 +184,15 @@ export default function TokenPage({
                     <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
                   </StyledExternalLink>
                 </AutoRow>
-                <RowFixed gap="10px" align="center">
+                <RowFixed align="center" justify="center">
                   <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
+                  {cmcLink && (
+                    <StyledExternalLink href={cmcLink} style={{ marginLeft: '12px' }}>
+                      <StyledCMCLogo src={CMCLogo} />
+                    </StyledExternalLink>
+                  )}
                   <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
-                    <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
+                    <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px', marginTop: '4px' }} />
                   </StyledExternalLink>
                 </RowFixed>
               </RowBetween>

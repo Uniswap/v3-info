@@ -50,7 +50,7 @@ export function getEtherscanLink(
         return `${prefix}/address/${data}`
       }
       case 'block': {
-        return `https://explorer.offchainlabs.com`
+        return `https://optimistic.etherscan.io`
       }
       case 'address':
       default: {

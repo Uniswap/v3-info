@@ -153,7 +153,7 @@ export default function Home() {
               height={220}
               minHeight={332}
               data={formattedVolumeData}
-              color={theme.blue1}
+              color={activeNetwork.secondaryColor}
               setValue={setVolumeHover}
               setLabel={setRightLabel}
               value={volumeHover}
@@ -215,7 +215,7 @@ export default function Home() {
         <RowBetween>
           <TYPE.main>Transactions</TYPE.main>
         </RowBetween>
-        {transactions ? <TransactionsTable transactions={transactions} /> : null}
+        {transactions ? <TransactionsTable transactions={transactions} color={activeNetwork.primaryColor} /> : null}
       </AutoColumn>
     </PageWrapper>
   )

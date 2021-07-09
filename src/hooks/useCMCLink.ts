@@ -11,26 +11,23 @@ const cmcAssetUrl = 'https://coinmarketcap.com/currencies/'
  * return  url, if not return undefined
  * @param address token address
  */
-export function useCMCLink(address: string, symbol: string | undefined): string | undefined {
+export function useCMCLink(address: string): string | undefined {
   const [link, setLink] = useState<string | undefined>(undefined)
-
-  console.log(symbol)
 
   useEffect(() => {
     async function fetchLink() {
       const result = await fetch(cmcEndpoint + address)
       // if link exists, format the url
-      if (result.status === 200 && symbol) {
-        console.log(result)
-        const formatted = cmcAssetUrl + symbol.replace(/\s/g, '-')
-        console.log(formatted)
-        setLink(formatted)
+      if (result.status === 200) {
+        result.json().then(({ data }) => {
+          setLink(data.url)
+        })
       }
     }
-    if (address && symbol) {
+    if (address) {
       fetchLink()
     }
-  }, [address, symbol])
+  }, [address])
 
   return link
 }

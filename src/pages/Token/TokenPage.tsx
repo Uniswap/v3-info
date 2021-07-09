@@ -100,7 +100,7 @@ export default function TokenPage({
   const chartData = useTokenChartData(address)
 
   // check for link to CMC
-  const cmcLink = useCMCLink(address, tokenData?.name)
+  const cmcLink = useCMCLink(address)
 
   // format for chart component
   const formattedTvlData = useMemo(() => {

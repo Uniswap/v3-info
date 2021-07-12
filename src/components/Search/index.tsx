@@ -35,9 +35,9 @@ const Wrapper = styled(Row)`
   positon: relative;
   z-index: 9999;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media (max-width: 1080px) {
     width: 100%;
-  `};
+  } ;
 `
 
 const StyledInput = styled.input`
@@ -120,7 +120,7 @@ const Break = styled.div`
 `
 
 const HoverText = styled.div<{ hide?: boolean | undefined }>`
-  color: ${({ theme }) => theme.blue1}
+  color: ${({ theme }) => theme.blue1};
   display: ${({ hide = false }) => hide && 'none'};
   :hover {
     cursor: pointer;

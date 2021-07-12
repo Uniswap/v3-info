@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-// import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import styled from 'styled-components'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import Menu from '../Menu'
-import Row, { RowFixed } from '../Row'
+import Row, { RowFixed, RowBetween } from '../Row'
 import SearchSmall from 'components/Search'
-import { HideMedium } from 'theme'
 import NetworkDropdown from 'components/Menu/NetworkDropdown'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
+import { AutoColumn } from 'components/Column'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -30,15 +28,15 @@ const HeaderFrame = styled.div`
 
   background-color: ${({ theme }) => theme.bg0};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media (max-width: 1080px) {
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 0.5rem 1rem;
     width: calc(100%);
     position: relative;
-  `};
+  }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem;
   `}
 `
 
@@ -48,29 +46,23 @@ const HeaderControls = styled.div`
   align-items: center;
   justify-self: flex-end;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-      padding-bottom: 1rem;
-      width: 100%;
-  `};
-`
-
-const HeaderElementWrap = styled.div`
-  display: flex;
-  align-items: center;
+  @media (max-width: 1080px) {
+    display: none;
+  }
 `
 
 const HeaderRow = styled(RowFixed)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
+  @media (max-width: 1080px) {
+    width: 100%;
+  }
 `
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
+  @media (max-width: 1080px) {
+    padding: 0.5rem;
     justify-content: flex-end;
-`};
+  } ;
 `
 
 const Title = styled(NavLink)`
@@ -148,8 +140,17 @@ export const StyledMenuButton = styled.button`
   svg {
     margin-top: 2px;
   }
+
   > * {
     stroke: ${({ theme }) => theme.text1};
+  }
+`
+
+const SmallContentGrouping = styled.div`
+  width: 100%;
+  display: none;
+  @media (max-width: 1080px) {
+    display: initial;
   }
 `
 
@@ -183,12 +184,17 @@ export default function Header() {
       <HeaderControls>
         <NetworkDropdown />
         <SearchSmall />
-        <HideMedium>
-          <HeaderElementWrap>
-            <Menu />
-          </HeaderElementWrap>
-        </HideMedium>
+        <Menu />
       </HeaderControls>
+      <SmallContentGrouping>
+        <AutoColumn gap="sm">
+          <RowBetween>
+            <NetworkDropdown />
+            <Menu />
+          </RowBetween>
+          <SearchSmall />
+        </AutoColumn>
+      </SmallContentGrouping>
     </HeaderFrame>
   )
 }

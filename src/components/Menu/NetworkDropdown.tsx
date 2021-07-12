@@ -1,5 +1,5 @@
 import { RowFixed, RowBetween } from 'components/Row'
-import { SUPPORTED_NETWORK_VERSIONS, ArbitrumNetworkInfo } from 'constants/networks'
+import { SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 import useTheme from 'hooks/useTheme'
 import React, { useState, useRef } from 'react'
 import { ChevronDown } from 'react-feather'
@@ -12,6 +12,7 @@ import { EthereumNetworkInfo } from '../../constants/networks'
 
 const Container = styled.div`
   position: relative;
+  z-index: 40;
 `
 
 const Wrapper = styled.div`
@@ -42,7 +43,7 @@ const LogoWrapper = styled.img`
 const FlyOut = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   position: absolute;
-  top: 48px;
+  top: 40px;
   left: 0;
   border-radius: 12px;
   padding: 16px;
@@ -60,27 +61,10 @@ opacity: ${({ disabled }) => (disabled ? '0.5' : 1)}
   }
 `
 
-const BlueBadge = styled.div`
-  background-color: ${({ theme }) => theme.blue1};
+const Badge = styled.div<{ bgColor?: string }>`
+  background-color: ${({ theme, bgColor }) => bgColor ?? theme.bg4};
   border-radius: 6px;
   padding: 2px 6px;
-  font-size: 12px;
-  font-weight: 600;
-`
-
-const LightGreyBadge = styled.div`
-  background-color: ${({ theme }) => theme.bg4};
-  border-radius: 6px;
-  padding: 2px 6px;
-  font-size: 12px;
-  font-weight: 600;
-`
-
-const GreyBadge = styled.div`
-  background-color: ${({ theme }) => theme.bg3};
-  border-radius: 6px;
-  padding: 2px 6px;
-  font-style: italic;
   font-size: 12px;
   font-weight: 600;
 `
@@ -93,8 +77,8 @@ const GreenDot = styled.div`
   border-radius: 50%;
   position: absolute;
   border: 2px solid black;
-  right: -14px;
-  bottom: -2px;
+  right: -16px;
+  bottom: -4px;
 `
 
 export default function NetworkDropdown() {
@@ -114,7 +98,11 @@ export default function NetworkDropdown() {
           <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px">
             {activeNetwork.name}
           </TYPE.main>
-          {activeNetwork === EthereumNetworkInfo ? null : <BlueBadge style={{ margin: '0 4px' }}>L2</BlueBadge>}
+          {activeNetwork === EthereumNetworkInfo ? null : (
+            <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
+              L2
+            </Badge>
+          )}
           <ChevronDown size="20px" />
         </RowFixed>
       </Wrapper>
@@ -145,20 +133,11 @@ export default function NetworkDropdown() {
                         {n.name}
                       </TYPE.main>
                     </RowFixed>
-                    {n.blurb && <LightGreyBadge>{n.blurb}</LightGreyBadge>}
+                    {n.blurb && <Badge>{n.blurb}</Badge>}
                   </NetworkRow>
                 </StyledInternalLink>
               )
             })}
-            <NetworkRow disabled={true}>
-              <RowFixed>
-                <LogoWrapper src={ArbitrumNetworkInfo.imageURL} />
-                <TYPE.main ml="12px" color={theme.white}>
-                  {ArbitrumNetworkInfo.name}
-                </TYPE.main>
-              </RowFixed>
-              <GreyBadge>Coming Soon</GreyBadge>
-            </NetworkRow>
           </AutoColumn>
         </FlyOut>
       )}

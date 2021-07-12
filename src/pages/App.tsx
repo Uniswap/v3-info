@@ -13,7 +13,7 @@ import TopBar from 'components/Header/TopBar'
 import { RedirectInvalidToken } from './Token/redirects'
 import { LocalLoader } from 'components/Loader'
 import PoolPage from './Pool/PoolPage'
-import { ExternalLink, HideMedium, TYPE } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo } from 'constants/networks'
@@ -44,22 +44,26 @@ const BodyWrapper = styled.div`
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 10;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding-top: 2rem;
-    margin-top: 100px;
-  `};
-
   z-index: 1;
 
   > * {
     max-width: 1200px;
   }
+
+  @media (max-width: 1080px) {
+    padding-top: 2rem;
+    margin-top: 140px;
+  }
 `
 
 const Marginer = styled.div`
   margin-top: 5rem;
+`
+
+const Hide1080 = styled.div`
+  @media (max-width: 1080px) {
+    display: none;
+  }
 `
 
 export default function App() {
@@ -111,9 +115,9 @@ export default function App() {
         <AppWrapper>
           <URLWarning />
           <HeaderWrapper>
-            <HideMedium>
+            <Hide1080>
               <TopBar />
-            </HideMedium>
+            </Hide1080>
             <Header />
           </HeaderWrapper>
           <BodyWrapper>

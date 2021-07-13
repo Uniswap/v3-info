@@ -193,8 +193,6 @@ export default function TokenPage({
                 </AutoRow>
                 <RowFixed align="center" justify="center">
                   <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
-                  <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
-                    <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
                   {cmcLink && (
                     <StyledExternalLink href={cmcLink} style={{ marginLeft: '12px' }}>
                       <StyledCMCLogo src={CMCLogo} />

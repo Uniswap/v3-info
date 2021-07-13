@@ -11,10 +11,10 @@ export const blockClient = new ApolloClient({
   queryDeduplication: true,
   defaultOptions: {
     watchQuery: {
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'no-cache',
     },
     query: {
-      fetchPolicy: 'cache-first',
+      fetchPolicy: 'no-cache',
       errorPolicy: 'all',
     },
   },

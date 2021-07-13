@@ -124,7 +124,7 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
         </ExternalLink>
       </Label>
       <Label end={1} fontWeight={400}>
-        {formatTime(transaction.timestamp, activeNetwork === OptimismNetworkInfo ? 0 : 0)}
+        {formatTime(transaction.timestamp, activeNetwork === OptimismNetworkInfo ? 8 : 0)}
       </Label>
     </ResponsiveGrid>
   )

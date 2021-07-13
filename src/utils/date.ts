@@ -13,6 +13,10 @@ export const formatTime = (unix: string, buffer?: number) => {
   const inHours = now.diff(timestamp, 'hour')
   const inDays = now.diff(timestamp, 'day')
 
+  if (inMinutes < 1) {
+    return 'recently'
+  }
+
   if (inHours >= 24) {
     return `${inDays} ${inDays === 1 ? 'day' : 'days'} ago`
   } else if (inMinutes >= 60) {

@@ -13,6 +13,7 @@ import ProtocolUpdater from './state/protocol/updater'
 import TokenUpdater from './state/tokens/updater'
 import PoolUpdater from './state/pools/updater'
 import ApplicationUpdater from './state/application/updater'
+import ListUpdater from './state/lists/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import { ApolloProvider } from '@apollo/client/react'
 import { client } from 'apollo/client'
@@ -41,6 +42,7 @@ window.addEventListener('error', (error) => {
 function Updaters() {
   return (
     <>
+      <ListUpdater />
       <UserUpdater />
       <ProtocolUpdater />
       <TokenUpdater />

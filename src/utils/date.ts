@@ -4,9 +4,9 @@ export function unixToDate(unix: number, format = 'YYYY-MM-DD'): string {
   return dayjs.unix(unix).format(format)
 }
 
-export const formatTime = (unix: string) => {
+export const formatTime = (unix: string, buffer?: number) => {
   const now = dayjs()
-  const timestamp = dayjs.unix(parseInt(unix))
+  const timestamp = dayjs.unix(parseInt(unix)).add(buffer ?? 0, 'minute')
 
   const inSeconds = now.diff(timestamp, 'second')
   const inMinutes = now.diff(timestamp, 'minute')

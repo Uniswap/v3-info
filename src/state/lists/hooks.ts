@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { AppState } from '../index'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
+import { useFetchListCallback } from 'hooks/useFetchListCallback'
 // import { useFetchListCallback } from 'hooks/useFetchListCallback'
 
 type TagDetails = Tags[keyof Tags]
@@ -43,6 +44,7 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.ROPSTEN]: {},
   [ChainId.GÖRLI]: {},
   [ChainId.MAINNET]: {},
+  [10]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -62,7 +64,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined) {
+      if (tokenMap[token.chainId]?.[token.address] !== undefined) {
         console.error(new Error(`Duplicate token! ${token.address}`))
         return tokenMap
       }
@@ -103,6 +105,7 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     [ChainId.ROPSTEN]: { ...map1[ChainId.ROPSTEN], ...map2[ChainId.ROPSTEN] },
     [ChainId.KOVAN]: { ...map1[ChainId.KOVAN], ...map2[ChainId.KOVAN] },
     [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] },
+    [10]: { ...map1[10], ...map2[10] },
   }
 }
 
@@ -177,16 +180,17 @@ export function useIsListActive(url: string): boolean {
 // const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
 
 export function useOptimismList() {
-  // const fetchList = useFetchListCallback()
+  const fetchList = useFetchListCallback()
   const [list, setList] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     async function fetch() {
       // const optimismList = await fetchList(OPTIMISM_LIST)
+
       setList('hey')
     }
     if (!list) {
       fetch()
     }
-  })
+  }, [list])
 }

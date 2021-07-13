@@ -163,6 +163,7 @@ export function useFetchedTokenDatas(
         : current
         ? [parseFloat(current.volumeUSD), 0]
         : [0, 0]
+
     const volumeUSDWeek =
       current && week
         ? parseFloat(current.volumeUSD) - parseFloat(week.volumeUSD)

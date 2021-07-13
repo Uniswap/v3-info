@@ -1,4 +1,5 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
+import { NetworkInfo } from 'constants/networks'
 import {
   addPopup,
   PopupContent,
@@ -7,7 +8,9 @@ import {
   updateSubgraphStatus,
   ApplicationModal,
   setOpenModal,
+  updateActiveNetworkVersion,
 } from './actions'
+import { EthereumNetworkInfo } from '../../constants/networks'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
@@ -19,6 +22,7 @@ export interface ApplicationState {
     available: boolean | null
     syncedBlock: number | undefined
   }
+  readonly activeNetworkVersion: NetworkInfo
 }
 
 const initialState: ApplicationState = {
@@ -29,6 +33,7 @@ const initialState: ApplicationState = {
     available: null,
     syncedBlock: undefined,
   },
+  activeNetworkVersion: EthereumNetworkInfo,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -66,5 +71,8 @@ export default createReducer(initialState, (builder) =>
         available,
         syncedBlock,
       }
+    })
+    .addCase(updateActiveNetworkVersion, (state, { payload: { activeNetworkVersion } }) => {
+      state.activeNetworkVersion = activeNetworkVersion
     })
 )

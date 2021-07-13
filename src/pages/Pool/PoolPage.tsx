@@ -26,6 +26,10 @@ import TransactionTable from 'components/TransactionsTable'
 import { useSavedPools } from 'state/user/hooks'
 import DensityChart from 'components/DensityChart'
 import { MonoSpace } from 'components/shared'
+import { useActiveNetworkVersion } from 'state/application/hooks'
+import { networkPrefix } from 'utils/networkPrefix'
+import { EthereumNetworkInfo } from 'constants/networks'
+import { GenericImageWrapper } from 'components/Logo'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -68,6 +72,8 @@ export default function PoolPage({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  const [activeNetwork] = useActiveNetworkVersion()
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -121,10 +127,10 @@ export default function PoolPage({
         <AutoColumn gap="32px">
           <RowBetween>
             <AutoRow gap="4px">
-              <StyledInternalLink to="/">
+              <StyledInternalLink to={networkPrefix(activeNetwork)}>
                 <TYPE.main>{`Home > `}</TYPE.main>
               </StyledInternalLink>
-              <StyledInternalLink to="/pools">
+              <StyledInternalLink to={networkPrefix(activeNetwork) + 'pools'}>
                 <TYPE.label>{` Pools `}</TYPE.label>
               </StyledInternalLink>
               <TYPE.main>{` > `}</TYPE.main>
@@ -134,14 +140,14 @@ export default function PoolPage({
             </AutoRow>
             <RowFixed gap="10px" align="center">
               <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
-              <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+              <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
                 <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
               </StyledExternalLink>
             </RowFixed>
           </RowBetween>
           <ResponsiveRow align="flex-end">
             <AutoColumn gap="lg">
-              <RowFixed gap="4px">
+              <RowFixed>
                 <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={24} />
                 <TYPE.label
                   ml="8px"
@@ -149,9 +155,12 @@ export default function PoolPage({
                   fontSize="24px"
                 >{` ${poolData.token0.symbol} / ${poolData.token1.symbol} `}</TYPE.label>
                 <GreyBadge>{feeTierPercent(poolData.feeTier)}</GreyBadge>
+                {activeNetwork === EthereumNetworkInfo ? null : (
+                  <GenericImageWrapper src={activeNetwork.imageURL} style={{ marginLeft: '8px' }} size={'26px'} />
+                )}
               </RowFixed>
               <ResponsiveRow>
-                <StyledInternalLink to={'/tokens/' + poolData.token0.address}>
+                <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token0.address}>
                   <TokenButton>
                     <RowFixed>
                       <CurrencyLogo address={poolData.token0.address} size={'20px'} />
@@ -163,7 +172,7 @@ export default function PoolPage({
                     </RowFixed>
                   </TokenButton>
                 </StyledInternalLink>
-                <StyledInternalLink to={'/tokens/' + poolData.token1.address}>
+                <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token1.address}>
                   <TokenButton ml="10px">
                     <RowFixed>
                       <CurrencyLogo address={poolData.token1.address} size={'20px'} />
@@ -177,7 +186,7 @@ export default function PoolPage({
                 </StyledInternalLink>
               </ResponsiveRow>
             </AutoColumn>
-            <AutoColumn gap="lg">
+            {activeNetwork !== EthereumNetworkInfo ? null : (
               <RowFixed>
                 <StyledExternalLink
                   href={`https://app.uniswap.org/#/add/${poolData.token0.address}/${poolData.token1.address}/${poolData.feeTier}`}
@@ -197,7 +206,7 @@ export default function PoolPage({
                   </ButtonPrimary>
                 </StyledExternalLink>
               </RowFixed>
-            </AutoColumn>
+            )}
           </ResponsiveRow>
           <ContentLayout>
             <DarkGreyCard>

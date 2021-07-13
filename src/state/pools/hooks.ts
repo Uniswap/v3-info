@@ -9,21 +9,31 @@ import { fetchPoolChartData } from 'data/pools/chartData'
 import { Transaction } from 'types'
 import { fetchPoolTransactions } from 'data/pools/transactions'
 import { PoolTickData } from 'data/pools/tickData'
+import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 
 export function useAllPoolData(): {
   [address: string]: { data: PoolData | undefined; lastUpdated: number | undefined }
 } {
-  return useSelector((state: AppState) => state.pools.byAddress)
+  const [network] = useActiveNetworkVersion()
+  return useSelector((state: AppState) => state.pools.byAddress[network.id] ?? {})
 }
 
 export function useUpdatePoolData(): (pools: PoolData[]) => void {
   const dispatch = useDispatch<AppDispatch>()
-  return useCallback((pools: PoolData[]) => dispatch(updatePoolData({ pools })), [dispatch])
+  const [network] = useActiveNetworkVersion()
+  return useCallback((pools: PoolData[]) => dispatch(updatePoolData({ pools, networkId: network.id })), [
+    dispatch,
+    network.id,
+  ])
 }
 
 export function useAddPoolKeys(): (addresses: string[]) => void {
   const dispatch = useDispatch<AppDispatch>()
-  return useCallback((poolAddresses: string[]) => dispatch(addPoolKeys({ poolAddresses })), [dispatch])
+  const [network] = useActiveNetworkVersion()
+  return useCallback((poolAddresses: string[]) => dispatch(addPoolKeys({ poolAddresses, networkId: network.id })), [
+    dispatch,
+    network.id,
+  ])
 }
 
 export function usePoolDatas(poolAddresses: string[]): PoolData[] {
@@ -62,15 +72,18 @@ export function usePoolDatas(poolAddresses: string[]): PoolData[] {
  */
 export function usePoolChartData(address: string): PoolChartEntry[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
-  const pool = useSelector((state: AppState) => state.pools.byAddress[address])
+  const [activeNetwork] = useActiveNetworkVersion()
+
+  const pool = useSelector((state: AppState) => state.pools.byAddress[activeNetwork.id]?.[address])
   const chartData = pool?.chartData
   const [error, setError] = useState(false)
+  const { dataClient } = useClients()
 
   useEffect(() => {
     async function fetch() {
-      const { error, data } = await fetchPoolChartData(address)
+      const { error, data } = await fetchPoolChartData(address, dataClient)
       if (!error && data) {
-        dispatch(updatePoolChartData({ poolAddress: address, chartData: data }))
+        dispatch(updatePoolChartData({ poolAddress: address, chartData: data, networkId: activeNetwork.id }))
       }
       if (error) {
         setError(error)
@@ -79,7 +92,7 @@ export function usePoolChartData(address: string): PoolChartEntry[] | undefined 
     if (!chartData && !error) {
       fetch()
     }
-  }, [address, dispatch, error, chartData])
+  }, [address, dispatch, error, chartData, dataClient, activeNetwork.id])
 
   // return data
   return chartData
@@ -91,23 +104,25 @@ export function usePoolChartData(address: string): PoolChartEntry[] | undefined 
  */
 export function usePoolTransactions(address: string): Transaction[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
-  const pool = useSelector((state: AppState) => state.pools.byAddress[address])
+  const [activeNetwork] = useActiveNetworkVersion()
+  const pool = useSelector((state: AppState) => state.pools.byAddress[activeNetwork.id]?.[address])
   const transactions = pool?.transactions
   const [error, setError] = useState(false)
+  const { dataClient } = useClients()
 
   useEffect(() => {
     async function fetch() {
-      const { error, data } = await fetchPoolTransactions(address)
+      const { error, data } = await fetchPoolTransactions(address, dataClient)
       if (error) {
         setError(true)
       } else if (data) {
-        dispatch(updatePoolTransactions({ poolAddress: address, transactions: data }))
+        dispatch(updatePoolTransactions({ poolAddress: address, transactions: data, networkId: activeNetwork.id }))
       }
     }
     if (!transactions && !error) {
       fetch()
     }
-  }, [address, dispatch, error, transactions])
+  }, [address, dispatch, error, transactions, dataClient, activeNetwork.id])
 
   // return data
   return transactions
@@ -117,12 +132,14 @@ export function usePoolTickData(
   address: string
 ): [PoolTickData | undefined, (poolAddress: string, tickData: PoolTickData) => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const pool = useSelector((state: AppState) => state.pools.byAddress[address])
+  const [activeNetwork] = useActiveNetworkVersion()
+  const pool = useSelector((state: AppState) => state.pools.byAddress[activeNetwork.id]?.[address])
   const tickData = pool.tickData
 
   const setPoolTickData = useCallback(
-    (address: string, tickData: PoolTickData) => dispatch(updateTickData({ poolAddress: address, tickData })),
-    [dispatch]
+    (address: string, tickData: PoolTickData) =>
+      dispatch(updateTickData({ poolAddress: address, tickData, networkId: activeNetwork.id })),
+    [activeNetwork.id, dispatch]
   )
 
   return [tickData, setPoolTickData]

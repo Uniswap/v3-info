@@ -6,6 +6,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { getEtherscanLink } from '../../utils'
+import { useActiveNetworkVersion } from 'state/application/hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -76,6 +77,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void
 }) {
+  const [activeNetwork] = useActiveNetworkVersion()
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -102,7 +104,10 @@ export default function AddressInputPanel({
                 Recipient
               </TYPE.black>
               {address && chainId && (
-                <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
+                <ExternalLink
+                  href={getEtherscanLink(chainId, name ?? address, 'address', activeNetwork)}
+                  style={{ fontSize: '14px' }}
+                >
                   (View on Etherscan)
                 </ExternalLink>
               )}

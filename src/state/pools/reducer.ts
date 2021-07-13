@@ -4,6 +4,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import { SerializedToken } from 'state/user/actions'
 import { Transaction } from 'types'
 import { PoolTickData } from 'data/pools/tickData'
+import { SupportedNetwork } from 'constants/networks'
 
 export interface Pool {
   address: string
@@ -64,35 +65,43 @@ export type PoolChartEntry = {
 export interface PoolsState {
   // analytics data from
   byAddress: {
-    [address: string]: {
-      data: PoolData | undefined
-      chartData: PoolChartEntry[] | undefined
-      transactions: Transaction[] | undefined
-      lastUpdated: number | undefined
-      tickData: PoolTickData | undefined
+    [networkId: string]: {
+      [address: string]: {
+        data: PoolData | undefined
+        chartData: PoolChartEntry[] | undefined
+        transactions: Transaction[] | undefined
+        lastUpdated: number | undefined
+        tickData: PoolTickData | undefined
+      }
     }
   }
 }
 
-export const initialState: PoolsState = { byAddress: {} }
+export const initialState: PoolsState = {
+  byAddress: {
+    [SupportedNetwork.ETHEREUM]: {},
+    [SupportedNetwork.ARBITRUM]: {},
+    [SupportedNetwork.OPTIMISM]: {},
+  },
+}
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(updatePoolData, (state, { payload: { pools } }) => {
+    .addCase(updatePoolData, (state, { payload: { pools, networkId } }) => {
       pools.map(
         (poolData) =>
-          (state.byAddress[poolData.address] = {
-            ...state.byAddress[poolData.address],
+          (state.byAddress[networkId][poolData.address] = {
+            ...state.byAddress[networkId][poolData.address],
             data: poolData,
             lastUpdated: currentTimestamp(),
           })
       )
     })
     // add address to byAddress keys if not included yet
-    .addCase(addPoolKeys, (state, { payload: { poolAddresses } }) => {
+    .addCase(addPoolKeys, (state, { payload: { poolAddresses, networkId } }) => {
       poolAddresses.map((address) => {
-        if (!state.byAddress[address]) {
-          state.byAddress[address] = {
+        if (!state.byAddress[networkId][address]) {
+          state.byAddress[networkId][address] = {
             data: undefined,
             chartData: undefined,
             transactions: undefined,
@@ -102,13 +111,13 @@ export default createReducer(initialState, (builder) =>
         }
       })
     })
-    .addCase(updatePoolChartData, (state, { payload: { poolAddress, chartData } }) => {
-      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], chartData: chartData }
+    .addCase(updatePoolChartData, (state, { payload: { poolAddress, chartData, networkId } }) => {
+      state.byAddress[networkId][poolAddress] = { ...state.byAddress[networkId][poolAddress], chartData: chartData }
     })
-    .addCase(updatePoolTransactions, (state, { payload: { poolAddress, transactions } }) => {
-      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], transactions }
+    .addCase(updatePoolTransactions, (state, { payload: { poolAddress, transactions, networkId } }) => {
+      state.byAddress[networkId][poolAddress] = { ...state.byAddress[networkId][poolAddress], transactions }
     })
-    .addCase(updateTickData, (state, { payload: { poolAddress, tickData } }) => {
-      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], tickData }
+    .addCase(updateTickData, (state, { payload: { poolAddress, tickData, networkId } }) => {
+      state.byAddress[networkId][poolAddress] = { ...state.byAddress[networkId][poolAddress], tickData }
     })
 )

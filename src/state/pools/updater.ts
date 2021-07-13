@@ -32,6 +32,7 @@ export default function Updater(): null {
 
   // update unloaded pool entries with fetched data
   const { error: poolDataError, loading: poolDataLoading, data: poolDatas } = usePoolDatas(unfetchedPoolAddresses)
+
   useEffect(() => {
     if (poolDatas && !poolDataError && !poolDataLoading) {
       updatePoolData(Object.values(poolDatas))

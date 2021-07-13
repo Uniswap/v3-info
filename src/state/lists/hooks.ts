@@ -2,11 +2,12 @@ import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
+// import { useFetchListCallback } from 'hooks/useFetchListCallback'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -171,4 +172,21 @@ export function useUnsupportedTokenList(): TokenAddressMap {
 export function useIsListActive(url: string): boolean {
   const activeListUrls = useActiveListUrls()
   return Boolean(activeListUrls?.includes(url))
+}
+
+// const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
+
+export function useOptimismList() {
+  // const fetchList = useFetchListCallback()
+  const [list, setList] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    async function fetch() {
+      // const optimismList = await fetchList(OPTIMISM_LIST)
+      setList('hey')
+    }
+    if (!list) {
+      fetch()
+    }
+  })
 }

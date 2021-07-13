@@ -2,9 +2,8 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
-import { client } from 'apollo/client'
-import { TokenChartEntry } from 'state/tokens/reducer'
 import { PoolChartEntry } from 'state/pools/reducer'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -35,7 +34,7 @@ interface ChartResults {
   }[]
 }
 
-export async function fetchPoolChartData(address: string) {
+export async function fetchPoolChartData(address: string, client: ApolloClient<NormalizedCacheObject>) {
   let data: {
     date: number
     volumeUSD: string

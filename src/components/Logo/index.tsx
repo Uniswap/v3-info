@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { HelpCircle } from 'react-feather'
 import { ImageProps } from 'rebass'
+import styled from 'styled-components'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
@@ -32,3 +33,8 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
 
   return <HelpCircle {...rest} />
 }
+
+export const GenericImageWrapper = styled.img<{ size?: string }>`
+  width: ${({ size }) => size ?? '20px'};
+  height: ${({ size }) => size ?? '20px'};
+`

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
+import { useClients } from 'state/application/hooks'
 
 export const TOP_TOKENS = gql`
   query topPools {
@@ -24,7 +25,9 @@ export function useTopTokenAddresses(): {
   error: boolean
   addresses: string[] | undefined
 } {
-  const { loading, error, data } = useQuery<TopTokensResponse>(TOP_TOKENS)
+  const { dataClient } = useClients()
+
+  const { loading, error, data } = useQuery<TopTokensResponse>(TOP_TOKENS, { client: dataClient })
 
   const formattedData = useMemo(() => {
     if (data) {

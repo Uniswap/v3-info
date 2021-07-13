@@ -1,5 +1,5 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import gql from 'graphql-tag'
-import { client } from 'apollo/client'
 
 export const POOLS_FOR_TOKEN = gql`
   query topPools($address: Bytes!) {
@@ -25,7 +25,8 @@ interface PoolsForTokenResponse {
  * Fetch top addresses by volume
  */
 export async function fetchPoolsForToken(
-  address: string
+  address: string,
+  client: ApolloClient<NormalizedCacheObject>
 ): Promise<{
   loading: boolean
   error: boolean

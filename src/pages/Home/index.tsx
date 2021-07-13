@@ -5,7 +5,12 @@ import { TYPE } from 'theme'
 import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart/alt'
 import useTheme from 'hooks/useTheme'
-import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
+import {
+  useProtocolData,
+  useProtocolChartData,
+  useProtocolTransactions,
+  useAggregateOverviewData,
+} from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
@@ -21,6 +26,7 @@ import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
 import dayjs from 'dayjs'
+import { useActiveNetworkVersion } from 'state/application/hooks'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -37,6 +43,10 @@ export default function Home() {
 
   const theme = useTheme()
 
+  useAggregateOverviewData()
+
+  const [activeNetwork] = useActiveNetworkVersion()
+
   const [protocolData] = useProtocolData()
   const [chartData] = useProtocolChartData()
   const [transactions] = useProtocolTransactions()
@@ -45,6 +55,11 @@ export default function Home() {
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
   const [rightLabel, setRightLabel] = useState<string | undefined>()
+
+  useEffect(() => {
+    setLiquidityHover(undefined)
+    setVolumeHover(undefined)
+  }, [activeNetwork])
 
   // get all the pool datas that exist
   const allPoolData = useAllPoolData()
@@ -102,7 +117,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <ThemedBackgroundGlobal backgroundColor={'#fc077d'} />
+      <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor} />
       <AutoColumn gap="16px">
         <TYPE.main>Uniswap Overview</TYPE.main>
         <ResponsiveRow>
@@ -111,7 +126,7 @@ export default function Home() {
               data={formattedTvlData}
               height={220}
               minHeight={332}
-              color={theme.pink1}
+              color={activeNetwork.primaryColor}
               value={liquidityHover}
               label={leftLabel}
               setValue={setLiquidityHover}
@@ -189,18 +204,18 @@ export default function Home() {
         </HideSmall>
         <RowBetween>
           <TYPE.main>Top Tokens</TYPE.main>
-          <StyledInternalLink to="/tokens">Explore</StyledInternalLink>
+          <StyledInternalLink to="tokens">Explore</StyledInternalLink>
         </RowBetween>
         <TokenTable tokenDatas={formattedTokens} />
         <RowBetween>
           <TYPE.main>Top Pools</TYPE.main>
-          <StyledInternalLink to="/pools">Explore</StyledInternalLink>
+          <StyledInternalLink to="pools">Explore</StyledInternalLink>
         </RowBetween>
         <PoolTable poolDatas={poolDatas} />
         <RowBetween>
           <TYPE.main>Transactions</TYPE.main>
         </RowBetween>
-        {transactions ? <TransactionsTable transactions={transactions} /> : null}
+        {transactions ? <TransactionsTable transactions={transactions} color={activeNetwork.primaryColor} /> : null}
       </AutoColumn>
     </PageWrapper>
   )

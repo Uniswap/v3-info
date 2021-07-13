@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
+import { NetworkInfo } from 'constants/networks'
 
 export type PopupContent = {
   listUpdate: {
@@ -24,4 +25,7 @@ export const addPopup = createAction<{ key?: string; removeAfterMs?: number | nu
 export const removePopup = createAction<{ key: string }>('application/removePopup')
 export const updateSubgraphStatus = createAction<{ available: boolean | null; syncedBlock: number | undefined }>(
   'application/updateSubgraphStatus'
+)
+export const updateActiveNetworkVersion = createAction<{ activeNetworkVersion: NetworkInfo }>(
+  'application/updateActiveNetworkVersion'
 )

@@ -5,6 +5,7 @@ import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { PoolData } from 'state/pools/reducer'
 import { get2DayChange } from 'utils/data'
 import { formatTokenName, formatTokenSymbol } from 'utils/tokens'
+import { useClients } from 'state/application/hooks'
 
 export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
   let poolString = `[`
@@ -97,21 +98,29 @@ export function usePoolDatas(
       }
     | undefined
 } {
+  // get client
+  const { dataClient } = useClients()
+
   // get blocks from historic timestamps
   const [t24, t48, tWeek] = useDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek])
   const [block24, block48, blockWeek] = blocks ?? []
 
-  const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined, poolAddresses))
+  const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined, poolAddresses), {
+    client: dataClient,
+  })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<PoolDataResponse>(
-    POOLS_BULK(block24?.number, poolAddresses)
+    POOLS_BULK(block24?.number, poolAddresses),
+    { client: dataClient }
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(
-    POOLS_BULK(block48?.number, poolAddresses)
+    POOLS_BULK(block48?.number, poolAddresses),
+    { client: dataClient }
   )
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponse>(
-    POOLS_BULK(blockWeek?.number, poolAddresses)
+    POOLS_BULK(blockWeek?.number, poolAddresses),
+    { client: dataClient }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)

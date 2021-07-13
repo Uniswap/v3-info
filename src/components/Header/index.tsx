@@ -1,26 +1,15 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-// import { ChainId } from '@uniswap/sdk'
 import React from 'react'
-// import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-
 import styled from 'styled-components'
-
-// import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
-// import { useActiveWeb3React } from '../../hooks'
-// import { useDarkModeManager } from '../../state/user/hooks'
-// import { useETHBalances } from '../../state/wallet/hooks'
-
-// import { YellowCard } from '../Card'
-// import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
-
-import Row, { RowFixed } from '../Row'
-// import Web3Status from '../Web3Status'
+import Row, { RowFixed, RowBetween } from '../Row'
 import SearchSmall from 'components/Search'
-import { HideMedium } from 'theme'
+import NetworkDropdown from 'components/Menu/NetworkDropdown'
+import { useActiveNetworkVersion } from 'state/application/hooks'
+import { networkPrefix } from 'utils/networkPrefix'
+import { AutoColumn } from 'components/Column'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -39,15 +28,15 @@ const HeaderFrame = styled.div`
 
   background-color: ${({ theme }) => theme.bg0};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media (max-width: 1080px) {
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 0.5rem 1rem;
     width: calc(100%);
     position: relative;
-  `};
+  }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem;
   `}
 `
 
@@ -57,85 +46,24 @@ const HeaderControls = styled.div`
   align-items: center;
   justify-self: flex-end;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-      padding-bottom: 1rem;
-      width: 100%;
-  `};
-`
-
-// const HeaderElement = styled.div`
-//   display: flex;
-//   align-items: center;
-
-//   /* addresses safari's lack of support for "gap" */
-//   & > *:not(:first-child) {
-//     margin-left: 8px;
-//   }
-
-//   ${({ theme }) => theme.mediaWidth.upToMedium`
-//    flex-direction: row-reverse;
-//     align-items: center;
-//   `};
-// `
-
-const HeaderElementWrap = styled.div`
-  display: flex;
-  align-items: center;
+  @media (max-width: 1080px) {
+    display: none;
+  }
 `
 
 const HeaderRow = styled(RowFixed)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
+  @media (max-width: 1080px) {
+    width: 100%;
+  }
 `
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
+  @media (max-width: 1080px) {
+    padding: 0.5rem;
     justify-content: flex-end;
-`};
+  } ;
 `
-
-// const AccountElement = styled.div<{ active: boolean }>`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg1)};
-//   border-radius: 12px;
-//   white-space: nowrap;
-//   width: 100%;
-//   cursor: pointer;
-
-//   :focus {
-//     border: 1px solid blue;
-//   }
-// `
-
-// const HideSmall = styled.span`
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     display: none;
-//   `};
-// `
-
-// const NetworkCard = styled(YellowCard)`
-//   border-radius: 12px;
-//   padding: 8px 12px;
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     margin: 0;
-//     margin-right: 0.5rem;
-//     width: initial;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//     flex-shrink: 1;
-//   `};
-// `
-
-// const BalanceText = styled(Text)`
-//   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-//     display: none;
-//   `};
-// `
 
 const Title = styled(NavLink)`
   display: flex;
@@ -212,77 +140,61 @@ export const StyledMenuButton = styled.button`
   svg {
     margin-top: 2px;
   }
+
   > * {
     stroke: ${({ theme }) => theme.text1};
   }
 `
 
-// const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-//   [ChainId.RINKEBY]: 'Rinkeby',
-//   [ChainId.ROPSTEN]: 'Ropsten',
-//   [ChainId.GÖRLI]: 'Görli',
-//   [ChainId.KOVAN]: 'Kovan',
-// }
+const SmallContentGrouping = styled.div`
+  width: 100%;
+  display: none;
+  @media (max-width: 1080px) {
+    display: initial;
+  }
+`
 
 export default function Header() {
-  // const { account, chainId } = useActiveWeb3React()
-
-  // const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  // const [isDark] = useDarkModeManager()
-  // const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [activeNewtork] = useActiveNetworkVersion()
 
   return (
     <HeaderFrame>
       <HeaderRow>
-        <Title to="/">
+        <Title to={networkPrefix(activeNewtork)}>
           <UniIcon>
             <img width={'24px'} src={LogoDark} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`pool-nav-link`} to={'/'} isActive={(match, { pathname }) => pathname === '/'}>
+          <StyledNavLink
+            id={`pool-nav-link`}
+            to={networkPrefix(activeNewtork)}
+            isActive={(match, { pathname }) => pathname === '/'}
+          >
             Overview
           </StyledNavLink>
-          {/* <StyledNavLink id={`swap-nav-link`} to={'/protocol'}>
-            Protocol
-          </StyledNavLink> */}
-          <StyledNavLink id={`stake-nav-link`} to={'/pools'}>
+          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'pools'}>
             Pools
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/tokens'}>
+          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'tokens'}>
             Tokens
           </StyledNavLink>
-          {/* <StyledNavLink id={`stake-nav-link`} to={'/wallet'}>
-            Wallet
-          </StyledNavLink> */}
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
+        <NetworkDropdown />
         <SearchSmall />
-        {/* <HeaderElement>
-          <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-            )}
-          </HideSmall>
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
-              </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
-        </HeaderElement> */}
-        <HideMedium>
-          <HeaderElementWrap>
-            {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton> */}
-            <Menu />
-          </HeaderElementWrap>
-        </HideMedium>
+        <Menu />
       </HeaderControls>
+      <SmallContentGrouping>
+        <AutoColumn gap="sm">
+          <RowBetween>
+            <NetworkDropdown />
+            <Menu />
+          </RowBetween>
+          <SearchSmall />
+        </AutoColumn>
+      </SmallContentGrouping>
     </HeaderFrame>
   )
 }

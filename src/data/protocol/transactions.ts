@@ -1,4 +1,4 @@
-import { client } from 'apollo/client'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import gql from 'graphql-tag'
 import { Transaction, TransactionType } from 'types'
 import { formatTokenSymbol } from 'utils/tokens'
@@ -121,11 +121,13 @@ interface TransactionResults {
   transactions: TransactionEntry[]
 }
 
-export async function fetchTopTransactions(): Promise<Transaction[] | undefined> {
+export async function fetchTopTransactions(
+  client: ApolloClient<NormalizedCacheObject>
+): Promise<Transaction[] | undefined> {
   try {
     const { data, error, loading } = await client.query<TransactionResults>({
       query: GLOBAL_TRANSACTIONS,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
     })
 
     if (error || loading || !data) {

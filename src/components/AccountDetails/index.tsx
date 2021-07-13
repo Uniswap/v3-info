@@ -15,6 +15,7 @@ import Identicon from '../Identicon'
 import { ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink } from '../../theme'
+import { useActiveNetworkVersion } from 'state/application/hooks'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -182,6 +183,7 @@ interface AccountDetailsProps {
 
 export default function AccountDetails({ toggleWalletModal, ENSName, openOptions }: AccountDetailsProps) {
   const { chainId, account, connector } = useActiveWeb3React()
+  const [activeNetwork] = useActiveNetworkVersion()
 
   function formatConnectorName() {
     const { ethereum } = window
@@ -305,7 +307,7 @@ export default function AccountDetails({ toggleWalletModal, ENSName, openOptions
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={true}
-                            href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
+                            href={chainId && getEtherscanLink(chainId, ENSName, 'address', activeNetwork)}
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
@@ -327,7 +329,7 @@ export default function AccountDetails({ toggleWalletModal, ENSName, openOptions
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={false}
-                            href={getEtherscanLink(chainId, account, 'address')}
+                            href={getEtherscanLink(chainId, account, 'address', activeNetwork)}
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>View on Etherscan</span>

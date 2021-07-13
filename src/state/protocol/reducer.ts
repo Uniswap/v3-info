@@ -2,6 +2,7 @@ import { currentTimestamp } from './../../utils/index'
 import { updateProtocolData, updateChartData, updateTransactions } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
 import { ChartDayData, Transaction } from 'types'
+import { SupportedNetwork } from 'constants/networks'
 
 export interface ProtocolData {
   // volume
@@ -22,35 +23,48 @@ export interface ProtocolData {
 }
 
 export interface ProtocolState {
-  // timestamp for last updated fetch
-  readonly lastUpdated: number | undefined
-
-  // overview data
-  readonly data: ProtocolData | undefined
-
-  readonly chartData: ChartDayData[] | undefined
-
-  readonly transactions: Transaction[] | undefined
+  [networkId: string]: {
+    // timestamp for last updated fetch
+    readonly lastUpdated: number | undefined
+    // overview data
+    readonly data: ProtocolData | undefined
+    readonly chartData: ChartDayData[] | undefined
+    readonly transactions: Transaction[] | undefined
+  }
 }
 
 export const initialState: ProtocolState = {
-  data: undefined,
-  chartData: undefined,
-  transactions: undefined,
-  lastUpdated: undefined,
+  [SupportedNetwork.ETHEREUM]: {
+    data: undefined,
+    chartData: undefined,
+    transactions: undefined,
+    lastUpdated: undefined,
+  },
+  [SupportedNetwork.ARBITRUM]: {
+    data: undefined,
+    chartData: undefined,
+    transactions: undefined,
+    lastUpdated: undefined,
+  },
+  [SupportedNetwork.OPTIMISM]: {
+    data: undefined,
+    chartData: undefined,
+    transactions: undefined,
+    lastUpdated: undefined,
+  },
 }
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(updateProtocolData, (state, { payload: { protocolData } }) => {
-      state.data = protocolData
+    .addCase(updateProtocolData, (state, { payload: { protocolData, networkId } }) => {
+      state[networkId].data = protocolData
       // mark when last updated
-      state.lastUpdated = currentTimestamp()
+      state[networkId].lastUpdated = currentTimestamp()
     })
-    .addCase(updateChartData, (state, { payload: { chartData } }) => {
-      state.chartData = chartData
+    .addCase(updateChartData, (state, { payload: { chartData, networkId } }) => {
+      state[networkId].chartData = chartData
     })
-    .addCase(updateTransactions, (state, { payload: { transactions } }) => {
-      state.transactions = transactions
+    .addCase(updateTransactions, (state, { payload: { transactions, networkId } }) => {
+      state[networkId].transactions = transactions
     })
 )

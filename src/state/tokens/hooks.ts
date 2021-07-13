@@ -19,29 +19,36 @@ import { PriceChartEntry, Transaction } from 'types'
 import { notEmpty } from 'utils'
 import dayjs, { OpUnitType } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
 
 export function useAllTokenData(): {
   [address: string]: { data: TokenData | undefined; lastUpdated: number | undefined }
 } {
-  return useSelector((state: AppState) => state.tokens.byAddress)
+  const [activeNetwork] = useActiveNetworkVersion()
+  return useSelector((state: AppState) => state.tokens.byAddress[activeNetwork.id] ?? {})
 }
 
 export function useUpdateTokenData(): (tokens: TokenData[]) => void {
   const dispatch = useDispatch<AppDispatch>()
+  const [activeNetwork] = useActiveNetworkVersion()
 
   return useCallback(
     (tokens: TokenData[]) => {
-      dispatch(updateTokenData({ tokens }))
+      dispatch(updateTokenData({ tokens, networkId: activeNetwork.id }))
     },
-    [dispatch]
+    [activeNetwork.id, dispatch]
   )
 }
 
 export function useAddTokenKeys(): (addresses: string[]) => void {
   const dispatch = useDispatch<AppDispatch>()
-  return useCallback((tokenAddresses: string[]) => dispatch(addTokenKeys({ tokenAddresses })), [dispatch])
+  const [activeNetwork] = useActiveNetworkVersion()
+  return useCallback(
+    (tokenAddresses: string[]) => dispatch(addTokenKeys({ tokenAddresses, networkId: activeNetwork.id })),
+    [activeNetwork.id, dispatch]
+  )
 }
 
 export function useTokenDatas(addresses: string[] | undefined): TokenData[] | undefined {
@@ -94,15 +101,17 @@ export function useTokenData(address: string | undefined): TokenData | undefined
  */
 export function usePoolsForToken(address: string): string[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
-  const token = useSelector((state: AppState) => state.tokens.byAddress[address])
+  const [activeNetwork] = useActiveNetworkVersion()
+  const token = useSelector((state: AppState) => state.tokens.byAddress[activeNetwork.id]?.[address])
   const poolsForToken = token.poolAddresses
   const [error, setError] = useState(false)
+  const { dataClient } = useClients()
 
   useEffect(() => {
     async function fetch() {
-      const { loading, error, addresses } = await fetchPoolsForToken(address)
+      const { loading, error, addresses } = await fetchPoolsForToken(address, dataClient)
       if (!loading && !error && addresses) {
-        dispatch(addPoolAddresses({ tokenAddress: address, poolAddresses: addresses }))
+        dispatch(addPoolAddresses({ tokenAddress: address, poolAddresses: addresses, networkId: activeNetwork.id }))
       }
       if (error) {
         setError(error)
@@ -111,7 +120,7 @@ export function usePoolsForToken(address: string): string[] | undefined {
     if (!poolsForToken && !error) {
       fetch()
     }
-  }, [address, dispatch, error, poolsForToken])
+  }, [address, dispatch, error, poolsForToken, dataClient, activeNetwork.id])
 
   // return data
   return poolsForToken
@@ -124,15 +133,17 @@ export function usePoolsForToken(address: string): string[] | undefined {
  */
 export function useTokenChartData(address: string): TokenChartEntry[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
-  const token = useSelector((state: AppState) => state.tokens.byAddress[address])
+  const [activeNetwork] = useActiveNetworkVersion()
+  const token = useSelector((state: AppState) => state.tokens.byAddress[activeNetwork.id]?.[address])
   const chartData = token.chartData
   const [error, setError] = useState(false)
+  const { dataClient } = useClients()
 
   useEffect(() => {
     async function fetch() {
-      const { error, data } = await fetchTokenChartData(address)
+      const { error, data } = await fetchTokenChartData(address, dataClient)
       if (!error && data) {
-        dispatch(updateChartData({ tokenAddress: address, chartData: data }))
+        dispatch(updateChartData({ tokenAddress: address, chartData: data, networkId: activeNetwork.id }))
       }
       if (error) {
         setError(error)
@@ -141,7 +152,7 @@ export function useTokenChartData(address: string): TokenChartEntry[] | undefine
     if (!chartData && !error) {
       fetch()
     }
-  }, [address, dispatch, error, chartData])
+  }, [address, dispatch, error, chartData, dataClient, activeNetwork.id])
 
   // return data
   return chartData
@@ -158,9 +169,11 @@ export function useTokenPriceData(
   timeWindow: OpUnitType
 ): PriceChartEntry[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
-  const token = useSelector((state: AppState) => state.tokens.byAddress[address])
+  const [activeNetwork] = useActiveNetworkVersion()
+  const token = useSelector((state: AppState) => state.tokens.byAddress[activeNetwork.id]?.[address])
   const priceData = token.priceData[interval]
   const [error, setError] = useState(false)
+  const { dataClient, blockClient } = useClients()
 
   // construct timestamps and check if we need to fetch more data
   const oldestTimestampFetched = token.priceData.oldestFetchedTimestamp
@@ -169,7 +182,13 @@ export function useTokenPriceData(
 
   useEffect(() => {
     async function fetch() {
-      const { data, error: fetchingError } = await fetchTokenPriceData(address, interval, startTimestamp)
+      const { data, error: fetchingError } = await fetchTokenPriceData(
+        address,
+        interval,
+        startTimestamp,
+        dataClient,
+        blockClient
+      )
       if (data) {
         dispatch(
           updatePriceData({
@@ -177,6 +196,7 @@ export function useTokenPriceData(
             secondsInterval: interval,
             priceData: data,
             oldestFetchedTimestamp: startTimestamp,
+            networkId: activeNetwork.id,
           })
         )
       }
@@ -187,7 +207,19 @@ export function useTokenPriceData(
     if (!priceData && !error) {
       fetch()
     }
-  }, [address, dispatch, error, interval, oldestTimestampFetched, priceData, startTimestamp, timeWindow])
+  }, [
+    activeNetwork.id,
+    address,
+    blockClient,
+    dataClient,
+    dispatch,
+    error,
+    interval,
+    oldestTimestampFetched,
+    priceData,
+    startTimestamp,
+    timeWindow,
+  ])
 
   // return data
   return priceData
@@ -200,23 +232,25 @@ export function useTokenPriceData(
  */
 export function useTokenTransactions(address: string): Transaction[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
-  const token = useSelector((state: AppState) => state.tokens.byAddress[address])
+  const [activeNetwork] = useActiveNetworkVersion()
+  const token = useSelector((state: AppState) => state.tokens.byAddress[activeNetwork.id]?.[address])
   const transactions = token.transactions
   const [error, setError] = useState(false)
+  const { dataClient } = useClients()
 
   useEffect(() => {
     async function fetch() {
-      const { error, data } = await fetchTokenTransactions(address)
+      const { error, data } = await fetchTokenTransactions(address, dataClient)
       if (error) {
         setError(true)
       } else if (data) {
-        dispatch(updateTransactions({ tokenAddress: address, transactions: data }))
+        dispatch(updateTransactions({ tokenAddress: address, transactions: data, networkId: activeNetwork.id }))
       }
     }
     if (!transactions && !error) {
       fetch()
     }
-  }, [address, dispatch, error, transactions])
+  }, [activeNetwork.id, address, dataClient, dispatch, error, transactions])
 
   // return data
   return transactions

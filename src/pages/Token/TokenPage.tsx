@@ -35,6 +35,11 @@ import { useSavedTokens } from 'state/user/hooks'
 import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
 import { MonoSpace } from 'components/shared'
 import dayjs from 'dayjs'
+import { useActiveNetworkVersion } from 'state/application/hooks'
+import { networkPrefix } from 'utils/networkPrefix'
+import { EthereumNetworkInfo } from 'constants/networks'
+import { GenericImageWrapper } from 'components/Logo'
+// import { SmallOptionButton } from '../../components/Button'
 import { useCMCLink } from 'hooks/useCMCLink'
 import CMCLogo from '../../assets/images/cmc.png'
 
@@ -84,6 +89,8 @@ export default function TokenPage({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  const [activeNetwork] = useActiveNetworkVersion()
+
   address = address.toLowerCase()
   // theming
   const backgroundColor = useColor(address)
@@ -168,19 +175,19 @@ export default function TokenPage({
             </StyledExternalLink>
           </LightGreyCard>
         ) : (
-          <AutoColumn gap="lg">
-            <AutoColumn gap="40px">
+          <AutoColumn gap="32px">
+            <AutoColumn gap="32px">
               <RowBetween>
                 <AutoRow gap="4px">
-                  <StyledInternalLink to={'/'}>
+                  <StyledInternalLink to={networkPrefix(activeNetwork)}>
                     <TYPE.main>{`Home > `}</TYPE.main>
                   </StyledInternalLink>
-                  <StyledInternalLink to={'/tokens'}>
+                  <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens'}>
                     <TYPE.label>{` Tokens `}</TYPE.label>
                   </StyledInternalLink>
                   <TYPE.main>{` > `}</TYPE.main>
                   <TYPE.label>{` ${tokenData.symbol} `}</TYPE.label>
-                  <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
+                  <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
                     <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
                   </StyledExternalLink>
                 </AutoRow>
@@ -191,42 +198,47 @@ export default function TokenPage({
                       <StyledCMCLogo src={CMCLogo} />
                     </StyledExternalLink>
                   )}
-                  <StyledExternalLink href={getEtherscanLink(1, address, 'address')}>
-                    <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px', marginTop: '4px' }} />
+                  <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
+                    <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
                   </StyledExternalLink>
                 </RowFixed>
               </RowBetween>
               <ResponsiveRow align="flex-end">
                 <AutoColumn gap="md">
-                  <RowFixed gap="4px">
+                  <RowFixed gap="lg">
                     <CurrencyLogo address={address} />
-                    <TYPE.label ml={'12px'} fontSize="20px">
+                    <TYPE.label ml={'10px'} fontSize="20px">
                       {tokenData.name}
                     </TYPE.label>
-                    <TYPE.main ml={'12px'} fontSize="20px">
+                    <TYPE.main ml={'6px'} fontSize="20px">
                       ({tokenData.symbol})
                     </TYPE.main>
+                    {activeNetwork === EthereumNetworkInfo ? null : (
+                      <GenericImageWrapper src={activeNetwork.imageURL} style={{ marginLeft: '8px' }} size={'26px'} />
+                    )}
                   </RowFixed>
                   <RowFlat style={{ marginTop: '8px' }}>
                     <PriceText mr="10px"> {formatDollarAmount(tokenData.priceUSD)}</PriceText>
                     (<Percent value={tokenData.priceUSDChange} />)
                   </RowFlat>
                 </AutoColumn>
-                <RowFixed>
-                  <StyledExternalLink href={`https://app.uniswap.org/#/add/${address}`}>
-                    <ButtonGray width="170px" mr="12px" height={'100%'} style={{ height: '44px' }}>
-                      <RowBetween>
-                        <Download size={24} />
-                        <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
-                      </RowBetween>
-                    </ButtonGray>
-                  </StyledExternalLink>
-                  <StyledExternalLink href={`https://app.uniswap.org/#/swap?inputCurrency=${address}`}>
-                    <ButtonPrimary width="100px" bgColor={backgroundColor} style={{ height: '44px' }}>
-                      Trade
-                    </ButtonPrimary>
-                  </StyledExternalLink>
-                </RowFixed>
+                {activeNetwork !== EthereumNetworkInfo ? null : (
+                  <RowFixed>
+                    <StyledExternalLink href={`https://app.uniswap.org/#/add/${address}`}>
+                      <ButtonGray width="170px" mr="12px" height={'100%'} style={{ height: '44px' }}>
+                        <RowBetween>
+                          <Download size={24} />
+                          <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
+                        </RowBetween>
+                      </ButtonGray>
+                    </StyledExternalLink>
+                    <StyledExternalLink href={`https://app.uniswap.org/#/swap?inputCurrency=${address}`}>
+                      <ButtonPrimary width="100px" bgColor={backgroundColor} style={{ height: '44px' }}>
+                        Trade
+                      </ButtonPrimary>
+                    </StyledExternalLink>
+                  </RowFixed>
+                )}
               </ResponsiveRow>
             </AutoColumn>
             <ContentLayout>

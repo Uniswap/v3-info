@@ -2,9 +2,11 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { isAddress } from 'utils'
 import Logo from '../Logo'
+// import { useOptimismList } from 'state/lists/hooks'
 
-export const getTokenLogoURL = (address: string) =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+export const getTokenLogoURL = (address: string) => {
+  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+}
 
 const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
@@ -25,6 +27,8 @@ export default function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
+  // const lists = useOptimismList()
+
   const srcs: string[] = useMemo(() => {
     const checkSummed = isAddress(address)
 

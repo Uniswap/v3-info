@@ -9,6 +9,7 @@ import {
 } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
 import { PriceChartEntry, Transaction } from 'types'
+import { SupportedNetwork, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 
 export type TokenData = {
   // token is in some pool on uniswap
@@ -47,38 +48,46 @@ export interface TokenChartEntry {
 export interface TokensState {
   // analytics data from
   byAddress: {
-    [address: string]: {
-      data: TokenData | undefined
-      poolAddresses: string[] | undefined
-      chartData: TokenChartEntry[] | undefined
-      priceData: {
-        oldestFetchedTimestamp?: number | undefined
-        [secondsInterval: number]: PriceChartEntry[] | undefined
+    [networkId: string]: {
+      [address: string]: {
+        data: TokenData | undefined
+        poolAddresses: string[] | undefined
+        chartData: TokenChartEntry[] | undefined
+        priceData: {
+          oldestFetchedTimestamp?: number | undefined
+          [secondsInterval: number]: PriceChartEntry[] | undefined
+        }
+        transactions: Transaction[] | undefined
+        lastUpdated: number | undefined
       }
-      transactions: Transaction[] | undefined
-      lastUpdated: number | undefined
     }
   }
 }
 
-export const initialState: TokensState = { byAddress: {} }
+export const initialState: TokensState = {
+  byAddress: {
+    [SupportedNetwork.ETHEREUM]: {},
+    [SupportedNetwork.ARBITRUM]: {},
+    [SupportedNetwork.OPTIMISM]: {},
+  },
+}
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(updateTokenData, (state, { payload: { tokens } }) => {
+    .addCase(updateTokenData, (state, { payload: { tokens, networkId } }) => {
       tokens.map(
         (tokenData) =>
-          (state.byAddress[tokenData.address] = {
-            ...state.byAddress[tokenData.address],
+          (state.byAddress[networkId][tokenData.address] = {
+            ...state.byAddress[networkId][tokenData.address],
             data: tokenData,
             lastUpdated: currentTimestamp(),
           })
       )
     }) // add address to byAddress keys if not included yet
-    .addCase(addTokenKeys, (state, { payload: { tokenAddresses } }) => {
+    .addCase(addTokenKeys, (state, { payload: { tokenAddresses, networkId } }) => {
       tokenAddresses.map((address) => {
-        if (!state.byAddress[address]) {
-          state.byAddress[address] = {
+        if (!state.byAddress[networkId][address]) {
+          state.byAddress[networkId][address] = {
             poolAddresses: undefined,
             data: undefined,
             chartData: undefined,
@@ -90,25 +99,25 @@ export default createReducer(initialState, (builder) =>
       })
     })
     // add list of pools the token is included in
-    .addCase(addPoolAddresses, (state, { payload: { tokenAddress, poolAddresses } }) => {
-      state.byAddress[tokenAddress] = { ...state.byAddress[tokenAddress], poolAddresses }
+    .addCase(addPoolAddresses, (state, { payload: { tokenAddress, poolAddresses, networkId } }) => {
+      state.byAddress[networkId][tokenAddress] = { ...state.byAddress[networkId][tokenAddress], poolAddresses }
     })
     // add list of pools the token is included in
-    .addCase(updateChartData, (state, { payload: { tokenAddress, chartData } }) => {
-      state.byAddress[tokenAddress] = { ...state.byAddress[tokenAddress], chartData }
+    .addCase(updateChartData, (state, { payload: { tokenAddress, chartData, networkId } }) => {
+      state.byAddress[networkId][tokenAddress] = { ...state.byAddress[networkId][tokenAddress], chartData }
     })
     // add list of pools the token is included in
-    .addCase(updateTransactions, (state, { payload: { tokenAddress, transactions } }) => {
-      state.byAddress[tokenAddress] = { ...state.byAddress[tokenAddress], transactions }
+    .addCase(updateTransactions, (state, { payload: { tokenAddress, transactions, networkId } }) => {
+      state.byAddress[networkId][tokenAddress] = { ...state.byAddress[networkId][tokenAddress], transactions }
     })
     // update historical price volume based on interval size
     .addCase(
       updatePriceData,
-      (state, { payload: { tokenAddress, secondsInterval, priceData, oldestFetchedTimestamp } }) => {
-        state.byAddress[tokenAddress] = {
-          ...state.byAddress[tokenAddress],
+      (state, { payload: { tokenAddress, secondsInterval, priceData, oldestFetchedTimestamp, networkId } }) => {
+        state.byAddress[networkId][tokenAddress] = {
+          ...state.byAddress[networkId][tokenAddress],
           priceData: {
-            ...state.byAddress[tokenAddress].priceData,
+            ...state.byAddress[networkId][tokenAddress].priceData,
             [secondsInterval]: priceData,
             oldestFetchedTimestamp,
           },

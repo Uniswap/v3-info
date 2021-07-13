@@ -1,9 +1,9 @@
 import gql from 'graphql-tag'
-import { client } from 'apollo/client'
 import JSBI from 'jsbi'
 import keyBy from 'lodash.keyby'
 import { TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
 const PRICE_FIXED_DIGITS = 4
 const DEFAULT_SURROUNDING_TICKS = 300
@@ -67,7 +67,8 @@ export interface TickProcessed {
 const fetchInitializedTicks = async (
   poolAddress: string,
   tickIdxLowerBound: number,
-  tickIdxUpperBound: number
+  tickIdxUpperBound: number,
+  client: ApolloClient<NormalizedCacheObject>
 ): Promise<{ loading?: boolean; error?: boolean; ticks?: Tick[] }> => {
   const tickQuery = gql`
     query surroundingTicks(
@@ -96,7 +97,7 @@ const fetchInitializedTicks = async (
   do {
     const { data, error, loading } = await client.query<SurroundingTicksResult>({
       query: tickQuery,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
       variables: {
         poolAddress,
         tickIdxLowerBound,
@@ -153,6 +154,7 @@ const poolQuery = gql`
 
 export const fetchTicksSurroundingPrice = async (
   poolAddress: string,
+  client: ApolloClient<NormalizedCacheObject>,
   numSurroundingTicks = DEFAULT_SURROUNDING_TICKS
 ): Promise<{
   loading?: boolean
@@ -196,7 +198,7 @@ export const fetchTicksSurroundingPrice = async (
   const tickIdxLowerBound = activeTickIdx - numSurroundingTicks * tickSpacing
   const tickIdxUpperBound = activeTickIdx + numSurroundingTicks * tickSpacing
 
-  const initializedTicksResult = await fetchInitializedTicks(poolAddress, tickIdxLowerBound, tickIdxUpperBound)
+  const initializedTicksResult = await fetchInitializedTicks(poolAddress, tickIdxLowerBound, tickIdxUpperBound, client)
   if (initializedTicksResult.error || initializedTicksResult.loading) {
     return {
       error: initializedTicksResult.error,

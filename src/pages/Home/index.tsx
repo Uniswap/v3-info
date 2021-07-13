@@ -153,7 +153,7 @@ export default function Home() {
               height={220}
               minHeight={332}
               data={formattedVolumeData}
-              color={activeNetwork.secondaryColor}
+              color={theme.blue1}
               setValue={setVolumeHover}
               setLabel={setRightLabel}
               value={volumeHover}

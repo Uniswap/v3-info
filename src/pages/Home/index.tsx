@@ -138,11 +138,7 @@ export default function Home() {
                     <MonoSpace>{formatDollarAmount(liquidityHover, 2, true)} </MonoSpace>
                   </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
-                    {leftLabel ? (
-                      <MonoSpace>{leftLabel}</MonoSpace>
-                    ) : (
-                      <MonoSpace>{dayjs.utc().format('MMM D, YYYY')}</MonoSpace>
-                    )}
+                    {leftLabel ? <MonoSpace>{leftLabel}</MonoSpace> : null}
                   </TYPE.main>
                 </AutoColumn>
               }
@@ -165,11 +161,7 @@ export default function Home() {
                     <MonoSpace> {formatDollarAmount(volumeHover, 2)}</MonoSpace>
                   </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
-                    {rightLabel ? (
-                      <MonoSpace>{rightLabel}</MonoSpace>
-                    ) : (
-                      <MonoSpace>{dayjs.utc().format('MMM D, YYYY')}</MonoSpace>
-                    )}
+                    {rightLabel ? <MonoSpace>{rightLabel}</MonoSpace> : null}
                   </TYPE.main>
                 </AutoColumn>
               }

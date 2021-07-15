@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 export function unixToDate(unix: number, format = 'YYYY-MM-DD'): string {
-  return dayjs.unix(unix).format(format)
+  return dayjs.unix(unix).utc().format(format)
 }
 
 export const formatTime = (unix: string, buffer?: number) => {

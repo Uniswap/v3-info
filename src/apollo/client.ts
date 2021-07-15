@@ -48,6 +48,34 @@ export const client = new ApolloClient({
   },
 })
 
+export const v2Client = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswapv2',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
 export const arbitrumClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one',
   cache: new InMemoryCache({

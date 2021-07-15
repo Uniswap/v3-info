@@ -63,7 +63,7 @@ const CustomBar = ({
         fill={fill}
         width={width}
         height={height === 0 ? 0 : Math.max(height, bottomMargin ? 4 : 0)}
-        rx="2"
+        rx="1"
       />
     </g>
   )
@@ -139,6 +139,14 @@ const CombinedChart = ({
             fill={color}
             shape={(props) => {
               return <CustomBar height={props.height} width={props.width} x={props.x} y={props.y} fill={color} />
+            }}
+          />
+          <Bar
+            dataKey="v2"
+            stackId="a"
+            fill={theme.blue2}
+            shape={(props) => {
+              return <CustomBar height={props.height} width={props.width} x={props.x} y={props.y} fill={theme.blue2} />
             }}
           />
           <Bar

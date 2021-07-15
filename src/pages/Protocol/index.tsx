@@ -17,6 +17,7 @@ const CardRow = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   column-gap: 1rem;
+  row-gap: 1rem;
 `
 
 const ChartWrapper = styled.div`
@@ -41,6 +42,7 @@ export default function Protocol() {
           time: unixToDate(day.date),
           ethereum: day.volumeEthereum,
           optimism: day.volumeOptimism,
+          v2: day.volumeV2,
         }
       })
     } else {

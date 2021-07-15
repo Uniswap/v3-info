@@ -1,3 +1,4 @@
+import { optimismClient } from './../../apollo/client'
 import { getPercentChange } from '../../utils/data'
 import { ProtocolData } from '../../state/protocol/reducer'
 import gql from 'graphql-tag'
@@ -6,7 +7,7 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
 import { useClients } from 'state/application/hooks'
-import { client, blockClient, arbitrumClient, arbitrumBlockClient } from 'apollo/client'
+import { client, blockClient, optimismBlockClient } from 'apollo/client'
 
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
@@ -128,6 +129,13 @@ export function useFetchProtocolData(
   }
 }
 
+function combinePercentChange(valueA: number, changeA: number, valueB: number, changeB: number) {
+  const valueA0 = (100 - changeA) * valueA
+  const valueB0 = (100 - changeB) * valueB
+  const total0 = valueA0 + valueB0
+  return (changeA * valueA0) / total0 + (changeB * valueB0) / total0
+}
+
 export function useFetchAggregateProtocolData(): {
   loading: boolean
   error: boolean
@@ -137,12 +145,12 @@ export function useFetchAggregateProtocolData(): {
     client,
     blockClient
   )
-  const { data: arbitrumData, loading: loadingArbitrum, error: errorArbitrum } = useFetchProtocolData(
-    arbitrumClient,
-    arbitrumBlockClient
+  const { data: optimismData, loading: loadingOptimism, error: errorOptimism } = useFetchProtocolData(
+    optimismClient,
+    optimismBlockClient
   )
 
-  if (!ethereumData && !arbitrumData) {
+  if (!ethereumData || !optimismData) {
     return {
       data: undefined,
       loading: false,
@@ -150,13 +158,67 @@ export function useFetchAggregateProtocolData(): {
     }
   }
 
-  // for now until useMultipleDatas hook just manuall construct ProtocolData object
+  if (loadingEthereum || loadingOptimism) {
+    return {
+      data: undefined,
+      loading: false,
+      error: false,
+    }
+  }
 
-  // console.log(ethereumData)
-  // console.log(arbitrumData)
+  if (errorEthereum || errorOptimism) {
+    return {
+      data: undefined,
+      loading: false,
+      error: false,
+    }
+  }
+
+  const volumeUSD = ethereumData.volumeUSD + optimismData.volumeUSD
+  const volumeUSDChange = combinePercentChange(
+    ethereumData.volumeUSD,
+    ethereumData.volumeUSDChange,
+    optimismData.volumeUSD,
+    optimismData.volumeUSDChange
+  )
+
+  const feesUSD = ethereumData.feesUSD + optimismData.feesUSD
+  const feeChange = combinePercentChange(
+    ethereumData.feesUSD,
+    ethereumData.feeChange,
+    optimismData.feesUSD,
+    optimismData.feeChange
+  )
+
+  const tvlUSD = ethereumData.tvlUSD + optimismData.tvlUSD
+  const tvlUSDChange = combinePercentChange(
+    ethereumData.tvlUSD,
+    ethereumData.tvlUSDChange,
+    optimismData.tvlUSD,
+    optimismData.tvlUSDChange
+  )
+
+  const txCount = ethereumData.txCount + optimismData.txCount
+  const txCountChange = combinePercentChange(
+    ethereumData.txCount,
+    ethereumData.txCountChange,
+    optimismData.txCount,
+    optimismData.txCountChange
+  )
+
+  const data = {
+    volumeUSD,
+    volumeUSDChange,
+    tvlUSD,
+    tvlUSDChange,
+    feesUSD,
+    feeChange,
+    txCount,
+    txCountChange,
+  }
 
   return {
-    data: undefined,
+    data,
     loading: false,
     error: false,
   }

@@ -9,6 +9,7 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
 import PoolsOverview from './Pool/PoolsOverview'
 import TokensOverview from './Token/TokensOverview'
+import ProtocolPage from './Protocol'
 import TopBar from 'components/Header/TopBar'
 import { RedirectInvalidToken } from './Token/redirects'
 import { LocalLoader } from 'components/Loader'
@@ -124,6 +125,7 @@ export default function App() {
             <Popups />
             <Switch>
               <Route exact strict path="/:networkID?/" component={Home} />
+              <Route exact strict path="/:networkID?/protocol" component={ProtocolPage} />
               <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
               <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
               <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />

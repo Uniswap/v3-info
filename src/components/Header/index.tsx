@@ -169,15 +169,30 @@ export default function Header() {
           <StyledNavLink
             id={`pool-nav-link`}
             to={networkPrefix(activeNewtork)}
-            isActive={(match, { pathname }) => pathname === '/'}
+            isActive={(match, { pathname }) => pathname === networkPrefix(activeNewtork)}
           >
             Overview
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'pools'}>
+          <StyledNavLink
+            id={`stake-nav-link`}
+            to={networkPrefix(activeNewtork) + 'pools'}
+            isActive={(match, { pathname }) => pathname.includes('pools')}
+          >
             Pools
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'tokens'}>
+          <StyledNavLink
+            id={`stake-nav-link`}
+            to={networkPrefix(activeNewtork) + 'tokens'}
+            isActive={(match, { pathname }) => pathname.includes('tokens')}
+          >
             Tokens
+          </StyledNavLink>
+          <StyledNavLink
+            id={`stake-nav-link`}
+            to={networkPrefix(activeNewtork) + 'protocol'}
+            isActive={(match, { pathname }) => pathname.includes('protocol')}
+          >
+            Protocol
           </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>

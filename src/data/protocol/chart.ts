@@ -118,20 +118,25 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
 /**
  * Fetch historic chart data
  */
-export function useFetchGlobalChartData(): {
+export function useFetchGlobalChartData(
+  dataClientOverride?: ApolloClient<NormalizedCacheObject>
+): {
   error: boolean
   data: ChartDayData[] | undefined
 } {
   const [data, setData] = useState<{ [network: string]: ChartDayData[] | undefined }>()
   const [error, setError] = useState(false)
+
+  // get appropriate clients if override needed
   const { dataClient } = useClients()
+  const activeDataClient = dataClientOverride ?? dataClient
 
   const [activeNetworkVersion] = useActiveNetworkVersion()
   const indexedData = data?.[activeNetworkVersion.id]
 
   useEffect(() => {
     async function fetch() {
-      const { data, error } = await fetchChartData(dataClient)
+      const { data, error } = await fetchChartData(activeDataClient)
       if (data && !error) {
         setData({
           [activeNetworkVersion.id]: data,
@@ -143,7 +148,7 @@ export function useFetchGlobalChartData(): {
     if (!indexedData && !error) {
       fetch()
     }
-  }, [data, error, dataClient, indexedData, activeNetworkVersion.id])
+  }, [data, error, activeDataClient, indexedData, activeNetworkVersion.id])
 
   return {
     error,

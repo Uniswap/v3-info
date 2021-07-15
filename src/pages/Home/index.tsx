@@ -5,12 +5,7 @@ import { TYPE } from 'theme'
 import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart/alt'
 import useTheme from 'hooks/useTheme'
-import {
-  useProtocolData,
-  useProtocolChartData,
-  useProtocolTransactions,
-  useAggregateOverviewData,
-} from 'state/protocol/hooks'
+import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
@@ -25,8 +20,8 @@ import { notEmpty } from 'utils'
 import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
-import dayjs from 'dayjs'
 import { useActiveNetworkVersion } from 'state/application/hooks'
+import { ButtonPrimary } from 'components/Button'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -42,8 +37,6 @@ export default function Home() {
   }, [])
 
   const theme = useTheme()
-
-  useAggregateOverviewData()
 
   const [activeNetwork] = useActiveNetworkVersion()
 
@@ -191,6 +184,10 @@ export default function Home() {
                   </RowFixed>
                 </HideMedium>
               </RowFixed>
+
+              <StyledInternalLink to="protocol">
+                <ButtonPrimary>More Protocol Analytics</ButtonPrimary>
+              </StyledInternalLink>
             </RowBetween>
           </DarkGreyCard>
         </HideSmall>

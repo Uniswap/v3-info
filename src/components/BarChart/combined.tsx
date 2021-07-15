@@ -1,12 +1,13 @@
 import React, { Dispatch, SetStateAction, ReactNode } from 'react'
-import { ResponsiveContainer, XAxis, Tooltip, AreaChart, Area } from 'recharts'
+import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar, Brush } from 'recharts'
 import styled from 'styled-components'
 import Card from 'components/Card'
 import { RowBetween } from 'components/Row'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import useTheme from 'hooks/useTheme'
-import { darken } from 'polished'
+import { OptimismNetworkInfo } from 'constants/networks'
+import { formatDollarAmount } from 'utils/numbers'
 dayjs.extend(utc)
 
 const DEFAULT_HEIGHT = 300
@@ -39,13 +40,33 @@ export type LineChartProps = {
   bottomRight?: ReactNode | undefined
 } & React.HTMLAttributes<HTMLDivElement>
 
-const Chart = ({
+const CustomBar = ({
+  x,
+  y,
+  width,
+  height,
+  fill,
+}: {
+  x: number
+  y: number
+  width: number
+  height: number
+  fill: string
+}) => {
+  return (
+    <g>
+      <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
+    </g>
+  )
+}
+
+const CombinedChart = ({
   data,
   color = '#56B2A4',
-  value,
-  label,
   setValue,
   setLabel,
+  value,
+  label,
   topLeft,
   topRight,
   bottomLeft,
@@ -63,7 +84,7 @@ const Chart = ({
         {topRight ?? null}
       </RowBetween>
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
+        <BarChart
           width={500}
           height={300}
           data={data}
@@ -78,12 +99,6 @@ const Chart = ({
             setValue && setValue(undefined)
           }}
         >
-          <defs>
-            <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={darken(0.36, color)} stopOpacity={0.5} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
           <XAxis
             dataKey="time"
             axisLine={false}
@@ -92,18 +107,49 @@ const Chart = ({
             minTickGap={10}
           />
           <Tooltip
-            cursor={{ stroke: theme.bg2 }}
-            contentStyle={{ display: 'none' }}
+            cursor={{ fill: theme.bg2 }}
+            contentStyle={{
+              backgroundColor: theme.bg1,
+              borderRadius: '8px',
+              border: '1px solid ' + theme.bg3,
+              padding: '16px',
+            }}
             formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value)
               }
               const formattedTime = dayjs(props.payload.time).format('MMM D, YYYY')
               if (setLabel && label !== formattedTime) setLabel(formattedTime)
+
+              return `${formatDollarAmount(value)}`
             }}
           />
-          <Area dataKey="value" type="monotone" stroke={color} fill="url(#gradient)" strokeWidth={2} />
-        </AreaChart>
+          <Bar
+            dataKey="ethereum"
+            stackId="a"
+            fill={color}
+            shape={(props) => {
+              return <CustomBar height={props.height} width={props.width} x={props.x} y={props.y} fill={color} />
+            }}
+          />
+          <Bar
+            dataKey="optimism"
+            stackId="a"
+            fill={'red'}
+            shape={(props) => {
+              return (
+                <CustomBar
+                  height={props.height}
+                  width={props.width}
+                  x={props.x}
+                  y={props.y}
+                  fill={OptimismNetworkInfo.primaryColor}
+                />
+              )
+            }}
+          />
+          <Brush dataKey="time" height={20} fill={theme.bg1} tickFormatter={() => ''} />
+        </BarChart>
       </ResponsiveContainer>
       <RowBetween>
         {bottomLeft ?? null}
@@ -113,4 +159,4 @@ const Chart = ({
   )
 }
 
-export default Chart
+export default CombinedChart

@@ -46,16 +46,25 @@ const CustomBar = ({
   width,
   height,
   fill,
+  bottomMargin,
 }: {
   x: number
   y: number
   width: number
   height: number
   fill: string
+  bottomMargin?: boolean
 }) => {
   return (
     <g>
-      <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
+      <rect
+        x={x}
+        y={bottomMargin ? y - 4 : y}
+        fill={fill}
+        width={width}
+        height={height === 0 ? 0 : Math.max(height, bottomMargin ? 4 : 0)}
+        rx="2"
+      />
     </g>
   )
 }
@@ -144,6 +153,7 @@ const CombinedChart = ({
                   x={props.x}
                   y={props.y}
                   fill={OptimismNetworkInfo.primaryColor}
+                  bottomMargin={true}
                 />
               )
             }}

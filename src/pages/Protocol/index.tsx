@@ -107,10 +107,6 @@ export default function Protocol() {
           minHeight={332}
           data={formattedVolumeData}
           color={theme.blue1}
-          // setValue={setVolumeHover}
-          // setLabel={setRightLabel}
-          // value={volumeHover}
-          // label={rightLabel}
           topLeft={<TYPE.body fontSize="16px">Aggregate Volume</TYPE.body>}
         />
       </AutoColumn>

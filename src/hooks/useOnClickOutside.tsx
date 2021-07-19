@@ -17,10 +17,10 @@ export function useOnClickOutside<T extends HTMLElement>(
       if (handlerRef.current) handlerRef.current()
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('click', handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('click', handleClickOutside)
     }
   }, [node])
 }

@@ -123,11 +123,11 @@ export default function App() {
           <BodyWrapper>
             <Popups />
             <Switch>
-              <Route exact path="/:networkID?" component={Home} />
-              <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
-              <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
-              <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
               <Route exact strict path="/:networkID?/pools/:address" component={PoolPage} />
+              <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
+              <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
+              <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
+              <Route exact path="/:networkID?" component={Home} />
             </Switch>
             <Marginer />
           </BodyWrapper>

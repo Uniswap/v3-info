@@ -5,16 +5,16 @@ import { useFetchedSubgraphStatus } from '../../data/application'
 export default function Updater(): null {
   // subgraph status
   const [status, updateStatus] = useSubgraphStatus()
-  const { available, syncedBlock: newSyncedBlock } = useFetchedSubgraphStatus()
+  const { available, syncedBlock: newSyncedBlock, headBlock } = useFetchedSubgraphStatus()
 
   const syncedBlock = status.syncedBlock
 
   useEffect(() => {
     if (status.available === null && available !== null) {
-      updateStatus(available, syncedBlock)
+      updateStatus(available, syncedBlock, headBlock)
     }
     if (!status.syncedBlock || (status.syncedBlock !== newSyncedBlock && syncedBlock)) {
-      updateStatus(status.available, newSyncedBlock)
+      updateStatus(status.available, newSyncedBlock, headBlock)
     }
   }, [available, newSyncedBlock, status.available, status.syncedBlock, syncedBlock, updateStatus])
 

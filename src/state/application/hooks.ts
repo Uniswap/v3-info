@@ -91,15 +91,16 @@ export function useSubgraphStatus(): [
   {
     available: boolean | null
     syncedBlock: number | undefined
+    headBlock: number | undefined
   },
-  (available: boolean | null, syncedBlock: number | undefined) => void
+  (available: boolean | null, syncedBlock: number | undefined, headBlock: number | undefined) => void
 ] {
   const dispatch = useDispatch()
   const status = useSelector((state: AppState) => state.application.subgraphStatus)
 
   const update = useCallback(
-    (available: boolean | null, syncedBlock: number | undefined) => {
-      dispatch(updateSubgraphStatus({ available, syncedBlock }))
+    (available: boolean | null, syncedBlock: number | undefined, headBlock: number | undefined) => {
+      dispatch(updateSubgraphStatus({ available, syncedBlock, headBlock }))
     },
     [dispatch]
   )

@@ -21,6 +21,7 @@ export interface ApplicationState {
   readonly subgraphStatus: {
     available: boolean | null
     syncedBlock: number | undefined
+    headBlock: number | undefined
   }
   readonly activeNetworkVersion: NetworkInfo
 }
@@ -32,6 +33,7 @@ const initialState: ApplicationState = {
   subgraphStatus: {
     available: null,
     syncedBlock: undefined,
+    headBlock: undefined,
   },
   activeNetworkVersion: EthereumNetworkInfo,
 }
@@ -66,10 +68,11 @@ export default createReducer(initialState, (builder) =>
         }
       })
     })
-    .addCase(updateSubgraphStatus, (state, { payload: { available, syncedBlock } }) => {
+    .addCase(updateSubgraphStatus, (state, { payload: { available, syncedBlock, headBlock } }) => {
       state.subgraphStatus = {
         available,
         syncedBlock,
+        headBlock,
       }
     })
     .addCase(updateActiveNetworkVersion, (state, { payload: { activeNetworkVersion } }) => {

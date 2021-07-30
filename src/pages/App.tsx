@@ -16,7 +16,7 @@ import PoolPage from './Pool/PoolPage'
 import { ExternalLink, TYPE } from 'theme'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
-import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo } from 'constants/networks'
+import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo, OptimismNetworkInfo } from 'constants/networks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -34,12 +34,12 @@ const HeaderWrapper = styled.div`
   z-index: 2;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ warningActive?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   padding-top: 40px;
-  margin-top: 100px;
+  margin-top: ${({ warningActive }) => (warningActive ? '140px' : '100px')};
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -66,6 +66,24 @@ const Hide1080 = styled.div`
   }
 `
 
+const WarningWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`
+
+const WarningBanner = styled.div`
+  background-color: ${({ theme }) => theme.bg3};
+  padding: 1rem;
+  color: white;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+`
+
+const BLOCK_DIFFERENCE_THRESHOLD = 30
+
 export default function App() {
   // pretend load buffer
   const [loading, setLoading] = useState(true)
@@ -73,13 +91,10 @@ export default function App() {
     setTimeout(() => setLoading(false), 1300)
   }, [])
 
-  // subgraph health
-  const [subgraphStatus] = useSubgraphStatus()
-
   // update network based on route
   // TEMP - find better way to do this
   const location = useLocation()
-  const [, setActiveNetwork] = useActiveNetworkVersion()
+  const [activeNetwork, setActiveNetwork] = useActiveNetworkVersion()
   useEffect(() => {
     if (location.pathname === '/') {
       setActiveNetwork(EthereumNetworkInfo)
@@ -91,6 +106,14 @@ export default function App() {
       })
     }
   }, [location.pathname, setActiveNetwork])
+
+  // subgraph health
+  const [subgraphStatus] = useSubgraphStatus()
+
+  const showNotSyncedWarning =
+    subgraphStatus.headBlock && subgraphStatus.syncedBlock && activeNetwork === OptimismNetworkInfo
+      ? subgraphStatus.headBlock - subgraphStatus.syncedBlock > BLOCK_DIFFERENCE_THRESHOLD
+      : false
 
   return (
     <Suspense fallback={null}>
@@ -115,12 +138,20 @@ export default function App() {
         <AppWrapper>
           <URLWarning />
           <HeaderWrapper>
+            {showNotSyncedWarning && (
+              <WarningWrapper>
+                <WarningBanner>
+                  {`Warning: 
+                  Data has only synced to Optimism block ${subgraphStatus.syncedBlock} (out of ${subgraphStatus.headBlock}). Please check back soon.`}
+                </WarningBanner>
+              </WarningWrapper>
+            )}
             <Hide1080>
               <TopBar />
             </Hide1080>
             <Header />
           </HeaderWrapper>
-          <BodyWrapper>
+          <BodyWrapper warningActive={showNotSyncedWarning}>
             <Popups />
             <Switch>
               <Route exact strict path="/:networkID?/pools/:address" component={PoolPage} />

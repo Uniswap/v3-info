@@ -183,6 +183,7 @@ export function useFetchSearchResults(
 
   // format as token and pool datas
   const { data: tokenFullDatas, loading: tokenFullLoading } = useFetchedTokenDatas(allFetchedTokens.map((t) => t.id))
+
   const poolDatasFull = usePoolDatas(allFetchedPools.map((p) => p.id))
   const formattedTokens = useMemo(() => (tokenFullDatas ? Object.values(tokenFullDatas) : []), [tokenFullDatas])
 

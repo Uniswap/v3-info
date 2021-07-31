@@ -21,7 +21,7 @@ import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo, OptimismNetworkInfo } 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
-  align-items: flex-start;
+  align-items: center;
   overflow-x: hidden;
   min-height: 100vh;
 `
@@ -121,19 +121,6 @@ export default function App() {
       <Route component={DarkModeQueryParamReader} />
       {loading ? (
         <LocalLoader fill={true} />
-      ) : subgraphStatus.available === false ? (
-        <AppWrapper>
-          <BodyWrapper>
-            <DarkGreyCard style={{ maxWidth: '340px' }}>
-              <TYPE.label>
-                The Graph network which provides data for this site is temporarily down. Check status{' '}
-                <ExternalLink href="https://thegraph.com/explorer/subgraph/ianlapham/uniswap-v3-testing">
-                  here.
-                </ExternalLink>
-              </TYPE.label>
-            </DarkGreyCard>
-          </BodyWrapper>
-        </AppWrapper>
       ) : (
         <AppWrapper>
           <URLWarning />
@@ -151,17 +138,32 @@ export default function App() {
             </Hide1080>
             <Header />
           </HeaderWrapper>
-          <BodyWrapper warningActive={showNotSyncedWarning}>
-            <Popups />
-            <Switch>
-              <Route exact strict path="/:networkID?/pools/:address" component={PoolPage} />
-              <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
-              <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
-              <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
-              <Route exact path="/:networkID?" component={Home} />
-            </Switch>
-            <Marginer />
-          </BodyWrapper>
+          {subgraphStatus.available === false || activeNetwork === OptimismNetworkInfo ? (
+            <AppWrapper>
+              <BodyWrapper>
+                <DarkGreyCard style={{ maxWidth: '340px' }}>
+                  <TYPE.label>
+                    The Graph network which provides data for this site is temporarily down. Check status{' '}
+                    <ExternalLink href="https://thegraph.com/explorer/subgraph/ianlapham/uniswap-optimism">
+                      here.
+                    </ExternalLink>
+                  </TYPE.label>
+                </DarkGreyCard>
+              </BodyWrapper>
+            </AppWrapper>
+          ) : (
+            <BodyWrapper warningActive={showNotSyncedWarning}>
+              <Popups />
+              <Switch>
+                <Route exact strict path="/:networkID?/pools/:address" component={PoolPage} />
+                <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
+                <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
+                <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
+                <Route exact path="/:networkID?" component={Home} />
+              </Switch>
+              <Marginer />
+            </BodyWrapper>
+          )}
         </AppWrapper>
       )}
     </Suspense>

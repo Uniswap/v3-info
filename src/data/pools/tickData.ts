@@ -5,7 +5,6 @@ import { TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
-const PRICE_FIXED_DIGITS = 4
 const DEFAULT_SURROUNDING_TICKS = 300
 const FEE_TIER_TO_TICK_SPACING = (feeTier: string): number => {
   switch (feeTier) {
@@ -231,8 +230,8 @@ export const fetchTicksSurroundingPrice = async (
     liquidityActive: JSBI.BigInt(liquidity),
     tickIdx: activeTickIdx,
     liquidityNet: JSBI.BigInt(0),
-    price0: tickToPrice(token0, token1, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
-    price1: tickToPrice(token1, token0, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
+    price0: tickToPrice(token0, token1, activeTickIdxForPrice).toFixed(token1.decimals),
+    price1: tickToPrice(token1, token0, activeTickIdxForPrice).toFixed(token0.decimals),
     liquidityGross: JSBI.BigInt(0),
   }
 
@@ -278,8 +277,8 @@ export const fetchTicksSurroundingPrice = async (
         liquidityActive: previousTickProcessed.liquidityActive,
         tickIdx: currentTickIdx,
         liquidityNet: JSBI.BigInt(0),
-        price0: tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-        price1: tickToPrice(token1, token0, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
+        price0: tickToPrice(token0, token1, currentTickIdx).toFixed(token1.decimals),
+        price1: tickToPrice(token1, token0, currentTickIdx).toFixed(token0.decimals),
         liquidityGross: JSBI.BigInt(0),
       }
 

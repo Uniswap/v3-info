@@ -18,6 +18,7 @@ const TOKEN_CHART = gql`
       where: { token: $address, date_gt: $startTime }
       orderBy: date
       orderDirection: asc
+      subgraphError: allow
     ) {
       date
       volumeUSD

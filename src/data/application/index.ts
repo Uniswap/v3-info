@@ -17,6 +17,7 @@ export const SUBGRAPH_HEALTH = gql`
           number
         }
       }
+      subgraphError: allow
     }
   }
 `

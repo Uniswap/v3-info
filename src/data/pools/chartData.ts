@@ -18,6 +18,7 @@ const POOL_CHART = gql`
       where: { pool: $address, date_gt: $startTime }
       orderBy: date
       orderDirection: asc
+      subgraphError: allow
     ) {
       date
       volumeUSD

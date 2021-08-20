@@ -12,7 +12,7 @@ export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
       factories(
        ${block ? `block: { number: ${block}}` : ``} 
-       first: 1) {
+       first: 1, subgraphError: allow) {
         txCount
         totalVolumeUSD
         totalFeesUSD
@@ -56,6 +56,7 @@ export function useFetchProtocolData(
     GLOBAL_DATA(block24?.number ?? undefined),
     { client: activeDataClient }
   )
+
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
     GLOBAL_DATA(block48?.number ?? undefined),
     { client: activeDataClient }

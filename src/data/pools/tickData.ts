@@ -78,6 +78,7 @@ const fetchInitializedTicks = async (
       $skip: Int!
     ) {
       ticks(
+        subgraphError: allow
         first: 1000
         skip: $skip
         where: { poolAddress: $poolAddress, tickIdx_lte: $tickIdxUpperBound, tickIdx_gte: $tickIdxLowerBound }

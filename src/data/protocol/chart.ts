@@ -14,7 +14,14 @@ const ONE_DAY_UNIX = 24 * 60 * 60
 
 const GLOBAL_CHART = gql`
   query uniswapDayDatas($startTime: Int!, $skip: Int!) {
-    uniswapDayDatas(first: 1000, skip: $skip, where: { date_gt: $startTime }, orderBy: date, orderDirection: asc) {
+    uniswapDayDatas(
+      first: 1000
+      skip: $skip
+      subgraphError: allow
+      where: { date_gt: $startTime }
+      orderBy: date
+      orderDirection: asc
+    ) {
       id
       date
       volumeUSD

@@ -14,7 +14,7 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
   let queryString = 'query blocks {'
   queryString += blocks.map(
     (block: any) => `
-      t${block.timestamp}:token(id:"${tokenAddress}", block: { number: ${block.number} }) { 
+      t${block.timestamp}:token(id:"${tokenAddress}", block: { number: ${block.number} }, subgraphError: allow) { 
         derivedETH
       }
     `
@@ -22,7 +22,7 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
   queryString += ','
   queryString += blocks.map(
     (block: any) => `
-      b${block.timestamp}: bundle(id:"1", block: { number: ${block.number} }) { 
+      b${block.timestamp}: bundle(id:"1", block: { number: ${block.number} }, subgraphError: allow) { 
         ethPriceUSD
       }
     `
@@ -37,7 +37,7 @@ const PRICE_CHART = gql`
     tokenHourDatas(
       first: 100
       skip: $skip
-      where: { token: $address, periodStartUnix_gt: $startTime }
+      where: { token: $address, periodStartUnix_gt: $startTime, subgraphError: allow, subgraphError: allow }
       orderBy: periodStartUnix
       orderDirection: asc
     ) {

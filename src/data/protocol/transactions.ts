@@ -5,7 +5,7 @@ import { formatTokenSymbol } from 'utils/tokens'
 
 const GLOBAL_TRANSACTIONS = gql`
   query transactions {
-    transactions(first: 500, orderBy: timestamp, orderDirection: desc) {
+    transactions(first: 500, orderBy: timestamp, orderDirection: desc, subgraphError: allow) {
       id
       timestamp
       mints {

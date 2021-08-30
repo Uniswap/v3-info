@@ -107,6 +107,7 @@ export default function App() {
     }
   }, [location.pathname, setActiveNetwork])
 
+  // subgraph health
   const [subgraphStatus] = useSubgraphStatus()
 
   const showNotSyncedWarning =
@@ -142,8 +143,7 @@ export default function App() {
               <BodyWrapper>
                 <DarkGreyCard style={{ maxWidth: '340px' }}>
                   <TYPE.label>
-                    The Graph hosted network which provides data for this site is temporarily experiences issues. Check
-                    status{' '}
+                    The Graph hosted network which provides data for this site is temporarily experiences issues. Check status{' '}
                     <ExternalLink href="https://thegraph.com/explorer/subgraph/ianlapham/uniswap-optimism">
                       here.
                     </ExternalLink>

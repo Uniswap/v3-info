@@ -47,4 +47,4 @@ export const OptimismNetworkInfo: NetworkInfo = {
   blurb: 'L2 Alpha',
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, OptimismNetworkInfo]
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, OptimismNetworkInfo, ArbitrumNetworkInfo]

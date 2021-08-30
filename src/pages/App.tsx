@@ -143,7 +143,7 @@ export default function App() {
                 <DarkGreyCard style={{ maxWidth: '340px' }}>
                   <TYPE.label>
                     The Graph hosted network which provides data for this site is temporarily experiences issues. Check
-                    status{' '}
+                    current status{' '}
                     <ExternalLink href="https://thegraph.com/explorer/subgraph/ianlapham/uniswap-optimism">
                       here.
                     </ExternalLink>

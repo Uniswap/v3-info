@@ -107,6 +107,7 @@ export default function App() {
     }
   }, [location.pathname, setActiveNetwork])
 
+  // subgraph health
   const [subgraphStatus] = useSubgraphStatus()
 
   const showNotSyncedWarning =

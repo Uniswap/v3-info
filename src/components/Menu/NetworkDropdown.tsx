@@ -51,13 +51,13 @@ const FlyOut = styled.div`
 `
 
 const NetworkRow = styled(RowBetween)<{ active?: boolean; disabled?: boolean }>`
-  padding: 6px 8px;
-  background-color: ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-  border-radius: 8px;
-  opacity: ${({ disabled }) => (disabled ? '0.5' : 1)};
+padding: 6px 8px;
+background-color: ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
+border-radius: 8px;
+opacity: ${({ disabled }) => (disabled ? '0.5' : 1)}
   :hover {
     cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
-    opacity: ${({ disabled }) => (disabled ? 0.5 : 0.7)};
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 0.7)}
   }
 `
 

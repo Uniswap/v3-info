@@ -25,8 +25,9 @@ import { notEmpty } from 'utils'
 import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
-import dayjs from 'dayjs'
 import { useActiveNetworkVersion } from 'state/application/hooks'
+import { AlertCircle } from 'react-feather'
+import { ArbitrumNetworkInfo } from 'constants/networks'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -119,6 +120,16 @@ export default function Home() {
     <PageWrapper>
       <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor} />
       <AutoColumn gap="16px">
+        {activeNetwork !== ArbitrumNetworkInfo ? null : (
+          <DarkGreyCard width="fit-content">
+            <RowBetween>
+              <AlertCircle color={theme.text2} size="16px" />
+              <TYPE.body fontSize="14px" color={theme.text2} marginLeft="8px">
+                USD prices may be inaccurate until sufficient liquidity is provided.
+              </TYPE.body>
+            </RowBetween>
+          </DarkGreyCard>
+        )}
         <TYPE.main>Uniswap Overview</TYPE.main>
         <ResponsiveRow>
           <ChartWrapper>

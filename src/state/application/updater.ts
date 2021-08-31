@@ -16,7 +16,7 @@ export default function Updater(): null {
     if (!status.syncedBlock || (status.syncedBlock !== newSyncedBlock && syncedBlock)) {
       updateStatus(status.available, newSyncedBlock, headBlock)
     }
-  }, [available, newSyncedBlock, status.available, status.syncedBlock, syncedBlock, updateStatus])
+  }, [available, headBlock, newSyncedBlock, status.available, status.syncedBlock, syncedBlock, updateStatus])
 
   return null
 }

@@ -2,11 +2,11 @@ import { useActiveNetworkVersion } from 'state/application/hooks'
 import { healthClient } from './../../apollo/client'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { EthereumNetworkInfo } from 'constants/networks'
+import { ArbitrumNetworkInfo, EthereumNetworkInfo } from 'constants/networks'
 
 export const SUBGRAPH_HEALTH = gql`
   query health($name: Bytes) {
-    indexingStatusForCurrentVersion(subgraphName: $name) {
+    indexingStatusForCurrentVersion(subgraphName: $name, subgraphError: allow) {
       synced
       health
       chains {
@@ -17,7 +17,6 @@ export const SUBGRAPH_HEALTH = gql`
           number
         }
       }
-      subgraphError: allow
     }
   }
 `
@@ -50,7 +49,12 @@ export function useFetchedSubgraphStatus(): {
     client: healthClient,
     fetchPolicy: 'network-only',
     variables: {
-      name: activeNetwork === EthereumNetworkInfo ? 'uniswap/uniswap-v3' : 'ianlapham/uniswap-optimism',
+      name:
+        activeNetwork === EthereumNetworkInfo
+          ? 'uniswap/uniswap-v3'
+          : activeNetwork === ArbitrumNetworkInfo
+          ? 'ianlapham/uniswap-arbitrum-one'
+          : 'ianlapham/uniswap-optimism',
     },
   })
 

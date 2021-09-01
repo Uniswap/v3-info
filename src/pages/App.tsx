@@ -138,7 +138,7 @@ export default function App() {
             </Hide1080>
             <Header />
           </HeaderWrapper>
-          {subgraphStatus.available === false || activeNetwork === OptimismNetworkInfo ? (
+          {subgraphStatus.available === false ? (
             <AppWrapper>
               <BodyWrapper>
                 <DarkGreyCard style={{ maxWidth: '340px' }}>

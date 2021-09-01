@@ -92,7 +92,7 @@ export const arbitrumBlockClient = new ApolloClient({
 })
 
 export const optimismClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism-dev',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

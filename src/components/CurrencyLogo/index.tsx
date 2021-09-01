@@ -40,28 +40,36 @@ export default function CurrencyLogo({
 }) {
   // useOptimismList()
   const optimismList = useCombinedActiveList()?.[10]
+  const arbitrumList = useCombinedActiveList()?.[42161]
 
   const [activeNetwork] = useActiveNetworkVersion()
 
   const checkSummed = isAddress(address)
 
-  const l2URI = useMemo(() => {
+  const optimismURI = useMemo(() => {
     if (checkSummed && optimismList?.[checkSummed]) {
       return optimismList?.[checkSummed].token.logoURI
     }
     return undefined
   }, [checkSummed, optimismList])
+  const uriLocationsOptimism = useHttpLocations(optimismURI)
 
-  const uriLocations = useHttpLocations(l2URI)
+  const arbitrumURI = useMemo(() => {
+    if (checkSummed && arbitrumList?.[checkSummed]) {
+      return arbitrumList?.[checkSummed].token.logoURI
+    }
+    return undefined
+  }, [checkSummed, arbitrumList])
+  const uriLocationsArbitrum = useHttpLocations(arbitrumURI)
 
   const srcs: string[] = useMemo(() => {
     const checkSummed = isAddress(address)
 
     if (checkSummed) {
-      return [getTokenLogoURL(checkSummed), ...uriLocations]
+      return [getTokenLogoURL(checkSummed), ...uriLocationsOptimism, ...uriLocationsArbitrum]
     }
     return []
-  }, [address, uriLocations])
+  }, [address, uriLocationsArbitrum, uriLocationsOptimism])
 
   if (activeNetwork === OptimismNetworkInfo && address === '0x4200000000000000000000000000000000000006') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />

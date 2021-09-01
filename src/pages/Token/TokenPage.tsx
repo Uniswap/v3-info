@@ -9,6 +9,7 @@ import {
 } from 'state/tokens/hooks'
 import styled from 'styled-components'
 import { useColor } from 'hooks/useColor'
+import ReactGA from 'react-ga'
 import { ThemedBackground, PageWrapper } from 'pages/styled'
 import { shortenAddress, getEtherscanLink, currentTimestamp } from 'utils'
 import { AutoColumn } from 'components/Column'
@@ -194,7 +195,16 @@ export default function TokenPage({
                 <RowFixed align="center" justify="center">
                   <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
                   {cmcLink && (
-                    <StyledExternalLink href={cmcLink} style={{ marginLeft: '12px' }}>
+                    <StyledExternalLink
+                      href={cmcLink}
+                      style={{ marginLeft: '12px' }}
+                      onClickCapture={() => {
+                        ReactGA.event({
+                          category: 'CMC',
+                          action: 'CMC token page click',
+                        })
+                      }}
+                    >
                       <StyledCMCLogo src={CMCLogo} />
                     </StyledExternalLink>
                   )}

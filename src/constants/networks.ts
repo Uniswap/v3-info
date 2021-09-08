@@ -32,7 +32,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
   name: 'Arbitrum',
   imageURL: ARBITRUM_LOGO_URL,
   bgColor: '#0A294B',
-  primaryColor: '#96BEDC',
+  primaryColor: '#0490ED',
   secondaryColor: '#96BEDC',
   blurb: 'L2 Alpha',
 }
@@ -47,4 +47,4 @@ export const OptimismNetworkInfo: NetworkInfo = {
   blurb: 'L2 Alpha',
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, OptimismNetworkInfo]
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, OptimismNetworkInfo, ArbitrumNetworkInfo]

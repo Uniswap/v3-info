@@ -84,13 +84,13 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.tvlUSD)}
-        </Label>
-        <Label end={1} fontWeight={400}>
           {formatDollarAmount(poolData.volumeUSD)}
         </Label>
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(poolData.volumeUSDWeek)}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {formatDollarAmount(poolData.tvlUSD)}
         </Label>
       </ResponsiveGrid>
     </LinkWrapper>
@@ -163,14 +163,14 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
             <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
               Pool {arrow(SORT_FIELD.feeTier)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
-              TVL {arrow(SORT_FIELD.tvlUSD)}
-            </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
               Volume 24H {arrow(SORT_FIELD.volumeUSD)}
             </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
               Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+              TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
           </ResponsiveGrid>
           <Break />

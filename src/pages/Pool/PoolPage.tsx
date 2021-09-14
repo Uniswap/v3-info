@@ -12,7 +12,7 @@ import { ExternalLink, Download } from 'react-feather'
 import { ExternalLink as StyledExternalLink } from '../../theme/components'
 import useTheme from 'hooks/useTheme'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { formatDollarAmount, formatAmount } from 'utils/numbers'
+import { formatDollarAmount, formatAmount, formatPercentAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
 import { DarkGreyCard, GreyCard, GreyBadge } from 'components/Card'
@@ -65,6 +65,7 @@ enum ChartView {
   VOL,
   PRICE,
   DENSITY,
+  ROL,
 }
 
 export default function PoolPage({
@@ -110,6 +111,19 @@ export default function PoolPage({
         return {
           time: unixToDate(day.date),
           value: day.volumeUSD,
+        }
+      })
+    } else {
+      return []
+    }
+  }, [chartData])
+
+  const formattedReturnOnLiqData = useMemo(() => {
+    if (chartData) {
+      return chartData.map((day) => {
+        return {
+          time: unixToDate(day.date),
+          value: day.feesUSD / day.totalValueLockedUSD,
         }
       })
     } else {
@@ -258,9 +272,13 @@ export default function PoolPage({
                   <TYPE.label fontSize="24px" height="30px">
                     <MonoSpace>
                       {latestValue
-                        ? formatDollarAmount(latestValue)
+                        ? view === ChartView.ROL
+                          ? formatPercentAmount(latestValue)
+                          : formatDollarAmount(latestValue)
                         : view === ChartView.VOL
                         ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                        : view === ChartView.ROL
+                        ? formatPercentAmount(formattedReturnOnLiqData[formattedReturnOnLiqData.length - 1]?.value)
                         : view === ChartView.DENSITY
                         ? ''
                         : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}{' '}
@@ -270,7 +288,7 @@ export default function PoolPage({
                     {valueLabel ? <MonoSpace>{valueLabel} (UTC)</MonoSpace> : ''}
                   </TYPE.main>
                 </AutoColumn>
-                <ToggleWrapper width="200px">
+                <ToggleWrapper width="250px">
                   <ToggleElementFree
                     isActive={view === ChartView.VOL}
                     fontSize="12px"
@@ -281,9 +299,16 @@ export default function PoolPage({
                   <ToggleElementFree
                     isActive={view === ChartView.TVL}
                     fontSize="12px"
-                    onClick={() => (view === ChartView.TVL ? setView(ChartView.DENSITY) : setView(ChartView.TVL))}
+                    onClick={() => (view === ChartView.TVL ? setView(ChartView.ROL) : setView(ChartView.TVL))}
                   >
                     TVL
+                  </ToggleElementFree>
+                  <ToggleElementFree
+                    isActive={view === ChartView.ROL}
+                    fontSize="12px"
+                    onClick={() => (view === ChartView.ROL ? setView(ChartView.DENSITY) : setView(ChartView.ROL))}
+                  >
+                    ROL
                   </ToggleElementFree>
                   <ToggleElementFree
                     isActive={view === ChartView.DENSITY}
@@ -307,6 +332,16 @@ export default function PoolPage({
               ) : view === ChartView.VOL ? (
                 <BarChart
                   data={formattedVolumeData}
+                  color={backgroundColor}
+                  minHeight={340}
+                  setValue={setLatestValue}
+                  setLabel={setValueLabel}
+                  value={latestValue}
+                  label={valueLabel}
+                />
+              ) : view === ChartView.ROL ? (
+                <LineChart
+                  data={formattedReturnOnLiqData}
                   color={backgroundColor}
                   minHeight={340}
                   setValue={setLatestValue}

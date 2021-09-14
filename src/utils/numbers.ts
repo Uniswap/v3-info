@@ -34,3 +34,21 @@ export const formatAmount = (num: number | undefined, digits = 2) => {
     },
   })
 }
+
+// using a currency library here in case we want to add more in future
+export const formatPercentAmount = (num: number | undefined, digits = 2) => {
+  if (num === 0) return '0.00%'
+  if (!num) return '-'
+  if (num < 0.0001) {
+    return '<0.01%'
+  }
+  return numbro(num).format({
+    average: true,
+    output: 'percent',
+    mantissa: num > 1 ? 0 : digits,
+    abbreviations: {
+      million: 'M',
+      billion: 'B',
+    },
+  })
+}

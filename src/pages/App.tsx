@@ -16,7 +16,12 @@ import PoolPage from './Pool/PoolPage'
 import { ExternalLink, TYPE } from 'theme'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
-import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo, OptimismNetworkInfo } from 'constants/networks'
+import {
+  SUPPORTED_NETWORK_VERSIONS,
+  EthereumNetworkInfo,
+  OptimismNetworkInfo,
+  ArbitrumNetworkInfo,
+} from 'constants/networks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -138,14 +143,14 @@ export default function App() {
             </Hide1080>
             <Header />
           </HeaderWrapper>
-          {subgraphStatus.available === false ? (
+          {subgraphStatus.available === false || activeNetwork === ArbitrumNetworkInfo ? (
             <AppWrapper>
               <BodyWrapper>
                 <DarkGreyCard style={{ maxWidth: '340px' }}>
                   <TYPE.label>
                     The Graph hosted network which provides data for this site is temporarily experiences issues. Check
                     current status{' '}
-                    <ExternalLink href="https://thegraph.com/explorer/subgraph/ianlapham/uniswap-optimism">
+                    <ExternalLink href="https://thegraph.com/legacy-explorer/subgraph/ianlapham/uniswap-arbitrum-one?version=pending">
                       here.
                     </ExternalLink>
                   </TYPE.label>

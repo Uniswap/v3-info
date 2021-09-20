@@ -10,6 +10,7 @@ export enum SupportedNetwork {
 
 export type NetworkInfo = {
   id: SupportedNetwork
+  route: string
   name: string
   imageURL: string
   bgColor: string
@@ -20,6 +21,7 @@ export type NetworkInfo = {
 
 export const EthereumNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.ETHEREUM,
+  route: '',
   name: 'Ethereum',
   bgColor: '#fc077d',
   primaryColor: '#fc077d',
@@ -29,6 +31,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
 
 export const ArbitrumNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.ARBITRUM,
+  route: 'arbitrum',
   name: 'Arbitrum',
   imageURL: ARBITRUM_LOGO_URL,
   bgColor: '#0A294B',
@@ -39,7 +42,8 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
 
 export const OptimismNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.OPTIMISM,
-  name: 'Optimism',
+  route: 'optimism',
+  name: 'OΞ (Optimism)',
   bgColor: '#F01B36',
   primaryColor: '#F01B36',
   secondaryColor: '#FB7876',

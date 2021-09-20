@@ -5,6 +5,6 @@ export function networkPrefix(activeNewtork: NetworkInfo) {
   if (isEthereum) {
     return '/'
   }
-  const prefix = '/' + activeNewtork.name.toLocaleLowerCase() + '/'
+  const prefix = '/' + activeNewtork.route.toLocaleLowerCase() + '/'
   return prefix
 }

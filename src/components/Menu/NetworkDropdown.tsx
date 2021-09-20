@@ -51,13 +51,13 @@ const FlyOut = styled.div`
 `
 
 const NetworkRow = styled(RowBetween)<{ active?: boolean; disabled?: boolean }>`
-padding: 6px 8px;
-background-color: ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-border-radius: 8px;
-opacity: ${({ disabled }) => (disabled ? '0.5' : 1)}
+  padding: 6px 8px;
+  background-color: ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
+  border-radius: 8px;
+  opacity: ${({ disabled }) => (disabled ? '0.5' : 1)};
   :hover {
     cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
-    opacity: ${({ disabled }) => (disabled ? 0.5 : 0.7)}
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 0.7)};
   }
 `
 
@@ -95,7 +95,7 @@ export default function NetworkDropdown() {
       <Wrapper onClick={() => setShowMenu(!showMenu)}>
         <RowFixed>
           <LogoWrapper src={activeNetwork.imageURL} />
-          <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px">
+          <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px" style={{ whiteSpace: 'nowrap' }}>
             {activeNetwork.name}
           </TYPE.main>
           {activeNetwork === EthereumNetworkInfo ? null : (
@@ -114,10 +114,7 @@ export default function NetworkDropdown() {
             </TYPE.main>
             {SUPPORTED_NETWORK_VERSIONS.map((n) => {
               return (
-                <StyledInternalLink
-                  key={n.id}
-                  to={`${n === EthereumNetworkInfo ? '' : '/' + n.name.toLocaleLowerCase()}/`}
-                >
+                <StyledInternalLink key={n.id} to={`${n === EthereumNetworkInfo ? '' : '/' + n.route}/`}>
                   <NetworkRow
                     onClick={() => {
                       setShowMenu(false)

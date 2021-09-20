@@ -39,7 +39,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
 
 export const OptimismNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.OPTIMISM,
-  name: 'Optimism',
+  name: 'OΞ (Optimism)',
   bgColor: '#F01B36',
   primaryColor: '#F01B36',
   secondaryColor: '#FB7876',

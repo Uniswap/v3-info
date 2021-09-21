@@ -1,27 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="223px" height="204px" viewBox="0 0 223 204" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Artboard</title>
-    <defs>
-        <linearGradient x1="100%" y1="32.0252359%" x2="31.7787057%" y2="73.2266552%" id="linearGradient-1">
-            <stop stop-color="#430728" offset="0%"></stop>
-            <stop stop-color="#3D0200" stop-opacity="0" offset="100%"></stop>
-        </linearGradient>
-    </defs>
-    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="optimism" transform="translate(4.000000, 4.000000)" fill-rule="nonzero">
-            <path d="M106.05,195.3 C153.021818,195.3 191.1,157.405076 191.1,110.659318 C191.1,63.9135606 21,63.9135606 21,110.659318 C21,157.405076 59.078182,195.3 106.05,195.3 Z" id="Oval" fill="#FF505F" opacity="0.600000024"></path>
-            <path d="M106.05,195.3 C153.021818,195.3 191.1,157.405076 191.1,110.659318 C191.1,63.9135606 21,63.9135606 21,110.659318 C21,157.405076 59.078182,195.3 106.05,195.3 Z" id="Oval" fill="#FF0320" opacity="0.600000024"></path>
-            <path d="M106.4,149.8 C165.163097,149.8 212.8,102.375943 212.8,43.8754042 C212.8,-14.6251347 1.42108547e-14,-14.6251347 1.42108547e-14,43.8754042 C1.42108547e-14,102.375943 47.6369026,149.8 106.4,149.8 Z" id="Oval" fill="#FFFFFF" opacity="0.229999989" transform="translate(106.400000, 74.900000) scale(-1, 1) rotate(-180.000000) translate(-106.400000, -74.900000) "></path>
-            <path d="M106.05,147 C153.021818,147 191.1,109.105076 191.1,62.3593183 C191.1,15.6135606 21,15.6135606 21,62.3593183 C21,109.105076 59.078182,147 106.05,147 Z" id="Oval" fill="#FFFFFF" transform="translate(106.050000, 87.150000) scale(-1, 1) rotate(-180.000000) translate(-106.050000, -87.150000) "></path>
-            <g id="Group-4" transform="translate(141.076778, 113.242429) rotate(21.000000) translate(-141.076778, -113.242429) translate(74.658153, 24.265716)">
-                <g id="Rhombus" transform="translate(66.762983, 70.168754) scale(-1, 1) rotate(36.000000) translate(-66.762983, -70.168754) translate(27.247207, 12.145296)">
-                    <polygon id="Path-2" fill="#FF4E65" points="21.4302576 58.2441649 39.1816074 4.30211422e-15 79.031551 58.2441649"></polygon>
-                    <polygon id="Path-2" fill="#FFFFFF" transform="translate(19.590803, 29.091971) scale(-1, 1) translate(-19.590803, -29.091971) " points="16.8481818 58.1839424 0 4.30211422e-15 39.1816067 58.1839424"></polygon>
-                    <polygon id="Path-2" fill="#D0001A" transform="translate(50.230904, 86.924835) scale(-1, 1) rotate(-180.000000) translate(-50.230904, -86.924835) " points="21.4302576 116.046917 39.1816074 57.8027525 79.031551 116.046917"></polygon>
-                    <polygon id="Path-2" fill="#FF697B" transform="translate(19.590803, 86.894724) rotate(180.000000) translate(-19.590803, -86.894724) " points="16.8481818 116.046917 3.55271368e-15 57.7425305 39.1816067 116.046917"></polygon>
-                </g>
-                <polygon id="Path-3" fill="url(#linearGradient-1)" opacity="0.300000012" transform="translate(54.671919, 124.115940) rotate(-37.000000) translate(-54.671919, -124.115940) " points="57.7355028 87.4948275 95.5325905 144.813546 79.323553 160.737053 13.8112474 133.705162"></polygon>
-            </g>
-        </g>
-    </g>
+<svg width="170" height="168" viewBox="0 0 170 168" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0)">
+<path opacity="0.6" d="M85.05 168C132.022 168 170.1 130.105 170.1 83.3593C170.1 36.6135 0 36.6135 0 83.3593C0 130.105 38.0782 168 85.05 168Z" fill="#FF505F"/>
+<path opacity="0.6" d="M85.05 168C132.022 168 170.1 130.105 170.1 83.3593C170.1 36.6135 0 36.6135 0 83.3593C0 130.105 38.0782 168 85.05 168Z" fill="#FF0320"/>
+<path d="M85.05 0C132.022 0 170.1 37.8949 170.1 84.6407C170.1 131.386 0 131.386 0 84.6407C0 37.8949 38.0782 0 85.05 0Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M144.665 64.0394L112.444 12.3742L89.0263 78.9477L144.665 64.0394Z" fill="#FF4E65"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M143.777 64.215L112.444 12.3742L165.349 58.4347L143.777 64.215Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M144.551 63.613L142.479 124.467L88.912 78.5213L144.551 63.613Z" fill="#D0001A"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M143.663 63.7886L142.479 124.467L165.235 58.0083L143.663 63.7886Z" fill="#FF697B"/>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="170" height="168" fill="white"/>
+</clipPath>
+</defs>
 </svg>

@@ -60,11 +60,18 @@ const ResponsiveRow = styled(RowBetween)`
   `};
 `
 
+const ToggleRow = styled(RowBetween)`
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+  }
+`
+
 enum ChartView {
   TVL,
   VOL,
   PRICE,
   DENSITY,
+  FEES,
 }
 
 export default function PoolPage({
@@ -110,6 +117,19 @@ export default function PoolPage({
         return {
           time: unixToDate(day.date),
           value: day.volumeUSD,
+        }
+      })
+    } else {
+      return []
+    }
+  }, [chartData])
+
+  const formattedFeesUSD = useMemo(() => {
+    if (chartData) {
+      return chartData.map((day) => {
+        return {
+          time: unixToDate(day.date),
+          value: day.feesUSD,
         }
       })
     } else {
@@ -253,7 +273,7 @@ export default function PoolPage({
               </AutoColumn>
             </DarkGreyCard>
             <DarkGreyCard>
-              <RowBetween align="flex-start">
+              <ToggleRow align="flex-start">
                 <AutoColumn>
                   <TYPE.label fontSize="24px" height="30px">
                     <MonoSpace>
@@ -270,7 +290,7 @@ export default function PoolPage({
                     {valueLabel ? <MonoSpace>{valueLabel} (UTC)</MonoSpace> : ''}
                   </TYPE.main>
                 </AutoColumn>
-                <ToggleWrapper width="200px">
+                <ToggleWrapper width="240px">
                   <ToggleElementFree
                     isActive={view === ChartView.VOL}
                     fontSize="12px"
@@ -292,8 +312,15 @@ export default function PoolPage({
                   >
                     Liquidity
                   </ToggleElementFree>
+                  <ToggleElementFree
+                    isActive={view === ChartView.FEES}
+                    fontSize="12px"
+                    onClick={() => (view === ChartView.FEES ? setView(ChartView.TVL) : setView(ChartView.FEES))}
+                  >
+                    Fees
+                  </ToggleElementFree>
                 </ToggleWrapper>
-              </RowBetween>
+              </ToggleRow>
               {view === ChartView.TVL ? (
                 <LineChart
                   data={formattedTvlData}
@@ -307,6 +334,16 @@ export default function PoolPage({
               ) : view === ChartView.VOL ? (
                 <BarChart
                   data={formattedVolumeData}
+                  color={backgroundColor}
+                  minHeight={340}
+                  setValue={setLatestValue}
+                  setLabel={setValueLabel}
+                  value={latestValue}
+                  label={valueLabel}
+                />
+              ) : view === ChartView.FEES ? (
+                <BarChart
+                  data={formattedFeesUSD}
                   color={backgroundColor}
                   minHeight={340}
                   setValue={setLatestValue}

@@ -143,12 +143,12 @@ export default function App() {
             </Hide1080>
             <Header />
           </HeaderWrapper>
-          {subgraphStatus.available === false || activeNetwork === ArbitrumNetworkInfo ? (
+          {subgraphStatus.available === false ? (
             <AppWrapper>
               <BodyWrapper>
                 <DarkGreyCard style={{ maxWidth: '340px' }}>
                   <TYPE.label>
-                    The Graph hosted network which provides data for this site is temporarily experiences issues. Check
+                    The Graph hosted network which provides data for this site is temporarily experiencing issues. Check
                     current status{' '}
                     <ExternalLink href="https://thegraph.com/legacy-explorer/subgraph/ianlapham/uniswap-arbitrum-one?version=pending">
                       here.

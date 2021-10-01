@@ -60,6 +60,7 @@ export type PoolChartEntry = {
   date: number
   volumeUSD: number
   totalValueLockedUSD: number
+  feesUSD: number
 }
 
 export interface PoolsState {

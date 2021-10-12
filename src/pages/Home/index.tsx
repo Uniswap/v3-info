@@ -21,7 +21,7 @@ import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
 import { useActiveNetworkVersion } from 'state/application/hooks'
-import { useMonthlyVolumeData, useWeeklyVolumeData } from 'hooks/chart'
+import { useTransformedVolumeData } from 'hooks/chart'
 import { SmallOptionButton } from 'components/Button'
 import { VolumeWindow } from 'types'
 
@@ -102,8 +102,8 @@ export default function Home() {
     }
   }, [chartData])
 
-  const weeklyVolumeData = useWeeklyVolumeData(chartData)
-  const monthlyVolumeData = useMonthlyVolumeData(chartData)
+  const weeklyVolumeData = useTransformedVolumeData(chartData, 'week')
+  const monthlyVolumeData = useTransformedVolumeData(chartData, 'month')
 
   const allTokens = useAllTokenData()
 

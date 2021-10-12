@@ -28,7 +28,7 @@ import DensityChart from 'components/DensityChart'
 import { MonoSpace } from 'components/shared'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
-import { EthereumNetworkInfo } from 'constants/networks'
+import { ArbitrumNetworkInfo, EthereumNetworkInfo } from 'constants/networks'
 import { GenericImageWrapper } from 'components/Logo'
 
 const ContentLayout = styled.div`
@@ -305,13 +305,15 @@ export default function PoolPage({
                   >
                     TVL
                   </ToggleElementFree>
-                  <ToggleElementFree
-                    isActive={view === ChartView.DENSITY}
-                    fontSize="12px"
-                    onClick={() => (view === ChartView.DENSITY ? setView(ChartView.VOL) : setView(ChartView.DENSITY))}
-                  >
-                    Liquidity
-                  </ToggleElementFree>
+                  {activeNetwork === ArbitrumNetworkInfo ? null : (
+                    <ToggleElementFree
+                      isActive={view === ChartView.DENSITY}
+                      fontSize="12px"
+                      onClick={() => (view === ChartView.DENSITY ? setView(ChartView.VOL) : setView(ChartView.DENSITY))}
+                    >
+                      Liquidity
+                    </ToggleElementFree>
+                  )}
                   <ToggleElementFree
                     isActive={view === ChartView.FEES}
                     fontSize="12px"

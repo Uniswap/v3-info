@@ -104,7 +104,7 @@ const Chart = ({
             dataKey="time"
             axisLine={false}
             tickLine={false}
-            tickFormatter={(time) => dayjs(time).format('DD')}
+            tickFormatter={(time) => dayjs(time).format(activeWindow === VolumeWindow.monthly ? 'MMM' : 'DD')}
             minTickGap={10}
           />
           <Tooltip

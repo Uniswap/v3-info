@@ -425,3 +425,7 @@ export const SmallOptionButton = styled(Base)<{ active?: boolean }>`
     opacity: 0.6;
   }
 `
+
+export const SmallOption = styled(ButtonOutlined)`
+  padding: 4px;
+`

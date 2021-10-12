@@ -5,12 +5,7 @@ import { TYPE } from 'theme'
 import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart/alt'
 import useTheme from 'hooks/useTheme'
-import {
-  useProtocolData,
-  useProtocolChartData,
-  useProtocolTransactions,
-  useAggregateOverviewData,
-} from 'state/protocol/hooks'
+import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
@@ -26,6 +21,9 @@ import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
 import { useActiveNetworkVersion } from 'state/application/hooks'
+import { useMonthlyVolumeData, useWeeklyVolumeData } from 'hooks/chart'
+import { SmallOptionButton } from 'components/Button'
+import { VolumeWindow } from 'types'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -41,8 +39,6 @@ export default function Home() {
   }, [])
 
   const theme = useTheme()
-
-  useAggregateOverviewData()
 
   const [activeNetwork] = useActiveNetworkVersion()
 
@@ -106,6 +102,9 @@ export default function Home() {
     }
   }, [chartData])
 
+  const weeklyVolumeData = useWeeklyVolumeData(chartData)
+  const monthlyVolumeData = useMonthlyVolumeData(chartData)
+
   const allTokens = useAllTokenData()
 
   const formattedTokens = useMemo(() => {
@@ -113,6 +112,8 @@ export default function Home() {
       .map((t) => t.data)
       .filter(notEmpty)
   }, [allTokens])
+
+  const [volumeWindow, setVolumeWindow] = useState(VolumeWindow.daily)
 
   return (
     <PageWrapper>
@@ -147,12 +148,43 @@ export default function Home() {
             <BarChart
               height={220}
               minHeight={332}
-              data={formattedVolumeData}
+              data={
+                volumeWindow === VolumeWindow.monthly
+                  ? monthlyVolumeData
+                  : volumeWindow === VolumeWindow.weekly
+                  ? weeklyVolumeData
+                  : formattedVolumeData
+              }
               color={theme.blue1}
               setValue={setVolumeHover}
               setLabel={setRightLabel}
               value={volumeHover}
               label={rightLabel}
+              activeWindow={volumeWindow}
+              topRight={
+                <RowFixed style={{ marginLeft: '-40px', marginTop: '8px' }}>
+                  <SmallOptionButton
+                    active={volumeWindow === VolumeWindow.daily}
+                    onClick={() => setVolumeWindow(VolumeWindow.daily)}
+                  >
+                    D
+                  </SmallOptionButton>
+                  <SmallOptionButton
+                    active={volumeWindow === VolumeWindow.weekly}
+                    style={{ marginLeft: '8px' }}
+                    onClick={() => setVolumeWindow(VolumeWindow.weekly)}
+                  >
+                    W
+                  </SmallOptionButton>
+                  <SmallOptionButton
+                    active={volumeWindow === VolumeWindow.monthly}
+                    style={{ marginLeft: '8px' }}
+                    onClick={() => setVolumeWindow(VolumeWindow.monthly)}
+                  >
+                    M
+                  </SmallOptionButton>
+                </RowFixed>
+              }
               topLeft={
                 <AutoColumn gap="4px">
                   <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>

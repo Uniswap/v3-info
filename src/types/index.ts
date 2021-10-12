@@ -3,10 +3,21 @@ export interface Block {
   timestamp: string
 }
 
+export enum VolumeWindow {
+  daily,
+  weekly,
+  monthly,
+}
+
 export interface ChartDayData {
   date: number
   volumeUSD: number
   tvlUSD: number
+}
+
+export interface GenericChartEntry {
+  time: string
+  value: number
 }
 
 export enum TransactionType {

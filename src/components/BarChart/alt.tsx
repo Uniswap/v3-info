@@ -6,6 +6,7 @@ import { RowBetween } from 'components/Row'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import useTheme from 'hooks/useTheme'
+import { VolumeWindow } from 'types'
 dayjs.extend(utc)
 
 const DEFAULT_HEIGHT = 300
@@ -16,7 +17,7 @@ const Wrapper = styled(Card)`
   padding: 1rem;
   padding-right: 2rem;
   display: flex;
-  background-color: ${({ theme }) => theme.bg0}
+  background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
   > * {
     font-size: 1rem;
@@ -32,6 +33,7 @@ export type LineChartProps = {
   setLabel?: Dispatch<SetStateAction<string | undefined>> // used for label of valye
   value?: number
   label?: string
+  activeWindow?: VolumeWindow
   topLeft?: ReactNode | undefined
   topRight?: ReactNode | undefined
   bottomLeft?: ReactNode | undefined
@@ -65,6 +67,7 @@ const Chart = ({
   setLabel,
   value,
   label,
+  activeWindow,
   topLeft,
   topRight,
   bottomLeft,
@@ -77,7 +80,7 @@ const Chart = ({
 
   return (
     <Wrapper minHeight={minHeight} {...rest}>
-      <RowBetween>
+      <RowBetween style={{ alignItems: 'flex-start' }}>
         {topLeft ?? null}
         {topRight ?? null}
       </RowBetween>
@@ -111,8 +114,19 @@ const Chart = ({
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value)
               }
-              const formattedTime = dayjs(props.payload.time).format('MMM D, YYYY')
-              if (setLabel && label !== formattedTime) setLabel(formattedTime)
+              const formattedTime = dayjs(props.payload.time).format('MMM D')
+              const formattedTimeDaily = dayjs(props.payload.time).format('MMM D YYYY')
+              const formattedTimePlusWeek = dayjs(props.payload.time).add(1, 'week').format('MMM D, YYYY')
+              const formattedTimePlusMonth = dayjs(props.payload.time).add(1, 'month').format('MMM D, YYYY')
+              if (setLabel && label !== formattedTime) {
+                if (activeWindow === VolumeWindow.weekly) {
+                  setLabel(formattedTime + '-' + formattedTimePlusWeek)
+                } else if (activeWindow === VolumeWindow.monthly) {
+                  setLabel(formattedTime + '-' + formattedTimePlusMonth)
+                } else {
+                  setLabel(formattedTimeDaily)
+                }
+              }
             }}
           />
           <Bar

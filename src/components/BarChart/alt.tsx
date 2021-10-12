@@ -116,13 +116,16 @@ const Chart = ({
               }
               const formattedTime = dayjs(props.payload.time).format('MMM D')
               const formattedTimeDaily = dayjs(props.payload.time).format('MMM D YYYY')
-              const formattedTimePlusWeek = dayjs(props.payload.time).add(1, 'week').format('MMM D, YYYY')
-              const formattedTimePlusMonth = dayjs(props.payload.time).add(1, 'month').format('MMM D, YYYY')
+              const formattedTimePlusWeek = dayjs(props.payload.time).add(1, 'week')
+              const formattedTimePlusMonth = dayjs(props.payload.time).add(1, 'month')
+
               if (setLabel && label !== formattedTime) {
                 if (activeWindow === VolumeWindow.weekly) {
-                  setLabel(formattedTime + '-' + formattedTimePlusWeek)
+                  const isCurrent = formattedTimePlusWeek.isAfter(dayjs())
+                  setLabel(formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusWeek.format('MMM D, YYYY')))
                 } else if (activeWindow === VolumeWindow.monthly) {
-                  setLabel(formattedTime + '-' + formattedTimePlusMonth)
+                  const isCurrent = formattedTimePlusMonth.isAfter(dayjs())
+                  setLabel(formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusMonth.format('MMM D, YYYY')))
                 } else {
                   setLabel(formattedTimeDaily)
                 }

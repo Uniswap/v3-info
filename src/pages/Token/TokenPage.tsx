@@ -124,6 +124,7 @@ export default function TokenPage({
       return []
     }
   }, [chartData])
+
   const formattedVolumeData = useMemo(() => {
     if (chartData) {
       return chartData.map((day) => {

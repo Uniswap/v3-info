@@ -37,7 +37,7 @@ const PRICE_CHART = gql`
     tokenHourDatas(
       first: 100
       skip: $skip
-      where: { token: $address, periodStartUnix_gt: $startTime, subgraphError: allow, subgraphError: allow }
+      where: { token: $address, periodStartUnix_gt: $startTime }
       orderBy: periodStartUnix
       orderDirection: asc
     ) {
@@ -108,6 +108,7 @@ export async function fetchTokenPriceData(
         error: false,
       }
     }
+
     let data: {
       periodStartUnix: number
       high: string
@@ -127,6 +128,7 @@ export async function fetchTokenPriceData(
         },
         fetchPolicy: 'no-cache',
       })
+
       if (!loading) {
         skip += 100
         if ((priceData && priceData.tokenHourDatas.length < 100) || errors) {

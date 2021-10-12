@@ -204,6 +204,7 @@ export function useTokenPriceData(
         setError(true)
       }
     }
+
     if (!priceData && !error) {
       fetch()
     }

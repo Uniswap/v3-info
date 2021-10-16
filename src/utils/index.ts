@@ -1,15 +1,15 @@
-import { OptimismNetworkInfo } from './../constants/networks'
-import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
-import { AddressZero } from '@ethersproject/constants'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
+import { AddressZero } from '@ethersproject/constants'
+import { Contract } from '@ethersproject/contracts'
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS } from '../constants'
-import { ChainId, Percent, Token, CurrencyAmount, Fraction, Currency } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
-import { TokenAddressMap } from '../state/lists/hooks'
 import { ArbitrumNetworkInfo, NetworkInfo } from 'constants/networks'
+import JSBI from 'jsbi'
+import { ROUTER_ADDRESS } from '../constants'
+import { TokenAddressMap } from '../state/lists/hooks'
+import { OptimismNetworkInfo } from './../constants/networks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -36,7 +36,7 @@ export function getEtherscanLink(
 ): string {
   const prefix =
     networkVersion === ArbitrumNetworkInfo
-      ? 'https://explorer.offchainlabs.com'
+      ? 'https://arbiscan.io/'
       : networkVersion === OptimismNetworkInfo
       ? 'https://optimistic.etherscan.io'
       : `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
@@ -68,7 +68,7 @@ export function getEtherscanLink(
         return `${prefix}/address/${data}`
       }
       case 'block': {
-        return 'https://explorer.offchainlabs.com'
+        return 'https://arbiscan.io/'
       }
       case 'address':
       default: {

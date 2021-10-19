@@ -62,14 +62,23 @@ export default function CurrencyLogo({
   }, [checkSummed, arbitrumList])
   const uriLocationsArbitrum = useHttpLocations(arbitrumURI)
 
+  //temp until token logo issue merged
+  const tempSources: { [address: string]: string } = useMemo(() => {
+    return {
+      ['0x4dd28568d05f09b02220b09c2cb307bfd837cb95']:
+        'https://assets.coingecko.com/coins/images/18143/thumb/wCPb0b88_400x400.png?1630667954',
+    }
+  }, [])
+
   const srcs: string[] = useMemo(() => {
     const checkSummed = isAddress(address)
 
-    if (checkSummed) {
-      return [getTokenLogoURL(checkSummed), ...uriLocationsOptimism, ...uriLocationsArbitrum]
+    if (checkSummed && address) {
+      const override = tempSources[address]
+      return [getTokenLogoURL(checkSummed), ...uriLocationsOptimism, ...uriLocationsArbitrum, override]
     }
     return []
-  }, [address, uriLocationsArbitrum, uriLocationsOptimism])
+  }, [address, tempSources, uriLocationsArbitrum, uriLocationsOptimism])
 
   if (activeNetwork === OptimismNetworkInfo && address === '0x4200000000000000000000000000000000000006') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />

@@ -41,11 +41,12 @@ export default function CurrencyLogo({
   // useOptimismList()
   const optimismList = useCombinedActiveList()?.[10]
   const arbitrumList = useCombinedActiveList()?.[42161]
-  const generalList = useCombinedActiveList()?.[1]
 
   const [activeNetwork] = useActiveNetworkVersion()
 
-  const checkSummed = isAddress(address)
+  const checkSummed = useMemo(() => {
+    return isAddress(address)
+  }, [address])
 
   const optimismURI = useMemo(() => {
     if (checkSummed && optimismList?.[checkSummed]) {
@@ -63,23 +64,14 @@ export default function CurrencyLogo({
   }, [checkSummed, arbitrumList])
   const uriLocationsArbitrum = useHttpLocations(arbitrumURI)
 
-  //https://tokens.coingecko.com/uniswap/all.json
-  const generalURI = useMemo(() => {
-    if (checkSummed && generalList?.[checkSummed]) {
-      return generalList?.[checkSummed].token.logoURI
-    }
-    return undefined
-  }, [checkSummed, generalList])
-  const uriLocationsMainnet = useHttpLocations(generalURI)
-
   const srcs: string[] = useMemo(() => {
     const checkSummed = isAddress(address)
 
     if (checkSummed) {
-      return [getTokenLogoURL(checkSummed), ...uriLocationsOptimism, ...uriLocationsArbitrum, ...uriLocationsMainnet]
+      return [getTokenLogoURL(checkSummed), ...uriLocationsOptimism, ...uriLocationsArbitrum]
     }
     return []
-  }, [address, uriLocationsArbitrum, uriLocationsOptimism, uriLocationsMainnet])
+  }, [address, uriLocationsArbitrum, uriLocationsOptimism])
 
   if (activeNetwork === OptimismNetworkInfo && address === '0x4200000000000000000000000000000000000006') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />

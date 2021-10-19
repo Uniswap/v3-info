@@ -30,10 +30,13 @@ export class WrappedTokenInfo extends Token {
   }
 }
 
-export type TokenAddressMap = Readonly<
-  { [chainId in ChainId | number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
->
+export type TokenAddressMap = Readonly<{
+  [chainId: number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }>
+}>
 
+type Mutable<T> = {
+  -readonly [P in keyof T]: Mutable<T[P]>
+}
 /**
  * An empty result, useful as a default.
  */
@@ -97,23 +100,36 @@ export function useAllLists(): {
   return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
 }
 
-function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
-  return {
-    [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
-    [ChainId.RINKEBY]: { ...map1[ChainId.RINKEBY], ...map2[ChainId.RINKEBY] },
-    [ChainId.ROPSTEN]: { ...map1[ChainId.ROPSTEN], ...map2[ChainId.ROPSTEN] },
-    [ChainId.KOVAN]: { ...map1[ChainId.KOVAN], ...map2[ChainId.KOVAN] },
-    [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] },
-    [10]: { ...map1[10], ...map2[10] },
-    [42161]: { ...map1[42161], ...map2[42161] },
-  }
+/**
+ * Combine the tokens in map2 with the tokens on map1, where tokens on map1 take precedence
+ * @param map1 the base token map
+ * @param map2 the map of additioanl tokens to add to the base map
+ */
+export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
+  const chainIds = Object.keys(
+    Object.keys(map1)
+      .concat(Object.keys(map2))
+      .reduce<{ [chainId: string]: true }>((memo, value) => {
+        memo[value] = true
+        return memo
+      }, {})
+  ).map((id) => parseInt(id))
+
+  return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {
+    memo[chainId] = {
+      ...map2[chainId],
+      // map1 takes precedence
+      ...map1[chainId],
+    }
+    return memo
+  }, {}) as TokenAddressMap
 }
 
 // merge tokens contained within lists from urls
 function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
   return useMemo(() => {
-    if (!urls) return EMPTY_LIST
+    if (!urls) return {}
     return (
       urls
         .slice()
@@ -123,17 +139,15 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
           const current = lists[currentUrl]?.current
           if (!current) return allTokens
           try {
-            const newTokens = Object.assign(listToTokenMap(current))
-            return combineMaps(allTokens, newTokens)
+            return combineMaps(allTokens, listToTokenMap(current))
           } catch (error) {
             console.error('Could not show token list due to error', error)
             return allTokens
           }
-        }, EMPTY_LIST)
+        }, {})
     )
   }, [lists, urls])
 }
-
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
   return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(

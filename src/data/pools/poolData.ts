@@ -5,7 +5,10 @@ import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { PoolData } from 'state/pools/reducer'
 import { get2DayChange } from 'utils/data'
 import { formatTokenName, formatTokenSymbol } from 'utils/tokens'
-import { useClients } from 'state/application/hooks'
+import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
+import { useCombinedActiveList } from 'state/lists/hooks'
+import { EthereumNetworkInfo } from 'constants/networks'
+import { isAddress } from 'utils'
 
 export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
   let poolString = `[`
@@ -98,6 +101,10 @@ export function usePoolDatas(
       }
     | undefined
 } {
+  // token logo URIs
+  const tokensFromLists = useCombinedActiveList()
+  const [activeNetwork] = useActiveNetworkVersion()
+
   // get client
   const { dataClient } = useClients()
 
@@ -194,6 +201,21 @@ export function usePoolDatas(
     const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) : 0
 
     const feeTier = current ? parseInt(current.feeTier) : 0
+
+    // check token lists for token uri
+    const checkSummed = isAddress(address)
+    let logoURI
+    switch (activeNetwork) {
+      case EthereumNetworkInfo:
+        if (checkSummed) {
+          logoURI = tokensFromLists?.[1]?.[checkSummed]?.token?.logoURI
+        }
+        break
+      default:
+        break
+    }
+
+    console.log(logoURI)
 
     if (current) {
       accum[address] = {

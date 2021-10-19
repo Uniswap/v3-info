@@ -78,6 +78,8 @@ const Chart = ({
   const theme = useTheme()
   const parsedValue = value
 
+  const now = dayjs()
+
   return (
     <Wrapper minHeight={minHeight} {...rest}>
       <RowBetween style={{ alignItems: 'flex-start' }}>
@@ -121,10 +123,10 @@ const Chart = ({
 
               if (setLabel && label !== formattedTime) {
                 if (activeWindow === VolumeWindow.weekly) {
-                  const isCurrent = formattedTimePlusWeek.isAfter(dayjs())
+                  const isCurrent = formattedTimePlusWeek.isAfter(now)
                   setLabel(formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusWeek.format('MMM D, YYYY')))
                 } else if (activeWindow === VolumeWindow.monthly) {
-                  const isCurrent = formattedTimePlusMonth.isAfter(dayjs())
+                  const isCurrent = formattedTimePlusMonth.isAfter(now)
                   setLabel(formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusMonth.format('MMM D, YYYY')))
                 } else {
                   setLabel(formattedTimeDaily)

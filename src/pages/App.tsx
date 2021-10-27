@@ -138,7 +138,7 @@ export default function App() {
             </Hide1080>
             <Header />
           </HeaderWrapper>
-          {subgraphStatus.available === false || true ? (
+          {subgraphStatus.available === false || activeNetwork === EthereumNetworkInfo ? (
             <AppWrapper>
               <BodyWrapper>
                 <DarkGreyCard style={{ maxWidth: '340px' }}>

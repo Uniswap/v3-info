@@ -16,12 +16,7 @@ import PoolPage from './Pool/PoolPage'
 import { ExternalLink, TYPE } from 'theme'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
-import {
-  SUPPORTED_NETWORK_VERSIONS,
-  EthereumNetworkInfo,
-  OptimismNetworkInfo,
-  ArbitrumNetworkInfo,
-} from 'constants/networks'
+import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo, OptimismNetworkInfo } from 'constants/networks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -143,7 +138,7 @@ export default function App() {
             </Hide1080>
             <Header />
           </HeaderWrapper>
-          {subgraphStatus.available === false ? (
+          {subgraphStatus.available === false || true ? (
             <AppWrapper>
               <BodyWrapper>
                 <DarkGreyCard style={{ maxWidth: '340px' }}>

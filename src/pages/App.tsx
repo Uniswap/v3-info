@@ -145,7 +145,7 @@ export default function App() {
                   <TYPE.label>
                     The Graph hosted network which provides data for this site is temporarily experiencing issues. Check
                     current status{' '}
-                    <ExternalLink href="https://thegraph.com/legacy-explorer/subgraph/ianlapham/uniswap-arbitrum-one?version=pending">
+                    <ExternalLink href="https://thegraph.com/legacy-explorer/subgraph/ianlapham/uniswap-v3-subgraph">
                       here.
                     </ExternalLink>
                   </TYPE.label>

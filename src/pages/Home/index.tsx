@@ -81,7 +81,7 @@ export default function Home() {
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.tvlUSD
+          value: day.tvlUSD,
         }
       })
     } else {
@@ -94,7 +94,7 @@ export default function Home() {
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.volumeUSD
+          value: day.volumeUSD,
         }
       })
     } else {
@@ -117,7 +117,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor}/>
+      <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor} />
       <AutoColumn gap="16px">
         <TYPE.main>Uniswap Overview</TYPE.main>
         <ResponsiveRow>
@@ -206,19 +206,19 @@ export default function Home() {
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Volume 24H: </TYPE.main>
                   <TYPE.label mr="4px">{formatDollarAmount(protocolData?.volumeUSD)}</TYPE.label>
-                  <Percent value={protocolData?.volumeUSDChange} wrap={true}/>
+                  <Percent value={protocolData?.volumeUSDChange} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Fees 24H: </TYPE.main>
                   <TYPE.label mr="4px">{formatDollarAmount(protocolData?.feesUSD)}</TYPE.label>
-                  <Percent value={protocolData?.feeChange} wrap={true}/>
+                  <Percent value={protocolData?.feeChange} wrap={true} />
                 </RowFixed>
                 <HideMedium>
                   <RowFixed mr="20px">
                     <TYPE.main mr="4px">TVL: </TYPE.main>
                     <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
                     <TYPE.main></TYPE.main>
-                    <Percent value={protocolData?.tvlUSDChange} wrap={true}/>
+                    <Percent value={protocolData?.tvlUSDChange} wrap={true} />
                   </RowFixed>
                 </HideMedium>
               </RowFixed>
@@ -229,16 +229,16 @@ export default function Home() {
           <TYPE.main>Top Tokens</TYPE.main>
           <StyledInternalLink to="tokens">Explore</StyledInternalLink>
         </RowBetween>
-        <TokenTable tokenDatas={formattedTokens}/>
+        <TokenTable tokenDatas={formattedTokens} />
         <RowBetween>
           <TYPE.main>Top Pools</TYPE.main>
           <StyledInternalLink to="pools">Explore</StyledInternalLink>
         </RowBetween>
-        <PoolTable poolDatas={poolDatas}/>
+        <PoolTable poolDatas={poolDatas} />
         <RowBetween>
           <TYPE.main>Transactions</TYPE.main>
         </RowBetween>
-        {transactions ? <TransactionsTable transactions={transactions} color={activeNetwork.primaryColor}/> : null}
+        {transactions ? <TransactionsTable transactions={transactions} color={activeNetwork.primaryColor} /> : null}
       </AutoColumn>
     </PageWrapper>
   )

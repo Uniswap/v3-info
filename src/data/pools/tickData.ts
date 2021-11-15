@@ -16,7 +16,7 @@ const FEE_TIER_TO_TICK_SPACING = (feeTier: string): number => {
     case '500':
       return 10
     case '100':
-      return 10
+      return 1
     default:
       throw Error(`Tick spacing for fee tier ${feeTier} undefined.`)
   }

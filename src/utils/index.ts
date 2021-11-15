@@ -3,8 +3,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import { SupportedChainId } from 'constants/chains'
 import { ArbitrumNetworkInfo, NetworkInfo } from 'constants/networks'
 import JSBI from 'jsbi'
 import { ROUTER_ADDRESS } from '../constants'
@@ -20,16 +21,18 @@ export function isAddress(value: any): string | false {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  1: '',
-  3: 'ropsten.',
-  4: 'rinkeby.',
-  5: 'goerli.',
-  42: 'kovan.',
+const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
+  [SupportedChainId.MAINNET]: '',
+  [SupportedChainId.ROPSTEN]: 'ropsten.',
+  [SupportedChainId.RINKEBY]: 'rinkeby.',
+  [SupportedChainId.GOERLI]: 'goerli.',
+  [SupportedChainId.KOVAN]: 'kovan.',
+  [SupportedChainId.OPTIMISM]: 'optimistic.',
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 'kovan-optimistic.',
 }
 
 export function getEtherscanLink(
-  chainId: ChainId,
+  chainId: number,
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block',
   networkVersion: NetworkInfo
@@ -149,7 +152,7 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): boolean {
-  return Boolean(token?.isToken && tokenAddressMap[token.chainId as ChainId]?.[token.address])
+  return Boolean(token?.isToken && tokenAddressMap[token.chainId]?.[token.address])
 }
 
 export function feeTierPercent(fee: number): string {
@@ -158,16 +161,4 @@ export function feeTierPercent(fee: number): string {
 
 export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   return value !== null && value !== undefined
-}
-
-/**
- * Returns chain id if chain from chainId supports WETH
- * if not, return undefined
- * @param chainId
- */
-export function supportedChainId(chainId: number): ChainId | undefined {
-  if (chainId in ChainId) {
-    return chainId
-  }
-  return undefined
 }

@@ -146,13 +146,6 @@ export function useFetchSearchResults(
   const [tokenData, setTokenData] = useState<TokenRes | undefined>()
   const [poolData, setPoolData] = useState<PoolRes | undefined>()
 
-  const symbols = debouncedValue
-    ? debouncedValue
-        .split(/[\/|\s]/) //split using forward slash and space
-        .map((val) => val.toUpperCase())
-        .filter((val) => !!val)
-    : []
-
   // fetch data based on search input
   useEffect(() => {
     async function fetch() {
@@ -160,7 +153,6 @@ export function useFetchSearchResults(
         const tokens = await client.query<TokenRes>({
           query: TOKEN_SEARCH,
           variables: {
-            symbols: symbols,
             value: debouncedValue ? debouncedValue.toUpperCase() : '',
             id: debouncedValue,
           },
@@ -252,6 +244,13 @@ export function useFetchSearchResults(
         .filter(notEmpty),
     ]
   }, [allPools, newPools])
+
+  const symbols = debouncedValue
+    ? debouncedValue
+        .split(/[\/|\s]/) //split using forward slash and space
+        .map((val) => val.toUpperCase())
+        .filter((val) => !!val)
+    : []
 
   const filteredSortedPools = useMemo(() => {
     return combinedPools.filter((t) => {

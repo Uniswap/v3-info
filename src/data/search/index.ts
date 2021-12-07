@@ -7,6 +7,7 @@ import { client } from 'apollo/client'
 import { usePoolDatas, useAllPoolData } from 'state/pools/hooks'
 import { PoolData } from 'state/pools/reducer'
 import { notEmpty, escapeRegExp } from 'utils'
+import useDebounce from 'hooks/useDebounce'
 
 export const TOKEN_SEARCH = gql`
   query tokens($value: String, $id: String) {
@@ -137,11 +138,20 @@ export function useFetchSearchResults(
   pools: PoolData[]
   loading: boolean
 } {
+  const debouncedValue = useDebounce(value, 300)
+
   const allTokens = useAllTokenData()
   const allPools = useAllPoolData()
 
   const [tokenData, setTokenData] = useState<TokenRes | undefined>()
   const [poolData, setPoolData] = useState<PoolRes | undefined>()
+
+  const symbols = debouncedValue
+    ? debouncedValue
+        .split(/[\/|\s]/) //split using forward slash and space
+        .map((val) => val.toUpperCase())
+        .filter((val) => !!val)
+    : []
 
   // fetch data based on search input
   useEffect(() => {
@@ -150,15 +160,16 @@ export function useFetchSearchResults(
         const tokens = await client.query<TokenRes>({
           query: TOKEN_SEARCH,
           variables: {
-            value: value ? value.toUpperCase() : '',
-            id: value,
+            symbols: symbols,
+            value: debouncedValue ? debouncedValue.toUpperCase() : '',
+            id: debouncedValue,
           },
         })
         const pools = await client.query<PoolRes>({
           query: POOL_SEARCH,
           variables: {
             tokens: tokens.data.asSymbol?.map((t) => t.id),
-            id: value,
+            id: debouncedValue,
           },
         })
 
@@ -172,10 +183,10 @@ export function useFetchSearchResults(
         console.log(e)
       }
     }
-    if (value && value.length > 0) {
+    if (debouncedValue && debouncedValue.length > 0) {
       fetch()
     }
-  }, [value])
+  }, [debouncedValue])
 
   const allFetchedTokens = useMemo(() => {
     if (tokenData) {
@@ -213,21 +224,21 @@ export function useFetchSearchResults(
   const filteredSortedTokens = useMemo(() => {
     return combinedTokens.filter((t) => {
       const regexMatches = Object.keys(t).map((tokenEntryKey) => {
-        const isAddress = value.slice(0, 2) === '0x'
+        const isAddress = debouncedValue.slice(0, 2) === '0x'
         if (tokenEntryKey === 'address' && isAddress) {
-          return t[tokenEntryKey].match(new RegExp(escapeRegExp(value), 'i'))
+          return t[tokenEntryKey].match(new RegExp(escapeRegExp(debouncedValue), 'i'))
         }
         if (tokenEntryKey === 'symbol' && !isAddress) {
-          return t[tokenEntryKey].match(new RegExp(escapeRegExp(value), 'i'))
+          return t[tokenEntryKey].match(new RegExp(escapeRegExp(debouncedValue), 'i'))
         }
         if (tokenEntryKey === 'name' && !isAddress) {
-          return t[tokenEntryKey].match(new RegExp(escapeRegExp(value), 'i'))
+          return t[tokenEntryKey].match(new RegExp(escapeRegExp(debouncedValue), 'i'))
         }
         return false
       })
       return regexMatches.some((m) => m)
     })
-  }, [combinedTokens, value])
+  }, [combinedTokens, debouncedValue])
 
   const newPools = useMemo(() => {
     return poolDatasFull.filter((p) => !Object.keys(allPools).includes(p.address))
@@ -245,21 +256,24 @@ export function useFetchSearchResults(
   const filteredSortedPools = useMemo(() => {
     return combinedPools.filter((t) => {
       const regexMatches = Object.keys(t).map((key) => {
-        const isAddress = value.slice(0, 2) === '0x'
+        const isAddress = debouncedValue.slice(0, 2) === '0x'
         if (key === 'address' && isAddress) {
-          return t[key].match(new RegExp(escapeRegExp(value), 'i'))
+          return t[key].match(new RegExp(escapeRegExp(debouncedValue), 'i'))
         }
         if ((key === 'token0' || key === 'token1') && !isAddress) {
           return (
-            t[key].name.match(new RegExp(escapeRegExp(value), 'i')) ||
-            t[key].symbol.toLocaleLowerCase().match(new RegExp(escapeRegExp(value.toLocaleLowerCase()), 'i'))
+            t[key].name.match(new RegExp(escapeRegExp(debouncedValue), 'i')) ||
+            t[key].symbol.toLocaleLowerCase().match(new RegExp(escapeRegExp(debouncedValue.toLocaleLowerCase()), 'i'))
           )
         }
         return false
       })
-      return regexMatches.some((m) => m)
+      const fuzzyString = `${t.token0.symbol} ${t.token1.symbol} ${t.feeTier / 10000}%`
+      const fuzzyRegex = new RegExp(`(${symbols.join('|')})`, 'g')
+      const fuzzyMatch = fuzzyString.match(fuzzyRegex)?.length === symbols.length
+      return regexMatches.some((m) => m) || fuzzyMatch
     })
-  }, [combinedPools, value])
+  }, [combinedPools, debouncedValue])
 
   return {
     tokens: filteredSortedTokens,

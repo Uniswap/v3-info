@@ -11,7 +11,7 @@ import { client, blockClient, arbitrumClient, arbitrumBlockClient } from 'apollo
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
       factories(
-       ${block ? `block: { number: ${block}}` : ``} 
+       ${block !== undefined ? `block: { number: ${block}}` : ``} 
        first: 1, subgraphError: allow) {
         txCount
         totalVolumeUSD
@@ -53,12 +53,12 @@ export function useFetchProtocolData(
   const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), { client: activeDataClient })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block24?.number ?? undefined),
+    GLOBAL_DATA(block24?.number ?? 0),
     { client: activeDataClient }
   )
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block48?.number ?? undefined),
+    GLOBAL_DATA(block48?.number ?? 0),
     { client: activeDataClient }
   )
 
@@ -81,7 +81,9 @@ export function useFetchProtocolData(
         : parseFloat(parsed.totalVolumeUSD)
 
     const volumeOneWindowAgo =
-      parsed24 && parsed48 ? parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed48.totalVolumeUSD) : undefined
+      parsed24?.totalVolumeUSD && parsed48?.totalVolumeUSD
+        ? parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed48.totalVolumeUSD)
+        : undefined
 
     const volumeUSDChange =
       volumeUSD && volumeOneWindowAgo ? ((volumeUSD - volumeOneWindowAgo) / volumeOneWindowAgo) * 100 : 0

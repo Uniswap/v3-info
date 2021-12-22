@@ -6,7 +6,7 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { SupportedChainId } from 'constants/chains'
-import { ArbitrumNetworkInfo, NetworkInfo } from 'constants/networks'
+import { ArbitrumNetworkInfo, NetworkInfo, PolygonNetworkInfo } from 'constants/networks'
 import JSBI from 'jsbi'
 import { ROUTER_ADDRESS } from '../constants'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -38,7 +38,9 @@ export function getEtherscanLink(
   networkVersion: NetworkInfo
 ): string {
   const prefix =
-    networkVersion === ArbitrumNetworkInfo
+    networkVersion === PolygonNetworkInfo
+      ? 'https://polygonscan.com/'
+      : networkVersion === ArbitrumNetworkInfo
       ? 'https://arbiscan.io/'
       : networkVersion === OptimismNetworkInfo
       ? 'https://optimistic.etherscan.io'

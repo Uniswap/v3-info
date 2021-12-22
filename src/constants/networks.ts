@@ -39,7 +39,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
   bgColor: '#0A294B',
   primaryColor: '#0490ED',
   secondaryColor: '#96BEDC',
-  blurb: 'L2 Beta',
+  blurb: 'Beta',
 }
 
 export const OptimismNetworkInfo: NetworkInfo = {
@@ -50,7 +50,7 @@ export const OptimismNetworkInfo: NetworkInfo = {
   primaryColor: '#F01B36',
   secondaryColor: '#FB7876',
   imageURL: OPTIMISM_LOGO_URL,
-  blurb: 'L2 Beta',
+  blurb: 'Beta',
 }
 
 export const PolygonNetworkInfo: NetworkInfo = {
@@ -64,9 +64,4 @@ export const PolygonNetworkInfo: NetworkInfo = {
   blurb: '',
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
-  EthereumNetworkInfo,
-  PolygonNetworkInfo,
-  ArbitrumNetworkInfo,
-  OptimismNetworkInfo,
-]
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, PolygonNetworkInfo, ArbitrumNetworkInfo]

@@ -64,4 +64,9 @@ export const PolygonNetworkInfo: NetworkInfo = {
   blurb: '',
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, PolygonNetworkInfo, ArbitrumNetworkInfo]
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
+  EthereumNetworkInfo,
+  PolygonNetworkInfo,
+  ArbitrumNetworkInfo,
+  OptimismNetworkInfo,
+]

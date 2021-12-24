@@ -92,7 +92,7 @@ export const arbitrumBlockClient = new ApolloClient({
 })
 
 export const optimismClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/id/QmTRsD4et6cfUcfMZHFMipqDJLdHrcxE4zwfTUY2Akrgev',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

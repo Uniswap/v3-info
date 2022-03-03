@@ -28,7 +28,7 @@ export function useTransformedVolumeData(
     if (chartData) {
       const data: Record<string, GenericChartEntry> = {}
 
-      chartData.forEach(({ date, volumeUSD }) => {
+      chartData.forEach(({ date, volumeUSD }: { date: number; volumeUSD: number }) => {
         const group = unixToType(date, type)
         if (data[group]) {
           data[group].value += volumeUSD

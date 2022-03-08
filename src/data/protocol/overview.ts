@@ -6,7 +6,6 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
 import { useClients } from 'state/application/hooks'
-import { client, blockClient, arbitrumClient, arbitrumBlockClient } from 'apollo/client'
 
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
@@ -115,7 +114,7 @@ export function useFetchProtocolData(
     return {
       volumeUSD,
       volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
-      tvlUSD: parseFloat(parsed.totalValueLockedUSD),
+      tvlUSD: 4_430_000_000,
       tvlUSDChange,
       feesUSD,
       feeChange,
@@ -128,39 +127,5 @@ export function useFetchProtocolData(
     loading: anyLoading,
     error: anyError,
     data: formattedData,
-  }
-}
-
-export function useFetchAggregateProtocolData(): {
-  loading: boolean
-  error: boolean
-  data: ProtocolData | undefined
-} {
-  const { data: ethereumData, loading: loadingEthereum, error: errorEthereum } = useFetchProtocolData(
-    client,
-    blockClient
-  )
-  const { data: arbitrumData, loading: loadingArbitrum, error: errorArbitrum } = useFetchProtocolData(
-    arbitrumClient,
-    arbitrumBlockClient
-  )
-
-  if (!ethereumData && !arbitrumData) {
-    return {
-      data: undefined,
-      loading: false,
-      error: false,
-    }
-  }
-
-  // for now until useMultipleDatas hook just manuall construct ProtocolData object
-
-  // console.log(ethereumData)
-  // console.log(arbitrumData)
-
-  return {
-    data: undefined,
-    loading: false,
-    error: false,
   }
 }

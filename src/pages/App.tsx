@@ -129,7 +129,7 @@ export default function App() {
               <WarningWrapper>
                 <WarningBanner>
                   {`Warning: 
-                  Data has only synced to Optimism block ${subgraphStatus.syncedBlock} (out of ${subgraphStatus.headBlock}). Please check back soon.`}
+                  Data has only synced to  block ${subgraphStatus.syncedBlock} (out of ${subgraphStatus.headBlock}). Please check back soon.`}
                 </WarningBanner>
               </WarningWrapper>
             )}

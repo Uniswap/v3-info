@@ -8,6 +8,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { arbitrumClient, optimismClient } from 'apollo/client'
 import { usePoolChartData } from 'state/pools/hooks'
+import { EthereumNetworkInfo } from 'constants/networks'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -168,9 +169,12 @@ export function useFetchGlobalChartData(): {
   const { dataClient } = useClients()
 
   const [activeNetworkVersion] = useActiveNetworkVersion()
+  const onEthereum = activeNetworkVersion === EthereumNetworkInfo
   const indexedData = data?.[activeNetworkVersion.id]
 
-  const formattedData = useAdjustedData(indexedData)
+  // @TODO: remove this once we have fix for mainnet TVL issue
+  const adjustedData = useAdjustedData(indexedData)
+  const formattedData = onEthereum ? adjustedData : indexedData
 
   useEffect(() => {
     async function fetch() {

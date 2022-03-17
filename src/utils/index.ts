@@ -6,11 +6,10 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { SupportedChainId } from 'constants/chains'
-import { ArbitrumNetworkInfo, NetworkInfo, PolygonNetworkInfo } from 'constants/networks'
+import { ArbitrumNetworkInfo, NetworkInfo, PolygonNetworkInfo, OptimismNetworkInfo } from 'constants/networks'
 import JSBI from 'jsbi'
 import { ROUTER_ADDRESS } from '../constants'
 import { TokenAddressMap } from '../state/lists/hooks'
-import { OptimismNetworkInfo } from './../constants/networks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {

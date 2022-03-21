@@ -7,7 +7,6 @@ import gql from 'graphql-tag'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { arbitrumClient, optimismClient } from 'apollo/client'
-import { usePoolChartData } from 'state/pools/hooks'
 import { EthereumNetworkInfo } from 'constants/networks'
 
 // format dayjs with the libraries that we need
@@ -133,26 +132,20 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
 }
 
 function useAdjustedData(indexedData: ChartDayData[] | undefined): ChartDayData[] | undefined {
-  const poolData = usePoolChartData('0xa850478adaace4c08fc61de44d8cf3b64f359bec')
-
-  const copiedData = poolData ? Array.from(poolData) : undefined
-
   const formattedData = useMemo(() => {
-    if (indexedData && copiedData) {
+    if (indexedData) {
       return indexedData.map((dayData) => {
-        const poolDayData = copiedData.find((poolDay) => poolDay.date / ONE_DAY_UNIX === dayData.date / ONE_DAY_UNIX)
-
         const adjustedData = {
           ...dayData,
-          volumeUSD: dayData.volumeUSD - (poolDayData?.volumeUSD ?? 0),
-          tvlUSD: dayData.date >= 1646524800 ? 4_430_000_000 : dayData.tvlUSD,
+          volumeUSD: dayData.volumeUSD,
+          tvlUSD: dayData.tvlUSD,
         }
         return adjustedData
       })
     } else {
       return undefined
     }
-  }, [indexedData, copiedData])
+  }, [indexedData])
 
   return formattedData
 }

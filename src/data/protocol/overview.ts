@@ -6,7 +6,6 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
 import { useClients } from 'state/application/hooks'
-import { client } from 'apollo/client'
 
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
@@ -43,8 +42,6 @@ export function useFetchProtocolData(
   const { dataClient, blockClient } = useClients()
   const activeDataClient = dataClientOverride ?? dataClient
   const activeBlockClient = blockClientOverride ?? blockClient
-
-  const onEthereum = dataClient && dataClient == client ? true : false
 
   // get blocks from historic timestamps
   const [t24, t48] = useDeltaTimestamps()
@@ -117,14 +114,14 @@ export function useFetchProtocolData(
     return {
       volumeUSD,
       volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
-      tvlUSD: onEthereum ? 4_430_000_000 : parseFloat(parsed?.totalValueLockedUSD),
+      tvlUSD: parseFloat(parsed?.totalValueLockedUSD),
       tvlUSDChange,
       feesUSD,
       feeChange,
       txCount,
       txCountChange,
     }
-  }, [anyError, anyLoading, blocks, onEthereum, parsed, parsed24, parsed48])
+  }, [anyError, anyLoading, blocks, parsed, parsed24, parsed48])
 
   return {
     loading: anyLoading,

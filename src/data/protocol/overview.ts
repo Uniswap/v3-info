@@ -6,12 +6,11 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
 import { useClients } from 'state/application/hooks'
-import { client, blockClient, arbitrumClient, arbitrumBlockClient } from 'apollo/client'
 
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
       factories(
-       ${block ? `block: { number: ${block}}` : ``} 
+       ${block !== undefined ? `block: { number: ${block}}` : ``} 
        first: 1, subgraphError: allow) {
         txCount
         totalVolumeUSD
@@ -53,12 +52,12 @@ export function useFetchProtocolData(
   const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), { client: activeDataClient })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block24?.number ?? undefined),
+    GLOBAL_DATA(block24?.number ?? 0),
     { client: activeDataClient }
   )
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block48?.number ?? undefined),
+    GLOBAL_DATA(block48?.number ?? 0),
     { client: activeDataClient }
   )
 
@@ -81,7 +80,9 @@ export function useFetchProtocolData(
         : parseFloat(parsed.totalVolumeUSD)
 
     const volumeOneWindowAgo =
-      parsed24 && parsed48 ? parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed48.totalVolumeUSD) : undefined
+      parsed24?.totalVolumeUSD && parsed48?.totalVolumeUSD
+        ? parseFloat(parsed24.totalVolumeUSD) - parseFloat(parsed48.totalVolumeUSD)
+        : undefined
 
     const volumeUSDChange =
       volumeUSD && volumeOneWindowAgo ? ((volumeUSD - volumeOneWindowAgo) / volumeOneWindowAgo) * 100 : 0
@@ -113,7 +114,7 @@ export function useFetchProtocolData(
     return {
       volumeUSD,
       volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
-      tvlUSD: parseFloat(parsed.totalValueLockedUSD),
+      tvlUSD: parseFloat(parsed?.totalValueLockedUSD),
       tvlUSDChange,
       feesUSD,
       feeChange,
@@ -126,39 +127,5 @@ export function useFetchProtocolData(
     loading: anyLoading,
     error: anyError,
     data: formattedData,
-  }
-}
-
-export function useFetchAggregateProtocolData(): {
-  loading: boolean
-  error: boolean
-  data: ProtocolData | undefined
-} {
-  const { data: ethereumData, loading: loadingEthereum, error: errorEthereum } = useFetchProtocolData(
-    client,
-    blockClient
-  )
-  const { data: arbitrumData, loading: loadingArbitrum, error: errorArbitrum } = useFetchProtocolData(
-    arbitrumClient,
-    arbitrumBlockClient
-  )
-
-  if (!ethereumData && !arbitrumData) {
-    return {
-      data: undefined,
-      loading: false,
-      error: false,
-    }
-  }
-
-  // for now until useMultipleDatas hook just manuall construct ProtocolData object
-
-  // console.log(ethereumData)
-  // console.log(arbitrumData)
-
-  return {
-    data: undefined,
-    loading: false,
-    error: false,
   }
 }

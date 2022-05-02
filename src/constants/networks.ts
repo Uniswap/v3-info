@@ -1,11 +1,13 @@
 import OPTIMISM_LOGO_URL from '../assets/images/optimism.svg'
 import ARBITRUM_LOGO_URL from '../assets/images/arbitrum.svg'
 import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
+import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 
 export enum SupportedNetwork {
   ETHEREUM,
   ARBITRUM,
   OPTIMISM,
+  POLYGON,
 }
 
 export type NetworkInfo = {
@@ -40,7 +42,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
   bgColor: '#0A294B',
   primaryColor: '#0490ED',
   secondaryColor: '#96BEDC',
-  blurb: 'L2 Beta',
+  blurb: 'Beta',
 }
 
 export const OptimismNetworkInfo: NetworkInfo = {
@@ -52,13 +54,31 @@ export const OptimismNetworkInfo: NetworkInfo = {
   primaryColor: '#F01B36',
   secondaryColor: '#FB7876',
   imageURL: OPTIMISM_LOGO_URL,
-  blurb: 'L2 Beta',
+  blurb: 'Beta',
+}
+
+export const PolygonNetworkInfo: NetworkInfo = {
+  id: SupportedNetwork.POLYGON,
+  route: 'polygon',
+  pathName: '/polygon/',
+  name: 'Polygon',
+  bgColor: '#8247e5',
+  primaryColor: '#8247e5',
+  secondaryColor: '#FB7876',
+  imageURL: POLYGON_LOGO_URL,
+  blurb: '',
 }
 
 export const SUPPORTED_NETWORK_PATH_NAMES = [
   EthereumNetworkInfo.pathName,
   ArbitrumNetworkInfo.pathName,
   OptimismNetworkInfo.pathName,
+  PolygonNetworkInfo.pathName,
 ]
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, OptimismNetworkInfo, ArbitrumNetworkInfo]
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
+  EthereumNetworkInfo,
+  PolygonNetworkInfo,
+  OptimismNetworkInfo,
+  ArbitrumNetworkInfo,
+]

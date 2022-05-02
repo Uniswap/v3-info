@@ -66,12 +66,12 @@ export default function Home() {
 
   // if hover value undefined, reset to current day value
   useEffect(() => {
-    if (!volumeHover && protocolData) {
+    if (volumeHover === undefined && protocolData) {
       setVolumeHover(protocolData.volumeUSD)
     }
   }, [protocolData, volumeHover])
   useEffect(() => {
-    if (!liquidityHover && protocolData) {
+    if (liquidityHover === undefined && protocolData) {
       setLiquidityHover(protocolData.tvlUSD)
     }
   }, [liquidityHover, protocolData])

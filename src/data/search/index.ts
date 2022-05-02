@@ -213,7 +213,7 @@ export function useFetchSearchResults(
 
   const filteredSortedTokens = useMemo(() => {
     const getMatch = (tokenEntry: string) => tokenEntry.match(new RegExp(escapeRegExp(value), 'i'))
-    const isAddress = /^(0x)?[0-9a-fA-F]{40}$/.test(value)
+    const isAddress = /^(0x[0-9a-fA-F]{40})$/.test(value)
 
     return combinedTokens.filter((t) => {
       const regexMatches = Object.keys(t).map((tokenEntryKey) => {
@@ -246,7 +246,7 @@ export function useFetchSearchResults(
   }, [allPools, newPools])
 
   const filteredSortedPools = useMemo(() => {
-    const isAddress = /^(0x)?[0-9a-fA-F]{40}$/.test(value)
+    const isAddress = /^(0x[0-9a-fA-F]{40})$/.test(value)
 
     return combinedPools.filter((t) => {
       const regexMatches = Object.keys(t).map((key) => {

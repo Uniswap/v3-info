@@ -1,7 +1,8 @@
+import React, { useState, useRef, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { RowFixed, RowBetween } from 'components/Row'
 import { SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 import useTheme from 'hooks/useTheme'
-import React, { useState, useRef } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import styled from 'styled-components'
@@ -9,6 +10,7 @@ import { StyledInternalLink, TYPE } from 'theme'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { AutoColumn } from 'components/Column'
 import { EthereumNetworkInfo } from '../../constants/networks'
+import { HEADER_EXTRA_TABS_ROUTES } from '../../constants/tabs'
 
 const Container = styled.div`
   position: relative;
@@ -55,6 +57,7 @@ const NetworkRow = styled(RowBetween)<{ active?: boolean; disabled?: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
   border-radius: 8px;
   opacity: ${({ disabled }) => (disabled ? '0.5' : 1)};
+
   :hover {
     cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
     opacity: ${({ disabled }) => (disabled ? 0.5 : 0.7)};
@@ -84,11 +87,17 @@ const GreenDot = styled.div`
 export default function NetworkDropdown() {
   const [activeNetwork] = useActiveNetworkVersion()
   const theme = useTheme()
+  const { pathname } = useLocation()
 
   const [showMenu, setShowMenu] = useState(false)
 
   const node = useRef<HTMLDivElement>(null)
   useOnClickOutside(node, () => setShowMenu(false))
+
+  const currentTabPath = useMemo(
+    () => Object.values(HEADER_EXTRA_TABS_ROUTES).find((extraTab) => pathname.includes(extraTab)) || '',
+    [pathname]
+  )
 
   return (
     <Container ref={node}>
@@ -114,7 +123,12 @@ export default function NetworkDropdown() {
             </TYPE.main>
             {SUPPORTED_NETWORK_VERSIONS.map((n) => {
               return (
-                <StyledInternalLink key={n.id} to={`${n === EthereumNetworkInfo ? '' : '/' + n.route}/`}>
+                <StyledInternalLink
+                  key={n.id}
+                  to={`${
+                    n.name === EthereumNetworkInfo.name ? `/${currentTabPath}` : `${n.pathName}${currentTabPath}`
+                  }`}
+                >
                   <NetworkRow
                     onClick={() => {
                       setShowMenu(false)

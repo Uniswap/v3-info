@@ -47,7 +47,7 @@ export const OptimismNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.OPTIMISM,
   route: 'optimism',
   pathName: '/optimism/',
-  name: 'OΞ (Optimism)',
+  name: 'Optimism',
   bgColor: '#F01B36',
   primaryColor: '#F01B36',
   secondaryColor: '#FB7876',

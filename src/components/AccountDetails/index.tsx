@@ -307,7 +307,7 @@ export default function AccountDetails({ toggleWalletModal, ENSName, openOptions
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={true}
-                            href={chainId && getEtherscanLink(chainId, ENSName, 'address', activeNetwork)}
+                            href={getEtherscanLink(chainId, ENSName, 'address', activeNetwork)}
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>View on Etherscan</span>

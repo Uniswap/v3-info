@@ -5,12 +5,19 @@ import { ChartDayData, GenericChartEntry } from 'types'
 import { unixToDate } from 'utils/date'
 import dayjs from 'dayjs'
 
-export function unixToWeek(unix: number): number {
-  return dayjs.unix(unix).utc().week()
-}
+function unixToType(unix: number, type: 'month' | 'week') {
+  const date = dayjs.unix(unix).utc()
 
-export function unixToMonth(unix: number): number {
-  return dayjs.unix(unix).utc().month()
+  switch (type) {
+    case 'month':
+      return date.format('YYYY-MM')
+    case 'week':
+      let week = String(date.week())
+      if (week.length === 1) {
+        week = `0${week}`
+      }
+      return `${date.year()}-${week}`
+  }
 }
 
 export function useTransformedVolumeData(
@@ -19,22 +26,21 @@ export function useTransformedVolumeData(
 ) {
   return useMemo(() => {
     if (chartData) {
-      let currentIndex = -1
-      const data: GenericChartEntry[] = []
-      chartData.forEach((day: { date: number; volumeUSD: number }) => {
-        const index = type === 'month' ? unixToMonth(day.date) : unixToWeek(day.date)
-        let needsDateUpdate = false
-        if (index !== currentIndex) {
-          currentIndex = index
-          needsDateUpdate = true
+      const data: Record<string, GenericChartEntry> = {}
+
+      chartData.forEach(({ date, volumeUSD }: { date: number; volumeUSD: number }) => {
+        const group = unixToType(date, type)
+        if (data[group]) {
+          data[group].value += volumeUSD
+        } else {
+          data[group] = {
+            time: unixToDate(date),
+            value: volumeUSD,
+          }
         }
-        data[currentIndex] = data[currentIndex] || {}
-        if (needsDateUpdate) {
-          data[currentIndex].time = unixToDate(day.date)
-        }
-        data[currentIndex].value = (data[currentIndex].value ?? 0) + day.volumeUSD
       })
-      return data.filter((x) => !!x)
+
+      return Object.values(data)
     } else {
       return []
     }

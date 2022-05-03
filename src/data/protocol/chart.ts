@@ -1,5 +1,5 @@
 import { ChartDayData } from '../../types/index'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -7,6 +7,7 @@ import gql from 'graphql-tag'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { arbitrumClient, optimismClient } from 'apollo/client'
+import { EthereumNetworkInfo } from 'constants/networks'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -45,7 +46,7 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
     volumeUSD: string
     tvlUSD: string
   }[] = []
-  const startTimestamp = client === arbitrumClient ? 1630423606 : 1619170975
+  const startTimestamp = client === arbitrumClient ? 1630423606 : client === optimismClient ? 1636697130 : 1619170975
   const endTimestamp = dayjs.utc().unix()
 
   let error = false
@@ -130,6 +131,25 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
   }
 }
 
+function useAdjustedData(indexedData: ChartDayData[] | undefined): ChartDayData[] | undefined {
+  const formattedData = useMemo(() => {
+    if (indexedData) {
+      return indexedData.map((dayData) => {
+        const adjustedData = {
+          ...dayData,
+          volumeUSD: dayData.volumeUSD,
+          tvlUSD: dayData.tvlUSD,
+        }
+        return adjustedData
+      })
+    } else {
+      return undefined
+    }
+  }, [indexedData])
+
+  return formattedData
+}
+
 /**
  * Fetch historic chart data
  */
@@ -142,7 +162,12 @@ export function useFetchGlobalChartData(): {
   const { dataClient } = useClients()
 
   const [activeNetworkVersion] = useActiveNetworkVersion()
+  const onEthereum = activeNetworkVersion === EthereumNetworkInfo
   const indexedData = data?.[activeNetworkVersion.id]
+
+  // @TODO: remove this once we have fix for mainnet TVL issue
+  const adjustedData = useAdjustedData(indexedData)
+  const formattedData = onEthereum ? adjustedData : indexedData
 
   useEffect(() => {
     async function fetch() {
@@ -162,6 +187,6 @@ export function useFetchGlobalChartData(): {
 
   return {
     error,
-    data: indexedData,
+    data: formattedData,
   }
 }

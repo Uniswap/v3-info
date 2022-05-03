@@ -126,6 +126,7 @@ const StyledLink = styled.a`
   display: inline;
   flex-direction: center;
   align-items: center;
+  display: flex;
 
   :hover {
     text-decoration: underline;

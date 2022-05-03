@@ -49,7 +49,7 @@ export const client = new ApolloClient({
 })
 
 export const arbitrumClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-dev',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -92,7 +92,7 @@ export const arbitrumBlockClient = new ApolloClient({
 })
 
 export const optimismClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism-dev',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -110,6 +110,21 @@ export const optimismClient = new ApolloClient({
   queryDeduplication: true,
   defaultOptions: {
     watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const optimismBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uni-testing-subgraph',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
       fetchPolicy: 'cache-first',
     },
     query: {
@@ -119,8 +134,36 @@ export const optimismClient = new ApolloClient({
   },
 })
 
-export const optimismBlockClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-blocks',
+export const polygonClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const polygonBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/polygon-blocks',
   cache: new InMemoryCache(),
   queryDeduplication: true,
   defaultOptions: {

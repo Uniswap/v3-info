@@ -129,7 +129,7 @@ export default function App() {
               <WarningWrapper>
                 <WarningBanner>
                   {`Warning: 
-                  Data has only synced to Optimism block ${subgraphStatus.syncedBlock} (out of ${subgraphStatus.headBlock}). Please check back soon.`}
+                  Data has only synced to  block ${subgraphStatus.syncedBlock} (out of ${subgraphStatus.headBlock}). Please check back soon.`}
                 </WarningBanner>
               </WarningWrapper>
             )}
@@ -145,7 +145,7 @@ export default function App() {
                   <TYPE.label>
                     The Graph hosted network which provides data for this site is temporarily experiencing issues. Check
                     current status{' '}
-                    <ExternalLink href="https://thegraph.com/legacy-explorer/subgraph/ianlapham/uniswap-v3-subgraph">
+                    <ExternalLink href="https://thegraph.com/hosted-service/subgraph/uniswap/uniswap-v3">
                       here.
                     </ExternalLink>
                   </TYPE.label>

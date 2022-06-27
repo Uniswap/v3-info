@@ -21,19 +21,19 @@ export function useAllPoolData(): {
 export function useUpdatePoolData(): (pools: PoolData[]) => void {
   const dispatch = useDispatch<AppDispatch>()
   const [network] = useActiveNetworkVersion()
-  return useCallback((pools: PoolData[]) => dispatch(updatePoolData({ pools, networkId: network.id })), [
-    dispatch,
-    network.id,
-  ])
+  return useCallback(
+    (pools: PoolData[]) => dispatch(updatePoolData({ pools, networkId: network.id })),
+    [dispatch, network.id]
+  )
 }
 
 export function useAddPoolKeys(): (addresses: string[]) => void {
   const dispatch = useDispatch<AppDispatch>()
   const [network] = useActiveNetworkVersion()
-  return useCallback((poolAddresses: string[]) => dispatch(addPoolKeys({ poolAddresses, networkId: network.id })), [
-    dispatch,
-    network.id,
-  ])
+  return useCallback(
+    (poolAddresses: string[]) => dispatch(addPoolKeys({ poolAddresses, networkId: network.id })),
+    [dispatch, network.id]
+  )
 }
 
 export function usePoolDatas(poolAddresses: string[]): PoolData[] {

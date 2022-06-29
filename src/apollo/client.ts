@@ -176,3 +176,47 @@ export const polygonBlockClient = new ApolloClient({
     },
   },
 })
+
+export const celoClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/joaquin-hernandez/uniswapv3-subgraph-celo',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const celoBlockClient = new ApolloClient({
+  //TODO what is the block client
+  uri: 'https://api.thegraph.com/subgraphs/name/joaquin-hernandez/uniswapv3-subgraph-celo',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-first',
+    },
+    query: {
+      fetchPolicy: 'cache-first',
+      errorPolicy: 'all',
+    },
+  },
+})

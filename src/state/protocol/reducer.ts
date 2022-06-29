@@ -58,6 +58,12 @@ export const initialState: ProtocolState = {
     transactions: undefined,
     lastUpdated: undefined,
   },
+  [SupportedNetwork.CELO]: {
+    data: undefined,
+    chartData: undefined,
+    transactions: undefined,
+    lastUpdated: undefined,
+  },
 }
 
 export default createReducer(initialState, (builder) =>

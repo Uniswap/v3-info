@@ -206,8 +206,8 @@ export const celoClient = new ApolloClient({
 })
 
 export const celoBlockClient = new ApolloClient({
-  //TODO what is the block client
-  uri: 'https://api.thegraph.com/subgraphs/name/joaquin-hernandez/uniswapv3-subgraph-celo',
+  //TODO determine how to deploy the block client subgraph (not in Uniswap/v3-subgraph?)
+  uri: '',
   cache: new InMemoryCache(),
   queryDeduplication: true,
   defaultOptions: {

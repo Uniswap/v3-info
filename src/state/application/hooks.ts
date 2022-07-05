@@ -156,7 +156,7 @@ export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
     case SupportedNetwork.POLYGON:
       return polygonBlockClient
     case SupportedNetwork.CELO:
-      return polygonBlockClient //TODO doesn't point to right URI
+      return celoBlockClient
     default:
       return blockClient
   }

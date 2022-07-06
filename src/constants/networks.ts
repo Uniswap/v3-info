@@ -69,9 +69,9 @@ export const CeloNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.CELO,
   route: 'celo',
   name: 'Celo',
-  bgColor: '#2E3338',
-  primaryColor: '#FBCC5C',
-  secondaryColor: '#35D07F',
+  bgColor: '#02502F',
+  primaryColor: '#35D07F',
+  secondaryColor: '#9ACDB2',
   imageURL: CELO_LOGO_URL,
   blurb: '',
 }

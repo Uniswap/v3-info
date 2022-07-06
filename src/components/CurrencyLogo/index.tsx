@@ -70,7 +70,6 @@ export default function CurrencyLogo({
     }
     return undefined
   }, [checkSummed, polygon])
-
   const uriLocationsPOlygon = useHttpLocations(polygonURI)
 
   const celoURI = useMemo(() => {
@@ -79,7 +78,6 @@ export default function CurrencyLogo({
     }
     return undefined
   }, [checkSummed, celo])
-
   const uriLocationsCelo = useHttpLocations(celoURI)
 
   //temp until token logo issue merged

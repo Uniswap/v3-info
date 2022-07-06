@@ -39,7 +39,7 @@ export function getEtherscanLink(
     networkVersion === PolygonNetworkInfo
       ? 'https://polygonscan.com/'
       : networkVersion === CeloNetworkInfo
-      ? 'https://explorer.celo.org/'
+      ? 'https://explorer.celo.org'
       : networkVersion === ArbitrumNetworkInfo
       ? 'https://arbiscan.io/'
       : networkVersion === OptimismNetworkInfo

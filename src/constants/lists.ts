@@ -5,7 +5,7 @@ export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json
 export const ARBITRUM_LIST = 'https://bridge.arbitrum.io/token-list-42161.json'
 export const POLYGON_LIST =
   'https://unpkg.com/quickswap-default-token-list@1.2.2/build/quickswap-default.tokenlist.json'
-export const CELO_LIST = 'https://raw.githubusercontent.com/celo-org/celo-token-list/main/celo.tokenlist.json'
+export const CELO_LIST = 'https://celo-org.github.io/celo-token-list/celo.tokenlist.json'
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [

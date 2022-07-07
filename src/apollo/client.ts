@@ -178,7 +178,7 @@ export const polygonBlockClient = new ApolloClient({
 })
 
 export const celoClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/joaquin-hernandez/uniswapv3-subgraph-celo',
+  uri: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

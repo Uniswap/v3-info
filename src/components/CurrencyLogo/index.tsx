@@ -70,7 +70,7 @@ export default function CurrencyLogo({
     }
     return undefined
   }, [checkSummed, polygon])
-  const uriLocationsPOlygon = useHttpLocations(polygonURI)
+  const uriLocationsPolygon = useHttpLocations(polygonURI)
 
   const celoURI = useMemo(() => {
     if (checkSummed && celo?.[checkSummed]) {
@@ -97,13 +97,13 @@ export default function CurrencyLogo({
         getTokenLogoURL(checkSummed),
         ...uriLocationsOptimism,
         ...uriLocationsArbitrum,
-        ...uriLocationsPOlygon,
+        ...uriLocationsPolygon,
         ...uriLocationsCelo,
         override,
       ]
     }
     return []
-  }, [address, tempSources, uriLocationsArbitrum, uriLocationsOptimism, uriLocationsPOlygon, uriLocationsCelo])
+  }, [address, tempSources, uriLocationsArbitrum, uriLocationsOptimism, uriLocationsPolygon, uriLocationsCelo])
 
   if (activeNetwork === OptimismNetworkInfo && address === '0x4200000000000000000000000000000000000006') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />

@@ -79,7 +79,7 @@ export const CeloNetworkInfo: NetworkInfo = {
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   EthereumNetworkInfo,
   PolygonNetworkInfo,
-  CeloNetworkInfo,
   OptimismNetworkInfo,
   ArbitrumNetworkInfo,
+  CeloNetworkInfo,
 ]

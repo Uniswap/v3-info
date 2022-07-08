@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { RowBetween, RowFixed, AutoRow } from 'components/Row'
-import { TYPE, ExternalLink } from 'theme'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { ExternalLink, TYPE } from 'theme'
 import { useEthPrices } from 'hooks/useEthPrices'
 import { formatDollarAmount } from 'utils/numbers'
 import Polling from './Polling'
+import { useActiveNetworkVersion } from '../../state/application/hooks'
+import { SupportedNetwork } from '../../constants/networks'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,13 +25,14 @@ const StyledLink = styled(ExternalLink)`
 
 const TopBar = () => {
   const ethPrices = useEthPrices()
+  const [activeNetwork] = useActiveNetworkVersion()
   return (
     <Wrapper>
       <RowBetween>
         <Polling />
         <AutoRow gap="6px">
           <RowFixed>
-            <Item>ETH Price:</Item>
+            {activeNetwork.id === SupportedNetwork.CELO ? <Item>Celo Price:</Item> : <Item>Eth Price:</Item>}
             <Item fontWeight="700" ml="4px">
               {formatDollarAmount(ethPrices?.current)}
             </Item>

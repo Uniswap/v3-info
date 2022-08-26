@@ -9,7 +9,7 @@ import { OptimismNetworkInfo } from 'constants/networks'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 
 export const getTokenLogoURL = (address: string) => {
-  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 }
 
 const StyledLogo = styled(Logo)<{ size: string }>`

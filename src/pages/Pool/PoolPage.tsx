@@ -17,7 +17,6 @@ import Percent from 'components/Percent'
 import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
 import { DarkGreyCard, GreyCard, GreyBadge } from 'components/Card'
 import { usePoolDatas, usePoolChartData, usePoolTransactions } from 'state/pools/hooks'
-import LineChart from 'components/LineChart/alt'
 import { unixToDate } from 'utils/date'
 import { ToggleWrapper, ToggleElementFree } from 'components/Toggle/index'
 import BarChart from 'components/BarChart/alt'
@@ -67,7 +66,6 @@ const ToggleRow = styled(RowBetween)`
 `
 
 enum ChartView {
-  TVL,
   VOL,
   PRICE,
   DENSITY,
@@ -294,16 +292,9 @@ export default function PoolPage({
                   <ToggleElementFree
                     isActive={view === ChartView.VOL}
                     fontSize="12px"
-                    onClick={() => (view === ChartView.VOL ? setView(ChartView.TVL) : setView(ChartView.VOL))}
+                    onClick={() => (view === ChartView.VOL ? setView(ChartView.DENSITY) : setView(ChartView.VOL))}
                   >
                     Volume
-                  </ToggleElementFree>
-                  <ToggleElementFree
-                    isActive={view === ChartView.TVL}
-                    fontSize="12px"
-                    onClick={() => (view === ChartView.TVL ? setView(ChartView.DENSITY) : setView(ChartView.TVL))}
-                  >
-                    TVL
                   </ToggleElementFree>
                   {activeNetwork === ArbitrumNetworkInfo ? null : (
                     <ToggleElementFree
@@ -317,23 +308,13 @@ export default function PoolPage({
                   <ToggleElementFree
                     isActive={view === ChartView.FEES}
                     fontSize="12px"
-                    onClick={() => (view === ChartView.FEES ? setView(ChartView.TVL) : setView(ChartView.FEES))}
+                    onClick={() => (view === ChartView.FEES ? setView(ChartView.VOL) : setView(ChartView.FEES))}
                   >
                     Fees
                   </ToggleElementFree>
                 </ToggleWrapper>
               </ToggleRow>
-              {view === ChartView.TVL ? (
-                <LineChart
-                  data={formattedTvlData}
-                  setLabel={setValueLabel}
-                  color={backgroundColor}
-                  minHeight={340}
-                  setValue={setLatestValue}
-                  value={latestValue}
-                  label={valueLabel}
-                />
-              ) : view === ChartView.VOL ? (
+              {view === ChartView.VOL ? (
                 <BarChart
                   data={formattedVolumeData}
                   color={backgroundColor}

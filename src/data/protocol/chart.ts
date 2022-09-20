@@ -1,5 +1,5 @@
 import { ChartDayData } from '../../types/index'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -8,6 +8,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { arbitrumClient, optimismClient } from 'apollo/client'
 import { EthereumNetworkInfo } from 'constants/networks'
+import { useDerivedProtocolTVLHistory } from './derived'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -131,25 +132,6 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
   }
 }
 
-function useAdjustedData(indexedData: ChartDayData[] | undefined): ChartDayData[] | undefined {
-  const formattedData = useMemo(() => {
-    if (indexedData) {
-      return indexedData.map((dayData) => {
-        const adjustedData = {
-          ...dayData,
-          volumeUSD: dayData.volumeUSD,
-          tvlUSD: dayData.tvlUSD,
-        }
-        return adjustedData
-      })
-    } else {
-      return undefined
-    }
-  }, [indexedData])
-
-  return formattedData
-}
-
 /**
  * Fetch historic chart data
  */
@@ -161,13 +143,14 @@ export function useFetchGlobalChartData(): {
   const [error, setError] = useState(false)
   const { dataClient } = useClients()
 
+  const derivedData = useDerivedProtocolTVLHistory()
+
   const [activeNetworkVersion] = useActiveNetworkVersion()
   const onEthereum = activeNetworkVersion === EthereumNetworkInfo
   const indexedData = data?.[activeNetworkVersion.id]
 
   // @TODO: remove this once we have fix for mainnet TVL issue
-  const adjustedData = useAdjustedData(indexedData)
-  const formattedData = onEthereum ? adjustedData : indexedData
+  const formattedData = onEthereum ? derivedData : indexedData
 
   useEffect(() => {
     async function fetch() {
@@ -180,10 +163,10 @@ export function useFetchGlobalChartData(): {
         setError(true)
       }
     }
-    if (!indexedData && !error) {
+    if (!indexedData && !error && !onEthereum) {
       fetch()
     }
-  }, [data, error, dataClient, indexedData, activeNetworkVersion.id])
+  }, [data, error, dataClient, indexedData, activeNetworkVersion.id, onEthereum])
 
   return {
     error,

@@ -41,10 +41,15 @@ export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
         token0Price
         token1Price
         volumeUSD
+        volumeToken0
+        volumeToken1
         txCount
         totalValueLockedToken0
         totalValueLockedToken1
         totalValueLockedUSD
+      }
+      bundles (where: {id: "1"}) {
+        ethPriceUSD
       }
     }
     `
@@ -74,6 +79,8 @@ interface PoolFields {
   token0Price: string
   token1Price: string
   volumeUSD: string
+  volumeToken0: string
+  volumeToken1: string
   txCount: string
   totalValueLockedToken0: string
   totalValueLockedToken1: string
@@ -82,6 +89,9 @@ interface PoolFields {
 
 interface PoolDataResponse {
   pools: PoolFields[]
+  bundles: {
+    ethPriceUSD: string
+  }[]
 }
 
 /**
@@ -136,6 +146,8 @@ export function usePoolDatas(
     }
   }
 
+  const ethPriceUSD = data?.bundles?.[0]?.ethPriceUSD ? parseFloat(data?.bundles?.[0]?.ethPriceUSD) : 0
+
   const parsed = data?.pools
     ? data.pools.reduce((accum: { [address: string]: PoolFields }, poolData) => {
         accum[poolData.id] = poolData
@@ -182,7 +194,18 @@ export function usePoolDatas(
         ? parseFloat(current.volumeUSD)
         : 0
 
-    const tvlUSD = current ? parseFloat(current.totalValueLockedUSD) : 0
+    // Hotifx: Subtract fees from TVL to correct data while subgraph is fixed.
+    /**
+     * Note: see issue desribed here https://github.com/Uniswap/v3-subgraph/issues/74
+     * During subgraph deploy switch this month we lost logic to fix this accounting.
+     * Grafted sync pending fix now.
+     */
+    const feePercent = current ? parseFloat(current.feeTier) / 10000 / 100 : 0
+    const tvlAdjust0 = current?.volumeToken0 ? (parseFloat(current.volumeToken0) * feePercent) / 2 : 0
+    const tvlAdjust1 = current?.volumeToken1 ? (parseFloat(current.volumeToken1) * feePercent) / 2 : 0
+    const tvlToken0 = current ? parseFloat(current.totalValueLockedToken0) - tvlAdjust0 : 0
+    const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) - tvlAdjust1 : 0
+    let tvlUSD = current ? parseFloat(current.totalValueLockedUSD) : 0
 
     const tvlUSDChange =
       current && oneDay
@@ -191,8 +214,14 @@ export function usePoolDatas(
           100
         : 0
 
-    const tvlToken0 = current ? parseFloat(current.totalValueLockedToken0) : 0
-    const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) : 0
+    // Part of TVL fix
+    const tvlUpdated = current
+      ? tvlToken0 * parseFloat(current.token0.derivedETH) * ethPriceUSD +
+        tvlToken1 * parseFloat(current.token1.derivedETH) * ethPriceUSD
+      : undefined
+    if (tvlUpdated) {
+      tvlUSD = tvlUpdated
+    }
 
     const feeTier = current ? parseInt(current.feeTier) : 0
 

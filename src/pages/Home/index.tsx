@@ -5,7 +5,7 @@ import { TYPE } from 'theme'
 import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart/alt'
 import useTheme from 'hooks/useTheme'
-import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
+import { useProtocolChartData, useProtocolData, useProtocolTransactions } from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
@@ -43,13 +43,15 @@ export default function Home() {
   const [activeNetwork] = useActiveNetworkVersion()
 
   const [protocolData] = useProtocolData()
-  const [chartData] = useProtocolChartData()
   const [transactions] = useProtocolTransactions()
 
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
   const [rightLabel, setRightLabel] = useState<string | undefined>()
+
+  // Hot fix to remove errors in TVL data while subgraph syncs.
+  const [chartData] = useProtocolChartData()
 
   useEffect(() => {
     setLiquidityHover(undefined)
@@ -113,7 +115,14 @@ export default function Home() {
       .filter(notEmpty)
   }, [allTokens])
 
-  const [volumeWindow, setVolumeWindow] = useState(VolumeWindow.daily)
+  const [volumeWindow, setVolumeWindow] = useState(VolumeWindow.weekly)
+
+  const tvlValue = useMemo(() => {
+    if (liquidityHover) {
+      return formatDollarAmount(liquidityHover, 2, true)
+    }
+    return formatDollarAmount(protocolData?.tvlUSD, 2, true)
+  }, [liquidityHover, protocolData?.tvlUSD])
 
   return (
     <PageWrapper>
@@ -135,7 +144,7 @@ export default function Home() {
                 <AutoColumn gap="4px">
                   <TYPE.mediumHeader fontSize="16px">TVL</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">
-                    <MonoSpace>{formatDollarAmount(liquidityHover, 2, true)} </MonoSpace>
+                    <MonoSpace>{tvlValue} </MonoSpace>
                   </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
                     {leftLabel ? <MonoSpace>{leftLabel} (UTC)</MonoSpace> : null}

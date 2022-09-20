@@ -101,7 +101,7 @@ export const LoadingRows = styled.div`
   max-width: 100%;
   grid-column-gap: 0.5em;
   grid-row-gap: 0.8em;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   & > div {
     animation: ${loadingAnimation} 1.5s infinite;
     animation-fill-mode: both;

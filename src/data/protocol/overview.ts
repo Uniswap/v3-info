@@ -6,6 +6,7 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
 import { useClients } from 'state/application/hooks'
+import { useTVLOffset } from './derived'
 
 export const GLOBAL_DATA = (block?: string) => {
   const queryString = ` query uniswapFactories {
@@ -43,6 +44,9 @@ export function useFetchProtocolData(
   const activeDataClient = dataClientOverride ?? dataClient
   const activeBlockClient = blockClientOverride ?? blockClient
 
+  // offsetData
+  const tvlOffset = useTVLOffset()
+
   // get blocks from historic timestamps
   const [t24, t48] = useDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48], activeBlockClient)
@@ -69,7 +73,7 @@ export function useFetchProtocolData(
   const parsed48 = data48?.factories?.[0]
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
-    if (anyError || anyLoading || !parsed || !blocks) {
+    if (anyError || anyLoading || !parsed || !blocks || !tvlOffset) {
       return undefined
     }
 
@@ -114,15 +118,14 @@ export function useFetchProtocolData(
     return {
       volumeUSD,
       volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
-      tvlUSD: parseFloat(parsed?.totalValueLockedUSD),
+      tvlUSD: parseFloat(parsed?.totalValueLockedUSD) - tvlOffset,
       tvlUSDChange,
       feesUSD,
       feeChange,
       txCount,
       txCountChange,
     }
-  }, [anyError, anyLoading, blocks, parsed, parsed24, parsed48])
-
+  }, [anyError, anyLoading, blocks, parsed, parsed24, parsed48, tvlOffset])
   return {
     loading: anyLoading,
     error: anyError,

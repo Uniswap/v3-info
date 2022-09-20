@@ -2,6 +2,8 @@ import { useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useClients } from 'state/application/hooks'
+import { notEmpty } from 'utils'
+import { POOL_HIDE } from '../../constants'
 
 export const TOP_POOLS = gql`
   query topPools {
@@ -33,7 +35,14 @@ export function useTopPoolAddresses(): {
 
   const formattedData = useMemo(() => {
     if (data) {
-      return data.pools.map((p) => p.id)
+      return data.pools
+        .map((p) => {
+          if (POOL_HIDE.includes(p.id.toLocaleLowerCase())) {
+            return undefined
+          }
+          return p.id
+        })
+        .filter(notEmpty)
     } else {
       return undefined
     }

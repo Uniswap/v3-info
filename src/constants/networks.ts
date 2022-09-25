@@ -52,7 +52,6 @@ export const OptimismNetworkInfo: NetworkInfo = {
   primaryColor: '#F01B36',
   secondaryColor: '#FB7876',
   imageURL: OPTIMISM_LOGO_URL,
-  blurb: 'Beta',
 }
 
 export const PolygonNetworkInfo: NetworkInfo = {

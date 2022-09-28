@@ -99,6 +99,9 @@ export function useDerivedProtocolTVLHistory() {
         .slice(0, PoolCountAggregate) // @TODO: must be replaced with aggregate with subgraph data fixed.
         .reduce(async (accumP: Promise<{ [key: number]: ChartDayData }>, address) => {
           const accum = await accumP
+          if (POOL_HIDE.includes(address)) {
+            return accum
+          }
           const { data } = await fetchPoolChartData(address, dataClient)
           if (!data) return accum
           dispatch(updatePoolChartData({ poolAddress: address, chartData: data, networkId: SupportedNetwork.ETHEREUM }))
@@ -125,7 +128,7 @@ export function useDerivedProtocolTVLHistory() {
     if (!chartData) {
       fetchAll()
     }
-  }, [addresses, chartData, dataClient])
+  }, [addresses, chartData, dataClient, dispatch])
 
   return chartData
 }

@@ -81,7 +81,7 @@ export function useDerivedOffsetTVLHistory() {
 }
 
 // # of pools to include in historical chart volume and TVL data
-const POOL_COUNT_FOR_AGGREGATE = 30
+const POOL_COUNT_FOR_AGGREGATE = 20
 
 /**
  * Derives historical TVL data for top 50 pools.

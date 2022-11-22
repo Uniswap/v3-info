@@ -15,6 +15,7 @@ import { PageButtons, Arrow, Break } from 'components/shared'
 import HoverInlineText from '../HoverInlineText'
 import useTheme from 'hooks/useTheme'
 import { TOKEN_HIDE } from '../../constants/index'
+import { useActiveNetworkVersion } from 'state/application/hooks'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -127,6 +128,8 @@ export default function TokenTable({
   // theming
   const theme = useTheme()
 
+  const [currentNetwork] = useActiveNetworkVersion()
+
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
@@ -147,7 +150,7 @@ export default function TokenTable({
   const sortedTokens = useMemo(() => {
     return tokenDatas
       ? tokenDatas
-          .filter((x) => !!x && !TOKEN_HIDE.includes(x.address))
+          .filter((x) => !!x && !TOKEN_HIDE[currentNetwork.id].includes(x.address))
           .sort((a, b) => {
             if (a && b) {
               return a[sortField as keyof TokenData] > b[sortField as keyof TokenData]
@@ -159,7 +162,7 @@ export default function TokenTable({
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : []
-  }, [tokenDatas, maxItems, page, sortDirection, sortField])
+  }, [tokenDatas, maxItems, page, currentNetwork.id, sortField, sortDirection])
 
   const handleSort = useCallback(
     (newField: string) => {

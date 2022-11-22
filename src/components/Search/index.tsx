@@ -157,6 +157,8 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
   const history = useHistory()
   const [activeNetwork] = useActiveNetworkVersion()
 
+  const [currentNetwork] = useActiveNetworkVersion()
+
   const ref = useRef<HTMLInputElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
@@ -277,7 +279,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               </HideSmall>
             </ResponsiveGrid>
             {tokensForList
-              .filter((t) => !TOKEN_HIDE.includes(t.address))
+              .filter((t) => !TOKEN_HIDE[currentNetwork.id].includes(t.address))
               .slice(0, tokensShown)
               .map((t, i) => {
                 return (
@@ -344,7 +346,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               </HideSmall>
             </ResponsiveGrid>
             {poolForList
-              .filter((p) => !POOL_HIDE.includes(p.address))
+              .filter((p) => !POOL_HIDE[currentNetwork.id].includes(p.address))
               .slice(0, poolsShown)
               .map((p, i) => {
                 return (

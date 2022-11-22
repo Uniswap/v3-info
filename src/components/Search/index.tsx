@@ -32,7 +32,7 @@ const Wrapper = styled(Row)`
   width: 500px;
   height: 38px;
   border-radius: 20px;
-  positon: relative;
+  position: relative;
   z-index: 9999;
 
   @media (max-width: 1080px) {

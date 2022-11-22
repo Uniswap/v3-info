@@ -100,6 +100,8 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
 const MAX_ITEMS = 10
 
 export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: PoolData[]; maxItems?: number }) {
+  const [currentNetwork] = useActiveNetworkVersion()
+
   // theming
   const theme = useTheme()
 
@@ -121,7 +123,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   const sortedPools = useMemo(() => {
     return poolDatas
       ? poolDatas
-          .filter((x) => !!x && !POOL_HIDE.includes(x.address))
+          .filter((x) => !!x && !POOL_HIDE[currentNetwork.id].includes(x.address))
           .sort((a, b) => {
             if (a && b) {
               return a[sortField as keyof PoolData] > b[sortField as keyof PoolData]
@@ -133,7 +135,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : []
-  }, [maxItems, page, poolDatas, sortDirection, sortField])
+  }, [currentNetwork.id, maxItems, page, poolDatas, sortDirection, sortField])
 
   const handleSort = useCallback(
     (newField: string) => {

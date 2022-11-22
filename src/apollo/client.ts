@@ -25,13 +25,9 @@ export const client = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
         keyFields: false,
       },
       Pool: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
         keyFields: false,
       },
     },

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
+import { useClients } from 'state/application/hooks'
 import { notEmpty } from 'utils'
 import { POOL_HIDE } from '../../constants'
 
@@ -27,7 +27,6 @@ export function useTopPoolAddresses(): {
   error: boolean
   addresses: string[] | undefined
 } {
-  const [currentNetwork] = useActiveNetworkVersion()
   const { dataClient } = useClients()
   const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
     client: dataClient,
@@ -38,7 +37,7 @@ export function useTopPoolAddresses(): {
     if (data) {
       return data.pools
         .map((p) => {
-          if (POOL_HIDE[currentNetwork.id].includes(p.id.toLocaleLowerCase())) {
+          if (POOL_HIDE.includes(p.id.toLocaleLowerCase())) {
             return undefined
           }
           return p.id
@@ -47,7 +46,7 @@ export function useTopPoolAddresses(): {
     } else {
       return undefined
     }
-  }, [currentNetwork.id, data])
+  }, [data])
 
   return {
     loading: loading,

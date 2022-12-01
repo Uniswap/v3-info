@@ -18,13 +18,16 @@ import { POOL_HIDE } from '../../constants'
 export function useTVLOffset() {
   const [currentNetwork] = useActiveNetworkVersion()
   const { data } = usePoolDatas(POOL_HIDE[currentNetwork.id])
+
   const tvlOffset = useMemo(() => {
-    if (!data) return 0
+    if (!data) return undefined
+
     return Object.keys(data).reduce((accum: number, poolAddress) => {
       const poolData: PoolData = data[poolAddress]
       return accum + poolData.tvlUSD
     }, 0)
   }, [data])
+
   return tvlOffset
 }
 

@@ -44,7 +44,7 @@ export function useFetchProtocolData(
   const activeDataClient = dataClientOverride ?? dataClient
   const activeBlockClient = blockClientOverride ?? blockClient
 
-  // offsetData
+  // Aggregate TVL in inaccurate pools. Offset Uniswap aggregate TVL by this amount.
   const tvlOffset = useTVLOffset()
 
   // get blocks from historic timestamps

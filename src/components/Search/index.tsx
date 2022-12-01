@@ -32,7 +32,7 @@ const Wrapper = styled(Row)`
   width: 500px;
   height: 38px;
   border-radius: 20px;
-  positon: relative;
+  position: relative;
   z-index: 9999;
 
   @media (max-width: 1080px) {
@@ -277,7 +277,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               </HideSmall>
             </ResponsiveGrid>
             {tokensForList
-              .filter((t) => !TOKEN_HIDE.includes(t.address))
+              .filter((t) => !TOKEN_HIDE[activeNetwork.id].includes(t.address))
               .slice(0, tokensShown)
               .map((t, i) => {
                 return (
@@ -344,7 +344,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               </HideSmall>
             </ResponsiveGrid>
             {poolForList
-              .filter((p) => !POOL_HIDE.includes(p.address))
+              .filter((p) => !POOL_HIDE[activeNetwork.id].includes(p.address))
               .slice(0, poolsShown)
               .map((p, i) => {
                 return (

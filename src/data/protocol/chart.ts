@@ -7,7 +7,7 @@ import gql from 'graphql-tag'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { arbitrumClient, optimismClient } from 'apollo/client'
-import { EthereumNetworkInfo } from 'constants/networks'
+import { SupportedNetwork } from 'constants/networks'
 import { useDerivedProtocolTVLHistory } from './derived'
 
 // format dayjs with the libraries that we need
@@ -146,11 +146,12 @@ export function useFetchGlobalChartData(): {
   const derivedData = useDerivedProtocolTVLHistory()
 
   const [activeNetworkVersion] = useActiveNetworkVersion()
-  const onEthereum = activeNetworkVersion === EthereumNetworkInfo
+  const shouldUserDerivedData =
+    activeNetworkVersion.id === SupportedNetwork.ETHEREUM || activeNetworkVersion.id === SupportedNetwork.POLYGON
   const indexedData = data?.[activeNetworkVersion.id]
 
   // @TODO: remove this once we have fix for mainnet TVL issue
-  const formattedData = onEthereum ? derivedData : indexedData
+  const formattedData = shouldUserDerivedData ? derivedData : indexedData
 
   useEffect(() => {
     async function fetch() {
@@ -163,10 +164,10 @@ export function useFetchGlobalChartData(): {
         setError(true)
       }
     }
-    if (!indexedData && !error && !onEthereum) {
+    if (!indexedData && !error && !shouldUserDerivedData) {
       fetch()
     }
-  }, [data, error, dataClient, indexedData, activeNetworkVersion.id, onEthereum])
+  }, [data, error, dataClient, indexedData, activeNetworkVersion.id, shouldUserDerivedData])
 
   return {
     error,

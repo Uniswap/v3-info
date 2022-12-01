@@ -73,7 +73,7 @@ export function useFetchProtocolData(
   const parsed48 = data48?.factories?.[0]
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
-    if (anyError || anyLoading || !parsed || !blocks || tvlOffset === undefined) {
+    if (anyError || anyLoading || !parsed || !blocks || !tvlOffset) {
       return undefined
     }
 

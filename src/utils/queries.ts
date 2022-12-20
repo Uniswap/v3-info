@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
  * @param values - the keys that are used as the values to map over if
  * @param skipCount - amount of entities to skip per query
  */
-export async function splitQuery<Type>(
+export async function splitQuery<Type extends Record<string, any>>(
   query: any,
   client: ApolloClient<NormalizedCacheObject>,
   vars: any[],

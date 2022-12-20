@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { Dispatch, SetStateAction, ReactNode } from 'react'
 import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar } from 'recharts'
 import styled from 'styled-components'

@@ -26,13 +26,23 @@ const StyledLink = styled(ExternalLink)`
 const TopBar = () => {
   const ethPrices = useEthPrices()
   const [activeNetwork] = useActiveNetworkVersion()
+  let nativeAsset: string
+
+  switch (activeNetwork.id) {
+    case SupportedNetwork.CELO:
+      nativeAsset = 'Celo'
+      break
+    default:
+      nativeAsset = 'Eth'
+  }
+
   return (
     <Wrapper>
       <RowBetween>
         <Polling />
         <AutoRow gap="6px">
           <RowFixed>
-            {activeNetwork.id === SupportedNetwork.CELO ? <Item>Celo Price:</Item> : <Item>Eth Price:</Item>}
+            <Item>{nativeAsset} Price:</Item>
             <Item fontWeight="700" ml="4px">
               {formatDollarAmount(ethPrices?.current)}
             </Item>

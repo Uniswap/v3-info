@@ -5,7 +5,13 @@ import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
-import { ArbitrumNetworkInfo, CeloNetworkInfo, NetworkInfo, PolygonNetworkInfo } from 'constants/networks'
+import {
+  ArbitrumNetworkInfo,
+  BscNetworkInfo,
+  CeloNetworkInfo,
+  NetworkInfo,
+  PolygonNetworkInfo,
+} from 'constants/networks'
 import JSBI from 'jsbi'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { OptimismNetworkInfo } from '../constants/networks'
@@ -36,7 +42,9 @@ export function getEtherscanLink(
   networkVersion: NetworkInfo
 ): string {
   const prefix =
-    networkVersion === PolygonNetworkInfo
+    networkVersion === BscNetworkInfo
+      ? 'https://bscscan.com/'
+      : networkVersion === PolygonNetworkInfo
       ? 'https://polygonscan.com/'
       : networkVersion === CeloNetworkInfo
       ? 'https://explorer.celo.org'

@@ -10,6 +10,8 @@ import {
   polygonClient,
   celoClient,
   celoBlockClient,
+  bscClient,
+  bscBlockClient,
 } from 'apollo/client'
 import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
@@ -138,6 +140,8 @@ export function useDataClient(): ApolloClient<NormalizedCacheObject> {
       return polygonClient
     case SupportedNetwork.CELO:
       return celoClient
+    case SupportedNetwork.BSC:
+      return bscClient
     default:
       return client
   }
@@ -157,6 +161,8 @@ export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
       return polygonBlockClient
     case SupportedNetwork.CELO:
       return celoBlockClient
+    case SupportedNetwork.BSC:
+      return bscBlockClient
     default:
       return blockClient
   }

@@ -25,6 +25,7 @@ export const TOKEN_HIDE: { [key: string]: string[] } = {
   [SupportedNetwork.ARBITRUM]: [],
   [SupportedNetwork.OPTIMISM]: [],
   [SupportedNetwork.CELO]: [],
+  [SupportedNetwork.BSC]: [],
 }
 
 export const POOL_HIDE: { [key: string]: string[] } = {
@@ -41,6 +42,7 @@ export const POOL_HIDE: { [key: string]: string[] } = {
   [SupportedNetwork.ARBITRUM]: [],
   [SupportedNetwork.OPTIMISM]: [],
   [SupportedNetwork.CELO]: [],
+  [SupportedNetwork.BSC]: [],
 }
 export interface WalletInfo {
   connector?: AbstractConnector

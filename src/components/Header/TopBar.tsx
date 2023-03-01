@@ -32,7 +32,13 @@ const TopBar = () => {
         <Polling />
         <AutoRow gap="6px">
           <RowFixed>
-            {activeNetwork.id === SupportedNetwork.CELO ? <Item>Celo Price:</Item> : <Item>Eth Price:</Item>}
+            {activeNetwork.id === SupportedNetwork.CELO ? (
+              <Item>Celo Price:</Item>
+            ) : activeNetwork.id === SupportedNetwork.BSC ? (
+              <Item>BNB Price:</Item>
+            ) : (
+              <Item>Eth Price:</Item>
+            )}
             <Item fontWeight="700" ml="4px">
               {formatDollarAmount(ethPrices?.current)}
             </Item>

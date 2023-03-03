@@ -85,7 +85,7 @@ export const initialState: PoolsState = {
     [SupportedNetwork.OPTIMISM]: {},
     [SupportedNetwork.POLYGON]: {},
     [SupportedNetwork.CELO]: {},
-    [SupportedNetwork.BSC]: {},
+    [SupportedNetwork.BNB]: {},
   },
 }
 

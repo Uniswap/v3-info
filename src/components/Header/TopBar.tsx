@@ -34,7 +34,7 @@ const TopBar = () => {
           <RowFixed>
             {activeNetwork.id === SupportedNetwork.CELO ? (
               <Item>Celo Price:</Item>
-            ) : activeNetwork.id === SupportedNetwork.BSC ? (
+            ) : activeNetwork.id === SupportedNetwork.BNB ? (
               <Item>BNB Price:</Item>
             ) : (
               <Item>Eth Price:</Item>

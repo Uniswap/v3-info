@@ -140,7 +140,7 @@ export function useDataClient(): ApolloClient<NormalizedCacheObject> {
       return polygonClient
     case SupportedNetwork.CELO:
       return celoClient
-    case SupportedNetwork.BSC:
+    case SupportedNetwork.BNB:
       return bscClient
     default:
       return client
@@ -161,7 +161,7 @@ export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
       return polygonBlockClient
     case SupportedNetwork.CELO:
       return celoBlockClient
-    case SupportedNetwork.BSC:
+    case SupportedNetwork.BNB:
       return bscBlockClient
     default:
       return blockClient

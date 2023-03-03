@@ -3,7 +3,7 @@ import ARBITRUM_LOGO_URL from '../assets/images/arbitrum.svg'
 import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
 import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 import CELO_LOGO_URL from '../assets/images/celo-logo.svg'
-import BSC_LOGO_URL from '../assets/images/bnb-logo.svg'
+import BNB_LOGO_URL from '../assets/images/bnb-logo.svg'
 
 export enum SupportedNetwork {
   ETHEREUM,
@@ -11,7 +11,7 @@ export enum SupportedNetwork {
   OPTIMISM,
   POLYGON,
   CELO,
-  BSC,
+  BNB,
 }
 
 export type NetworkInfo = {
@@ -76,14 +76,14 @@ export const CeloNetworkInfo: NetworkInfo = {
   blurb: '',
 }
 
-export const BscNetworkInfo: NetworkInfo = {
-  id: SupportedNetwork.BSC,
-  route: 'bsc',
-  name: 'BSC',
+export const BNBNetworkInfo: NetworkInfo = {
+  id: SupportedNetwork.BNB,
+  route: 'bnb',
+  name: 'BNB Chain',
   bgColor: '#F0B90B',
   primaryColor: '#F0B90B',
   secondaryColor: '#F0B90B',
-  imageURL: BSC_LOGO_URL,
+  imageURL: BNB_LOGO_URL,
   blurb: '',
 }
 
@@ -93,5 +93,5 @@ export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   OptimismNetworkInfo,
   ArbitrumNetworkInfo,
   CeloNetworkInfo,
-  BscNetworkInfo,
+  BNBNetworkInfo,
 ]

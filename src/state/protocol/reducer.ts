@@ -64,7 +64,7 @@ export const initialState: ProtocolState = {
     transactions: undefined,
     lastUpdated: undefined,
   },
-  [SupportedNetwork.BSC]: {
+  [SupportedNetwork.BNB]: {
     data: undefined,
     chartData: undefined,
     transactions: undefined,

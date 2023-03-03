@@ -7,7 +7,7 @@ import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk
 import { SupportedChainId } from 'constants/chains'
 import {
   ArbitrumNetworkInfo,
-  BscNetworkInfo,
+  BNBNetworkInfo,
   CeloNetworkInfo,
   NetworkInfo,
   PolygonNetworkInfo,
@@ -42,7 +42,7 @@ export function getEtherscanLink(
   networkVersion: NetworkInfo
 ): string {
   const prefix =
-    networkVersion === BscNetworkInfo
+    networkVersion === BNBNetworkInfo
       ? 'https://bscscan.com/'
       : networkVersion === PolygonNetworkInfo
       ? 'https://polygonscan.com/'

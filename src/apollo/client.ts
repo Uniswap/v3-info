@@ -49,7 +49,7 @@ export const client = new ApolloClient({
 })
 
 export const arbitrumClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

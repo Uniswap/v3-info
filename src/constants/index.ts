@@ -44,6 +44,16 @@ export const POOL_HIDE: { [key: string]: string[] } = {
   [SupportedNetwork.CELO]: [],
   [SupportedNetwork.BSC]: [],
 }
+
+export const START_BLOCKS: { [key: string]: number } = {
+  [SupportedNetwork.ETHEREUM]: 1,
+  [SupportedNetwork.POLYGON]: 1,
+  [SupportedNetwork.ARBITRUM]: 1,
+  [SupportedNetwork.OPTIMISM]: 1,
+  [SupportedNetwork.CELO]: 1,
+  [SupportedNetwork.BSC]: 26324014,
+}
+
 export interface WalletInfo {
   connector?: AbstractConnector
   name: string

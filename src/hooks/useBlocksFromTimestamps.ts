@@ -1,6 +1,7 @@
 import gql from 'graphql-tag'
 import { useState, useEffect, useMemo } from 'react'
 import { splitQuery } from 'utils/queries'
+import { START_BLOCKS } from 'constants/index'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
@@ -63,9 +64,13 @@ export function useBlocksFromTimestamps(
       const formatted = []
       for (const t in networkBlocks) {
         if (networkBlocks[t].length > 0) {
+          const number = networkBlocks[t][0]['number']
+          const deploymentBlock = START_BLOCKS[activeNetwork.id]
+          const adjustedNumber = number > deploymentBlock ? number : deploymentBlock
+
           formatted.push({
             timestamp: t.split('t')[1],
-            number: networkBlocks[t][0]['number'],
+            number: adjustedNumber,
           })
         }
       }

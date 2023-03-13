@@ -53,8 +53,8 @@ async function fetchEthPrices(
       query: ETH_PRICES,
       variables: {
         block24: blocks[0],
-        block48: blocks[0],
-        blockWeek: blocks[0],
+        block48: blocks[1] ?? 1,
+        blockWeek: blocks[2] ?? 1,
       },
     })
 

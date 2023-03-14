@@ -51,7 +51,7 @@ export const START_BLOCKS: { [key: string]: number } = {
   [SupportedNetwork.ARBITRUM]: 175,
   [SupportedNetwork.OPTIMISM]: 10028767,
   [SupportedNetwork.CELO]: 13916355,
-  [SupportedNetwork.BSC]: 26324014,
+  [SupportedNetwork.BNB]: 26324014,
 }
 
 export interface WalletInfo {

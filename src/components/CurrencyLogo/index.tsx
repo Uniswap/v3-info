@@ -69,11 +69,11 @@ export default function CurrencyLogo({
   const uriLocationsArbitrum = useHttpLocations(arbitrumURI)
 
   const BNBURI = useMemo(() => {
-    if (checkSummed && arbitrumList?.[checkSummed]) {
-      return arbitrumList?.[checkSummed].token.logoURI
+    if (checkSummed && bnbList?.[checkSummed]) {
+      return bnbList?.[checkSummed].token.logoURI
     }
     return undefined
-  }, [checkSummed, arbitrumList])
+  }, [checkSummed, bnbList])
   const uriLocationsBNB = useHttpLocations(BNBURI)
 
   const polygonURI = useMemo(() => {

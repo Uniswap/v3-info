@@ -9,10 +9,27 @@ import { OptimismNetworkInfo } from 'constants/networks'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { SupportedChainId } from '@uniswap/sdk-core'
 
-const getTokenLogoURL = ({ address, chainName }: { address: string; chainName?: string }) => {
-  return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/${
-    chainName ?? 'ethereum'
-  }/assets/${address}/logo.png`
+export function chainIdToNetworkName(networkId: SupportedChainId) {
+  switch (networkId) {
+    case SupportedChainId.MAINNET:
+      return 'ethereum'
+    case SupportedChainId.ARBITRUM_ONE:
+      return 'arbitrum'
+    case SupportedChainId.OPTIMISM:
+      return 'optimism'
+    case SupportedChainId.POLYGON:
+      return 'polygon'
+    case SupportedChainId.BNB:
+      return 'smartchain'
+    default:
+      return 'ethereum'
+  }
+}
+
+const getTokenLogoURL = ({ address, chainId }: { address: string; chainId: SupportedChainId }) => {
+  return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/${chainIdToNetworkName(
+    chainId
+  )}/assets/${address}/logo.png`
 }
 
 const StyledLogo = styled(Logo)<{ size: string }>`
@@ -105,16 +122,8 @@ export default function CurrencyLogo({
 
     if (checkSummed && address) {
       const override = tempSources[address]
-      let chainName: string
-      switch (activeNetwork.chainId) {
-        case SupportedChainId.BNB:
-          chainName = 'smartchain'
-          break
-        default:
-          chainName = 'ethereum'
-      }
       return [
-        getTokenLogoURL({ address: checkSummed, chainName }),
+        getTokenLogoURL({ address: checkSummed, chainId: activeNetwork.chainId }),
         ...uriLocationsOptimism,
         ...uriLocationsArbitrum,
         ...uriLocationsPolygon,

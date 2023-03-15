@@ -131,7 +131,7 @@
     "@data-ui/histogram": "^0.0.84",
     "@types/numeral": "^2.0.1",
     "@uniswap/default-token-list": "^2.0.0",
-    "@uniswap/sdk-core": "^3.0.1",
+    "@uniswap/sdk-core": "^3.2.2",
     "@uniswap/v2-sdk": "^3.0.0-alpha.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",

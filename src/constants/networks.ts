@@ -3,6 +3,8 @@ import ARBITRUM_LOGO_URL from '../assets/images/arbitrum.svg'
 import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
 import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 import CELO_LOGO_URL from '../assets/images/celo-logo.svg'
+import BNB_LOGO_URL from '../assets/images/bnb-logo.svg'
+import { SupportedChainId } from '@uniswap/sdk-core'
 
 export enum SupportedNetwork {
   ETHEREUM,
@@ -10,9 +12,11 @@ export enum SupportedNetwork {
   OPTIMISM,
   POLYGON,
   CELO,
+  BNB,
 }
 
 export type NetworkInfo = {
+  chainId: SupportedChainId
   id: SupportedNetwork
   route: string
   name: string
@@ -24,6 +28,7 @@ export type NetworkInfo = {
 }
 
 export const EthereumNetworkInfo: NetworkInfo = {
+  chainId: SupportedChainId.MAINNET,
   id: SupportedNetwork.ETHEREUM,
   route: '',
   name: 'Ethereum',
@@ -34,6 +39,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
 }
 
 export const ArbitrumNetworkInfo: NetworkInfo = {
+  chainId: SupportedChainId.ARBITRUM_ONE,
   id: SupportedNetwork.ARBITRUM,
   route: 'arbitrum',
   name: 'Arbitrum',
@@ -44,6 +50,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
 }
 
 export const OptimismNetworkInfo: NetworkInfo = {
+  chainId: SupportedChainId.OPTIMISM,
   id: SupportedNetwork.OPTIMISM,
   route: 'optimism',
   name: 'Optimism',
@@ -54,6 +61,7 @@ export const OptimismNetworkInfo: NetworkInfo = {
 }
 
 export const PolygonNetworkInfo: NetworkInfo = {
+  chainId: SupportedChainId.POLYGON,
   id: SupportedNetwork.POLYGON,
   route: 'polygon',
   name: 'Polygon',
@@ -64,6 +72,7 @@ export const PolygonNetworkInfo: NetworkInfo = {
   blurb: '',
 }
 export const CeloNetworkInfo: NetworkInfo = {
+  chainId: SupportedChainId.CELO,
   id: SupportedNetwork.CELO,
   route: 'celo',
   name: 'Celo',
@@ -74,10 +83,23 @@ export const CeloNetworkInfo: NetworkInfo = {
   blurb: '',
 }
 
+export const BNBNetworkInfo: NetworkInfo = {
+  chainId: SupportedChainId.BNB,
+  id: SupportedNetwork.BNB,
+  route: 'bnb',
+  name: 'BNB Chain',
+  bgColor: '#F0B90B',
+  primaryColor: '#F0B90B',
+  secondaryColor: '#F0B90B',
+  imageURL: BNB_LOGO_URL,
+  blurb: '',
+}
+
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   EthereumNetworkInfo,
   PolygonNetworkInfo,
   OptimismNetworkInfo,
   ArbitrumNetworkInfo,
   CeloNetworkInfo,
+  BNBNetworkInfo,
 ]

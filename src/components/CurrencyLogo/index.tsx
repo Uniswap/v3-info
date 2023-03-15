@@ -7,9 +7,29 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { OptimismNetworkInfo } from 'constants/networks'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import { SupportedChainId } from '@uniswap/sdk-core'
 
-export const getTokenLogoURL = (address: string) => {
-  return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+export function chainIdToNetworkName(networkId: SupportedChainId) {
+  switch (networkId) {
+    case SupportedChainId.MAINNET:
+      return 'ethereum'
+    case SupportedChainId.ARBITRUM_ONE:
+      return 'arbitrum'
+    case SupportedChainId.OPTIMISM:
+      return 'optimism'
+    case SupportedChainId.POLYGON:
+      return 'polygon'
+    case SupportedChainId.BNB:
+      return 'smartchain'
+    default:
+      return 'ethereum'
+  }
+}
+
+const getTokenLogoURL = ({ address, chainId }: { address: string; chainId: SupportedChainId }) => {
+  return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/${chainIdToNetworkName(
+    chainId
+  )}/assets/${address}/logo.png`
 }
 
 const StyledLogo = styled(Logo)<{ size: string }>`
@@ -43,6 +63,7 @@ export default function CurrencyLogo({
   const arbitrumList = useCombinedActiveList()?.[42161]
   const polygon = useCombinedActiveList()?.[137]
   const celo = useCombinedActiveList()?.[42220]
+  const bnbList = useCombinedActiveList()?.[SupportedChainId.BNB]
 
   const [activeNetwork] = useActiveNetworkVersion()
 
@@ -63,6 +84,14 @@ export default function CurrencyLogo({
     return undefined
   }, [checkSummed, arbitrumList])
   const uriLocationsArbitrum = useHttpLocations(arbitrumURI)
+
+  const BNBURI = useMemo(() => {
+    if (checkSummed && bnbList?.[checkSummed]) {
+      return bnbList?.[checkSummed].token.logoURI
+    }
+    return undefined
+  }, [checkSummed, bnbList])
+  const uriLocationsBNB = useHttpLocations(BNBURI)
 
   const polygonURI = useMemo(() => {
     if (checkSummed && polygon?.[checkSummed]) {
@@ -94,16 +123,26 @@ export default function CurrencyLogo({
     if (checkSummed && address) {
       const override = tempSources[address]
       return [
-        getTokenLogoURL(checkSummed),
+        getTokenLogoURL({ address: checkSummed, chainId: activeNetwork.chainId }),
         ...uriLocationsOptimism,
         ...uriLocationsArbitrum,
         ...uriLocationsPolygon,
         ...uriLocationsCelo,
+        ...uriLocationsBNB,
         override,
       ]
     }
     return []
-  }, [address, tempSources, uriLocationsArbitrum, uriLocationsOptimism, uriLocationsPolygon, uriLocationsCelo])
+  }, [
+    address,
+    tempSources,
+    activeNetwork.chainId,
+    uriLocationsOptimism,
+    uriLocationsArbitrum,
+    uriLocationsPolygon,
+    uriLocationsCelo,
+    uriLocationsBNB,
+  ])
 
   if (activeNetwork === OptimismNetworkInfo && address === '0x4200000000000000000000000000000000000006') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />

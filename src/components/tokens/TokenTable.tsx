@@ -137,20 +137,24 @@ export default function TokenTable({
   // pagination
   const [page, setPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
+
+  const filteredTokens: TokenData[] = useMemo(() => {
+    return tokenDatas ? tokenDatas.filter((x) => !!x && !TOKEN_HIDE[currentNetwork.id].includes(x.address)) : []
+  }, [currentNetwork.id, tokenDatas])
+
   useEffect(() => {
     let extraPages = 1
-    if (tokenDatas) {
-      if (tokenDatas.length % maxItems === 0) {
+    if (filteredTokens) {
+      if (filteredTokens.length % maxItems === 0) {
         extraPages = 0
       }
-      setMaxPage(Math.floor(tokenDatas.length / maxItems) + extraPages)
+      setMaxPage(Math.floor(filteredTokens.length / maxItems) + extraPages)
     }
-  }, [maxItems, tokenDatas])
+  }, [maxItems, filteredTokens])
 
   const sortedTokens = useMemo(() => {
-    return tokenDatas
-      ? tokenDatas
-          .filter((x) => !!x && !TOKEN_HIDE[currentNetwork.id].includes(x.address))
+    return filteredTokens
+      ? filteredTokens
           .sort((a, b) => {
             if (a && b) {
               return a[sortField as keyof TokenData] > b[sortField as keyof TokenData]
@@ -162,7 +166,7 @@ export default function TokenTable({
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : []
-  }, [tokenDatas, maxItems, page, currentNetwork.id, sortField, sortDirection])
+  }, [filteredTokens, maxItems, page, sortField, sortDirection])
 
   const handleSort = useCallback(
     (newField: string) => {

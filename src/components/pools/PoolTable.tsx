@@ -112,18 +112,25 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   // pagination
   const [page, setPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
-  useEffect(() => {
-    let extraPages = 1
-    if (poolDatas.length % maxItems === 0) {
-      extraPages = 0
-    }
-    setMaxPage(Math.floor(poolDatas.length / maxItems) + extraPages)
-  }, [maxItems, poolDatas])
-
-  const sortedPools = useMemo(() => {
+    
+  const filteredPools : PoolData[] = useMemo(() => {
     return poolDatas
       ? poolDatas
           .filter((x) => !!x && !POOL_HIDE[currentNetwork.id].includes(x.address))
+      : []
+  }, [currentNetwork.id, poolDatas])
+
+  useEffect(() => {
+    let extraPages = 1
+    if (filteredPools.length % maxItems === 0) {
+      extraPages = 0
+    }
+    setMaxPage(Math.floor(filteredPools.length / maxItems) + extraPages)
+  }, [maxItems, filteredPools])
+
+  const sortedPools = useMemo(() => {
+    return filteredPools
+      ? filteredPools
           .sort((a, b) => {
             if (a && b) {
               return a[sortField as keyof PoolData] > b[sortField as keyof PoolData]
@@ -135,7 +142,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : []
-  }, [currentNetwork.id, maxItems, page, poolDatas, sortDirection, sortField])
+  }, [currentNetwork.id, maxItems, page, filteredPools, sortDirection, sortField])
 
   const handleSort = useCallback(
     (newField: string) => {

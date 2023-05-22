@@ -5,6 +5,49 @@ export const healthClient = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
+export const blockClientGoldSky = new ApolloClient({
+  uri: 'https://api.goldsky.com/api/public/project_cl7gjtydo00g30hx10fzo6f8z/subgraphs/ethereum-blocks/prod/gn',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const clientGoldSky = new ApolloClient({
+  uri: 'https://uniswap-eth.goldsky.com',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
 export const blockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
   cache: new InMemoryCache(),

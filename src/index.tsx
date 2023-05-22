@@ -17,6 +17,7 @@ import ListUpdater from './state/lists/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import { ApolloProvider } from '@apollo/client/react'
 import { client } from 'apollo/client'
+import ResetUpdater from 'state/global/updater'
 
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 if (typeof GOOGLE_ANALYTICS_ID === 'string') {
@@ -48,6 +49,7 @@ function Updaters() {
       <TokenUpdater />
       <PoolUpdater />
       <ApplicationUpdater />
+      <ResetUpdater />
     </>
   )
 }

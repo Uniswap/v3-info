@@ -9,6 +9,7 @@ import {
   ApplicationModal,
   setOpenModal,
   updateActiveNetworkVersion,
+  updateShouldUserAlternateL1DataSource,
 } from './actions'
 import { EthereumNetworkInfo } from '../../constants/networks'
 
@@ -24,6 +25,7 @@ export interface ApplicationState {
     headBlock: number | undefined
   }
   readonly activeNetworkVersion: NetworkInfo
+  readonly shouldUseAlternateL1DataSource: boolean
 }
 
 const initialState: ApplicationState = {
@@ -36,6 +38,7 @@ const initialState: ApplicationState = {
     headBlock: undefined,
   },
   activeNetworkVersion: EthereumNetworkInfo,
+  shouldUseAlternateL1DataSource: true,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -77,5 +80,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateActiveNetworkVersion, (state, { payload: { activeNetworkVersion } }) => {
       state.activeNetworkVersion = activeNetworkVersion
+    })
+    .addCase(updateShouldUserAlternateL1DataSource, (state, { payload: { shouldUse } }) => {
+      state.shouldUseAlternateL1DataSource = shouldUse
     })
 )

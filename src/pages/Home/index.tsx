@@ -20,7 +20,7 @@ import { notEmpty } from 'utils'
 import TransactionsTable from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
-import { useActiveNetworkVersion } from 'state/application/hooks'
+import { useActiveNetworkVersion, useAlternateL1DataSource, useDataClient } from 'state/application/hooks'
 import { useTransformedVolumeData } from 'hooks/chart'
 import { SmallOptionButton } from 'components/Button'
 import { VolumeWindow } from 'types'
@@ -52,6 +52,13 @@ export default function Home() {
 
   // Hot fix to remove errors in TVL data while subgraph syncs.
   const [chartData] = useProtocolChartData()
+
+  // Reset hover values when switching data sources
+  const [isAlternate] = useAlternateL1DataSource()
+  useEffect(() => {
+    setLiquidityHover(undefined)
+    setVolumeHover(undefined)
+  }, [isAlternate])
 
   useEffect(() => {
     setLiquidityHover(undefined)
@@ -117,12 +124,9 @@ export default function Home() {
 
   const [volumeWindow, setVolumeWindow] = useState(VolumeWindow.weekly)
 
-  const tvlValue = useMemo(() => {
-    if (liquidityHover) {
-      return formatDollarAmount(liquidityHover, 2, true)
-    }
-    return formatDollarAmount(protocolData?.tvlUSD, 2, true)
-  }, [liquidityHover, protocolData?.tvlUSD])
+  const tvlValue = liquidityHover
+    ? formatDollarAmount(liquidityHover, 2, true)
+    : formatDollarAmount(protocolData?.tvlUSD, 2, true)
 
   return (
     <PageWrapper>

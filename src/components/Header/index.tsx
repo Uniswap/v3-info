@@ -10,6 +10,7 @@ import NetworkDropdown from 'components/Menu/NetworkDropdown'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
 import { AutoColumn } from 'components/Column'
+import DataSourceDropdown from 'components/Menu/DataSouceDropdown'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -182,6 +183,7 @@ export default function Header() {
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
+        <DataSourceDropdown />
         <NetworkDropdown />
         <SearchSmall />
         <Menu />

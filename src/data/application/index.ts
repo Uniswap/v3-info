@@ -53,7 +53,7 @@ export function useFetchedSubgraphStatus(): {
         activeNetwork === EthereumNetworkInfo
           ? 'uniswap/uniswap-v3'
           : activeNetwork === ArbitrumNetworkInfo
-          ? 'ianlapham/arbitrum-minimal'
+          ? 'ianlapham/uniswap-arbitrum-one'
           : 'ianlapham/uniswap-optimism',
     },
   })

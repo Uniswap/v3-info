@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
 
 import application from './application/reducer'
@@ -10,18 +10,29 @@ import protocol from './protocol/reducer'
 import tokens from './tokens/reducer'
 import pools from './pools/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'lists']
+const PERSISTED_KEYS: string[] = ['user', 'lists', 'application']
+
+const reducers = combineReducers({
+  application,
+  user,
+  multicall,
+  lists,
+  protocol,
+  tokens,
+  pools,
+  state: (state = {}) => state,
+})
+
+export const DESTROY_SESSION = 'DESTROY_SESSION'
+
+const rootReducer = (state: any, action: any) => {
+  // Clear all uniswap data in redux store to initial.
+  if (action.type === DESTROY_SESSION) state = { ...state, protocol: undefined, tokens: undefined, pools: undefined }
+  return reducers(state, action)
+}
 
 const store = configureStore({
-  reducer: {
-    application,
-    user,
-    multicall,
-    lists,
-    protocol,
-    tokens,
-    pools,
-  },
+  reducer: rootReducer,
   middleware: [...getDefaultMiddleware({ thunk: false, immutableCheck: false }), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS }),
 })

@@ -31,3 +31,7 @@ export const updateSubgraphStatus = createAction<{
 export const updateActiveNetworkVersion = createAction<{ activeNetworkVersion: NetworkInfo }>(
   'application/updateActiveNetworkVersion'
 )
+
+export const updateShouldUserAlternateL1DataSource = createAction<{ shouldUse: boolean }>(
+  'application/updateShouldUserAlternateL1DataSource'
+)

@@ -12,6 +12,8 @@ import {
   celoBlockClient,
   bscClient,
   bscBlockClient,
+  clientGoldSky,
+  blockClientGoldSky,
 } from 'apollo/client'
 import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
@@ -25,6 +27,7 @@ import {
   removePopup,
   setOpenModal,
   updateActiveNetworkVersion,
+  updateShouldUserAlternateL1DataSource,
   updateSubgraphStatus,
 } from './actions'
 
@@ -114,6 +117,19 @@ export function useSubgraphStatus(): [
 }
 
 // returns a function that allows adding a popup
+export function useAlternateL1DataSource(): [boolean, (shouldUse: boolean) => void] {
+  const dispatch = useDispatch()
+  const shouldUse = useSelector((state: AppState) => state.application.shouldUseAlternateL1DataSource)
+  const update = useCallback(
+    (shouldUse: boolean) => {
+      dispatch(updateShouldUserAlternateL1DataSource({ shouldUse }))
+    },
+    [dispatch]
+  )
+  return [shouldUse, update]
+}
+
+// returns a function that allows adding a popup
 export function useActiveNetworkVersion(): [NetworkInfo, (activeNetworkVersion: NetworkInfo) => void] {
   const dispatch = useDispatch()
   const activeNetwork = useSelector((state: AppState) => state.application.activeNetworkVersion)
@@ -129,9 +145,10 @@ export function useActiveNetworkVersion(): [NetworkInfo, (activeNetworkVersion: 
 // get the apollo client related to the active network
 export function useDataClient(): ApolloClient<NormalizedCacheObject> {
   const [activeNetwork] = useActiveNetworkVersion()
+  const [isUsingAlternateL1DataSource] = useAlternateL1DataSource()
   switch (activeNetwork.id) {
     case SupportedNetwork.ETHEREUM:
-      return client
+      return isUsingAlternateL1DataSource ? clientGoldSky : client
     case SupportedNetwork.ARBITRUM:
       return arbitrumClient
     case SupportedNetwork.OPTIMISM:
@@ -150,9 +167,10 @@ export function useDataClient(): ApolloClient<NormalizedCacheObject> {
 // get the apollo client related to the active network for fetching blocks
 export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
   const [activeNetwork] = useActiveNetworkVersion()
+  const [isUsingAlternateL1DataSource] = useAlternateL1DataSource()
   switch (activeNetwork.id) {
     case SupportedNetwork.ETHEREUM:
-      return blockClient
+      return isUsingAlternateL1DataSource ? blockClientGoldSky : blockClient
     case SupportedNetwork.ARBITRUM:
       return arbitrumBlockClient
     case SupportedNetwork.OPTIMISM:

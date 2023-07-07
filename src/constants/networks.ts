@@ -98,7 +98,7 @@ export const BNBNetworkInfo: NetworkInfo = {
 }
 
 export const AvalancheNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.AVALANCHE,
+  chainId: 43114,
   id: SupportedNetwork.AVALANCHE,
   route: 'avalanche',
   name: 'Avalanche',

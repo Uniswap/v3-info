@@ -100,8 +100,8 @@ export const BNBNetworkInfo: NetworkInfo = {
 export const AvalancheNetworkInfo: NetworkInfo = {
   chainId: 43114,
   id: SupportedNetwork.AVALANCHE,
-  route: 'avalanche',
-  name: 'Avalanche',
+  route: 'avax',
+  name: 'Avax',
   bgColor: '#e84142',
   primaryColor: '#e84142',
   secondaryColor: '#e84142',

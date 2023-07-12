@@ -72,6 +72,7 @@ export const initialState: TokensState = {
     [SupportedNetwork.POLYGON]: {},
     [SupportedNetwork.CELO]: {},
     [SupportedNetwork.BNB]: {},
+    [SupportedNetwork.AVALANCHE]: {},
   },
 }
 

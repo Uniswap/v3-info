@@ -36,6 +36,8 @@ const TopBar = () => {
               <Item>Celo Price:</Item>
             ) : activeNetwork.id === SupportedNetwork.BNB ? (
               <Item>BNB Price:</Item>
+            ) : activeNetwork.id === SupportedNetwork.AVALANCHE ? (
+              <Item>AVAX Price:</Item>
             ) : (
               <Item>Eth Price:</Item>
             )}

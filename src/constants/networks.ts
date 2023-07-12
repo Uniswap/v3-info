@@ -101,7 +101,7 @@ export const AvalancheNetworkInfo: NetworkInfo = {
   chainId: 43114,
   id: SupportedNetwork.AVALANCHE,
   route: 'avax',
-  name: 'Avax',
+  name: 'Avalanche',
   bgColor: '#e84142',
   primaryColor: '#e84142',
   secondaryColor: '#e84142',

@@ -162,6 +162,49 @@ export const optimismClient = new ApolloClient({
   },
 })
 
+export const baseClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/uniswap-v3-base',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const baseBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/base-blocks',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-first',
+    },
+    query: {
+      fetchPolicy: 'cache-first',
+      errorPolicy: 'all',
+    },
+  },
+})
+
 export const bscClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc',
   cache: new InMemoryCache({

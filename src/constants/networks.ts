@@ -4,6 +4,7 @@ import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
 import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 import CELO_LOGO_URL from '../assets/images/celo-logo.svg'
 import BNB_LOGO_URL from '../assets/images/bnb-logo.svg'
+import BASE_LOGO_URL from '../assets/images/base-logo.svg'
 import { SupportedChainId } from '@uniswap/sdk-core'
 
 export enum SupportedNetwork {
@@ -13,6 +14,7 @@ export enum SupportedNetwork {
   POLYGON,
   CELO,
   BNB,
+  BASE,
 }
 
 export type NetworkInfo = {
@@ -24,7 +26,6 @@ export type NetworkInfo = {
   bgColor: string
   primaryColor: string
   secondaryColor: string
-  blurb?: string
 }
 
 export const EthereumNetworkInfo: NetworkInfo = {
@@ -69,7 +70,6 @@ export const PolygonNetworkInfo: NetworkInfo = {
   primaryColor: '#8247e5',
   secondaryColor: '#FB7876',
   imageURL: POLYGON_LOGO_URL,
-  blurb: '',
 }
 export const CeloNetworkInfo: NetworkInfo = {
   chainId: SupportedChainId.CELO,
@@ -80,7 +80,6 @@ export const CeloNetworkInfo: NetworkInfo = {
   primaryColor: '#35D07F',
   secondaryColor: '#9ACDB2',
   imageURL: CELO_LOGO_URL,
-  blurb: '',
 }
 
 export const BNBNetworkInfo: NetworkInfo = {
@@ -92,7 +91,17 @@ export const BNBNetworkInfo: NetworkInfo = {
   primaryColor: '#F0B90B',
   secondaryColor: '#F0B90B',
   imageURL: BNB_LOGO_URL,
-  blurb: '',
+}
+
+const BaseNetworkInfo: NetworkInfo = {
+  chainId: SupportedChainId.BNB,
+  id: SupportedNetwork.BASE,
+  route: 'base',
+  name: 'Base',
+  bgColor: '#0052ff',
+  primaryColor: '#0052ff',
+  secondaryColor: '#0052ff',
+  imageURL: BASE_LOGO_URL,
 }
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
@@ -102,4 +111,5 @@ export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   ArbitrumNetworkInfo,
   CeloNetworkInfo,
   BNBNetworkInfo,
+  BaseNetworkInfo,
 ]

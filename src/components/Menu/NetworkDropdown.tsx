@@ -130,7 +130,6 @@ export default function NetworkDropdown() {
                         {n.name}
                       </TYPE.main>
                     </RowFixed>
-                    {n.blurb && <Badge>{n.blurb}</Badge>}
                   </NetworkRow>
                 </StyledInternalLink>
               )

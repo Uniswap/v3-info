@@ -5,7 +5,7 @@ import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 import CELO_LOGO_URL from '../assets/images/celo-logo.svg'
 import BNB_LOGO_URL from '../assets/images/bnb-logo.svg'
 import BASE_LOGO_URL from '../assets/images/base-logo.svg'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
 export enum SupportedNetwork {
   ETHEREUM,
@@ -18,7 +18,7 @@ export enum SupportedNetwork {
 }
 
 export type NetworkInfo = {
-  chainId: SupportedChainId
+  chainId: ChainId
   id: SupportedNetwork
   route: string
   name: string
@@ -29,7 +29,7 @@ export type NetworkInfo = {
 }
 
 export const EthereumNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.MAINNET,
+  chainId: ChainId.MAINNET,
   id: SupportedNetwork.ETHEREUM,
   route: '',
   name: 'Ethereum',
@@ -40,7 +40,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
 }
 
 export const ArbitrumNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.ARBITRUM_ONE,
+  chainId: ChainId.ARBITRUM_ONE,
   id: SupportedNetwork.ARBITRUM,
   route: 'arbitrum',
   name: 'Arbitrum',
@@ -51,7 +51,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
 }
 
 export const OptimismNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.OPTIMISM,
+  chainId: ChainId.OPTIMISM,
   id: SupportedNetwork.OPTIMISM,
   route: 'optimism',
   name: 'Optimism',
@@ -62,7 +62,7 @@ export const OptimismNetworkInfo: NetworkInfo = {
 }
 
 export const PolygonNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.POLYGON,
+  chainId: ChainId.POLYGON,
   id: SupportedNetwork.POLYGON,
   route: 'polygon',
   name: 'Polygon',
@@ -72,7 +72,7 @@ export const PolygonNetworkInfo: NetworkInfo = {
   imageURL: POLYGON_LOGO_URL,
 }
 export const CeloNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.CELO,
+  chainId: ChainId.CELO,
   id: SupportedNetwork.CELO,
   route: 'celo',
   name: 'Celo',
@@ -83,7 +83,7 @@ export const CeloNetworkInfo: NetworkInfo = {
 }
 
 export const BNBNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.BNB,
+  chainId: ChainId.BNB,
   id: SupportedNetwork.BNB,
   route: 'bnb',
   name: 'BNB Chain',
@@ -94,7 +94,7 @@ export const BNBNetworkInfo: NetworkInfo = {
 }
 
 const BaseNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.BNB,
+  chainId: ChainId.BASE_GOERLI,
   id: SupportedNetwork.BASE,
   route: 'base',
   name: 'Base',

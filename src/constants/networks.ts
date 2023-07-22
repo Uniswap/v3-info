@@ -4,6 +4,7 @@ import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
 import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 import CELO_LOGO_URL from '../assets/images/celo-logo.svg'
 import BNB_LOGO_URL from '../assets/images/bnb-logo.svg'
+import AVALANCHE_LOGO_URL from '../assets/images/avalanche-logo.png'
 import { SupportedChainId } from '@uniswap/sdk-core'
 
 export enum SupportedNetwork {
@@ -13,6 +14,7 @@ export enum SupportedNetwork {
   POLYGON,
   CELO,
   BNB,
+  AVALANCHE,
 }
 
 export type NetworkInfo = {
@@ -95,6 +97,18 @@ export const BNBNetworkInfo: NetworkInfo = {
   blurb: '',
 }
 
+export const AvalancheNetworkInfo: NetworkInfo = {
+  chainId: 43114,
+  id: SupportedNetwork.AVALANCHE,
+  route: 'avax',
+  name: 'Avalanche',
+  bgColor: '#e84142',
+  primaryColor: '#e84142',
+  secondaryColor: '#e84142',
+  imageURL: AVALANCHE_LOGO_URL,
+  blurb: '',
+}
+
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   EthereumNetworkInfo,
   PolygonNetworkInfo,
@@ -102,4 +116,5 @@ export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   ArbitrumNetworkInfo,
   CeloNetworkInfo,
   BNBNetworkInfo,
+  AvalancheNetworkInfo,
 ]

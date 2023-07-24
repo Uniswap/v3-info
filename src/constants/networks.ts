@@ -96,7 +96,7 @@ export const BNBNetworkInfo: NetworkInfo = {
 }
 
 const BaseNetworkInfo: NetworkInfo = {
-  chainId: ChainId.BASE_GOERLI,
+  chainId: ChainId.BASE,
   id: SupportedNetwork.BASE,
   route: 'base',
   name: 'Base',

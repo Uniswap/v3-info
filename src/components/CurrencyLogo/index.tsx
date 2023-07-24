@@ -21,7 +21,7 @@ export function chainIdToNetworkName(networkId: ChainId) {
       return 'polygon'
     case ChainId.BNB:
       return 'smartchain'
-    case ChainId.BASE_GOERLI:
+    case ChainId.BASE:
       return 'base'
     default:
       return 'ethereum'
@@ -66,7 +66,7 @@ export default function CurrencyLogo({
   const polygon = useCombinedActiveList()?.[137]
   const celo = useCombinedActiveList()?.[42220]
   const bnbList = useCombinedActiveList()?.[ChainId.BNB]
-  const baseList = useCombinedActiveList()?.[ChainId.BASE_GOERLI]
+  const baseList = useCombinedActiveList()?.[ChainId.BASE]
 
   const [activeNetwork] = useActiveNetworkVersion()
 

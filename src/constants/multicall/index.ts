@@ -1,12 +1,11 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import MULTICALL_ABI from './abi.json'
 
 const MULTICALL_NETWORKS: { [chainId: number]: string } = {
-  [SupportedChainId.MAINNET]: '0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441',
-  [SupportedChainId.ROPSTEN]: '0x53C43764255c17BD724F74c4eF150724AC50a3ed',
-  [SupportedChainId.KOVAN]: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A',
-  [SupportedChainId.RINKEBY]: '0x42Ad527de7d4e9d9d011aC45B31D8551f8Fe9821',
-  [SupportedChainId.CELO]: '0x9e824152ADA7574b659585f51e7Da9BeC9F4aC74',
+  [ChainId.MAINNET]: '0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441',
+  [ChainId.AVALANCHE]: '0x0139141Cd4Ee88dF3Cdb65881D411bAE271Ef0C2',
+  [ChainId.CELO]: '0x9e824152ADA7574b659585f51e7Da9BeC9F4aC74',
+  [ChainId.BASE]: '0x091e99cb1C49331a94dD62755D168E941AbD0693',
 }
 
 export { MULTICALL_ABI, MULTICALL_NETWORKS }

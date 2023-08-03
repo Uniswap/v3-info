@@ -95,7 +95,7 @@ export const BNBNetworkInfo: NetworkInfo = {
   imageURL: BNB_LOGO_URL,
 }
 
-const BaseNetworkInfo: NetworkInfo = {
+export const BaseNetworkInfo: NetworkInfo = {
   chainId: ChainId.BASE,
   id: SupportedNetwork.BASE,
   route: 'base',

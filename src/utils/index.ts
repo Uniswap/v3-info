@@ -7,6 +7,8 @@ import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk
 import { SupportedChainId } from 'constants/chains'
 import {
   ArbitrumNetworkInfo,
+  AvalancheNetworkInfo,
+  BaseNetworkInfo,
   BNBNetworkInfo,
   CeloNetworkInfo,
   NetworkInfo,
@@ -48,8 +50,12 @@ export function getEtherscanLink(
       ? 'https://polygonscan.com/'
       : networkVersion === CeloNetworkInfo
       ? 'https://celoscan.io/'
+      : networkVersion === AvalancheNetworkInfo
+      ? 'https://avascan.info/'
       : networkVersion === ArbitrumNetworkInfo
       ? 'https://arbiscan.io/'
+      : networkVersion === BaseNetworkInfo
+      ? 'https://basescan.org/'
       : networkVersion === OptimismNetworkInfo
       ? 'https://optimistic.etherscan.io'
       : `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`

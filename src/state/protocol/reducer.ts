@@ -33,49 +33,22 @@ export interface ProtocolState {
   }
 }
 
+const DEFAULT_INITIAL_STATE = {
+  data: undefined,
+  chartData: undefined,
+  transactions: undefined,
+  lastUpdated: undefined,
+}
+
 export const initialState: ProtocolState = {
-  [SupportedNetwork.ETHEREUM]: {
-    data: undefined,
-    chartData: undefined,
-    transactions: undefined,
-    lastUpdated: undefined,
-  },
-  [SupportedNetwork.ARBITRUM]: {
-    data: undefined,
-    chartData: undefined,
-    transactions: undefined,
-    lastUpdated: undefined,
-  },
-  [SupportedNetwork.OPTIMISM]: {
-    data: undefined,
-    chartData: undefined,
-    transactions: undefined,
-    lastUpdated: undefined,
-  },
-  [SupportedNetwork.POLYGON]: {
-    data: undefined,
-    chartData: undefined,
-    transactions: undefined,
-    lastUpdated: undefined,
-  },
-  [SupportedNetwork.CELO]: {
-    data: undefined,
-    chartData: undefined,
-    transactions: undefined,
-    lastUpdated: undefined,
-  },
-  [SupportedNetwork.BNB]: {
-    data: undefined,
-    chartData: undefined,
-    transactions: undefined,
-    lastUpdated: undefined,
-  },
-  [SupportedNetwork.AVALANCHE]: {
-    data: undefined,
-    chartData: undefined,
-    transactions: undefined,
-    lastUpdated: undefined,
-  },
+  [SupportedNetwork.ETHEREUM]: DEFAULT_INITIAL_STATE,
+  [SupportedNetwork.ARBITRUM]: DEFAULT_INITIAL_STATE,
+  [SupportedNetwork.OPTIMISM]: DEFAULT_INITIAL_STATE,
+  [SupportedNetwork.POLYGON]: DEFAULT_INITIAL_STATE,
+  [SupportedNetwork.CELO]: DEFAULT_INITIAL_STATE,
+  [SupportedNetwork.BNB]: DEFAULT_INITIAL_STATE,
+  [SupportedNetwork.AVALANCHE]: DEFAULT_INITIAL_STATE,
+  [SupportedNetwork.BASE]: DEFAULT_INITIAL_STATE,
 }
 
 export default createReducer(initialState, (builder) =>

@@ -7,26 +7,28 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { OptimismNetworkInfo } from 'constants/networks'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
-export function chainIdToNetworkName(networkId: SupportedChainId) {
+export function chainIdToNetworkName(networkId: ChainId) {
   switch (networkId) {
-    case SupportedChainId.MAINNET:
+    case ChainId.MAINNET:
       return 'ethereum'
-    case SupportedChainId.ARBITRUM_ONE:
+    case ChainId.ARBITRUM_ONE:
       return 'arbitrum'
-    case SupportedChainId.OPTIMISM:
+    case ChainId.OPTIMISM:
       return 'optimism'
-    case SupportedChainId.POLYGON:
+    case ChainId.POLYGON:
       return 'polygon'
-    case SupportedChainId.BNB:
+    case ChainId.BNB:
       return 'smartchain'
+    case ChainId.BASE:
+      return 'base'
     default:
       return 'ethereum'
   }
 }
 
-const getTokenLogoURL = ({ address, chainId }: { address: string; chainId: SupportedChainId }) => {
+const getTokenLogoURL = ({ address, chainId }: { address: string; chainId: ChainId }) => {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/${chainIdToNetworkName(
     chainId
   )}/assets/${address}/logo.png`
@@ -63,7 +65,8 @@ export default function CurrencyLogo({
   const arbitrumList = useCombinedActiveList()?.[42161]
   const polygon = useCombinedActiveList()?.[137]
   const celo = useCombinedActiveList()?.[42220]
-  const bnbList = useCombinedActiveList()?.[SupportedChainId.BNB]
+  const bnbList = useCombinedActiveList()?.[ChainId.BNB]
+  const baseList = useCombinedActiveList()?.[ChainId.BASE]
 
   const [activeNetwork] = useActiveNetworkVersion()
 
@@ -92,6 +95,14 @@ export default function CurrencyLogo({
     return undefined
   }, [checkSummed, bnbList])
   const uriLocationsBNB = useHttpLocations(BNBURI)
+
+  const BaseURI = useMemo(() => {
+    if (checkSummed && baseList?.[checkSummed]) {
+      return baseList?.[checkSummed].token.logoURI
+    }
+    return undefined
+  }, [checkSummed, baseList])
+  const uriLocationsBase = useHttpLocations(BaseURI)
 
   const polygonURI = useMemo(() => {
     if (checkSummed && polygon?.[checkSummed]) {
@@ -129,6 +140,7 @@ export default function CurrencyLogo({
         ...uriLocationsPolygon,
         ...uriLocationsCelo,
         ...uriLocationsBNB,
+        ...uriLocationsBase,
         override,
       ]
     }
@@ -142,6 +154,7 @@ export default function CurrencyLogo({
     uriLocationsPolygon,
     uriLocationsCelo,
     uriLocationsBNB,
+    uriLocationsBase,
   ])
 
   if (activeNetwork === OptimismNetworkInfo && address === '0x4200000000000000000000000000000000000006') {

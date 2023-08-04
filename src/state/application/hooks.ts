@@ -14,6 +14,8 @@ import {
   bscBlockClient,
   avalancheClient,
   avalancheBlockClient,
+  baseBlockClient,
+  baseClient,
 } from 'apollo/client'
 import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
@@ -146,6 +148,8 @@ export function useDataClient(): ApolloClient<NormalizedCacheObject> {
       return bscClient
     case SupportedNetwork.AVALANCHE:
       return avalancheClient
+    case SupportedNetwork.BASE:
+      return baseClient
     default:
       return client
   }
@@ -169,6 +173,8 @@ export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
       return bscBlockClient
     case SupportedNetwork.AVALANCHE:
       return avalancheBlockClient
+    case SupportedNetwork.BASE:
+      return baseBlockClient
     default:
       return blockClient
   }

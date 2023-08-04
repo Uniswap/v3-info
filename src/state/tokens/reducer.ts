@@ -73,6 +73,7 @@ export const initialState: TokensState = {
     [SupportedNetwork.CELO]: {},
     [SupportedNetwork.BNB]: {},
     [SupportedNetwork.AVALANCHE]: {},
+    [SupportedNetwork.BASE]: {},
   },
 }
 

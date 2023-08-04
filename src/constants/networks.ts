@@ -4,8 +4,9 @@ import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
 import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 import CELO_LOGO_URL from '../assets/images/celo-logo.svg'
 import BNB_LOGO_URL from '../assets/images/bnb-logo.svg'
+import BASE_LOGO_URL from '../assets/images/base-logo.svg'
+import { ChainId } from '@uniswap/sdk-core'
 import AVALANCHE_LOGO_URL from '../assets/images/avalanche-logo.png'
-import { SupportedChainId } from '@uniswap/sdk-core'
 
 export enum SupportedNetwork {
   ETHEREUM,
@@ -14,11 +15,12 @@ export enum SupportedNetwork {
   POLYGON,
   CELO,
   BNB,
+  BASE,
   AVALANCHE,
 }
 
 export type NetworkInfo = {
-  chainId: SupportedChainId
+  chainId: ChainId
   id: SupportedNetwork
   route: string
   name: string
@@ -26,11 +28,10 @@ export type NetworkInfo = {
   bgColor: string
   primaryColor: string
   secondaryColor: string
-  blurb?: string
 }
 
 export const EthereumNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.MAINNET,
+  chainId: ChainId.MAINNET,
   id: SupportedNetwork.ETHEREUM,
   route: '',
   name: 'Ethereum',
@@ -41,7 +42,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
 }
 
 export const ArbitrumNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.ARBITRUM_ONE,
+  chainId: ChainId.ARBITRUM_ONE,
   id: SupportedNetwork.ARBITRUM,
   route: 'arbitrum',
   name: 'Arbitrum',
@@ -52,7 +53,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
 }
 
 export const OptimismNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.OPTIMISM,
+  chainId: ChainId.OPTIMISM,
   id: SupportedNetwork.OPTIMISM,
   route: 'optimism',
   name: 'Optimism',
@@ -63,7 +64,7 @@ export const OptimismNetworkInfo: NetworkInfo = {
 }
 
 export const PolygonNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.POLYGON,
+  chainId: ChainId.POLYGON,
   id: SupportedNetwork.POLYGON,
   route: 'polygon',
   name: 'Polygon',
@@ -71,10 +72,9 @@ export const PolygonNetworkInfo: NetworkInfo = {
   primaryColor: '#8247e5',
   secondaryColor: '#FB7876',
   imageURL: POLYGON_LOGO_URL,
-  blurb: '',
 }
 export const CeloNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.CELO,
+  chainId: ChainId.CELO,
   id: SupportedNetwork.CELO,
   route: 'celo',
   name: 'Celo',
@@ -82,11 +82,10 @@ export const CeloNetworkInfo: NetworkInfo = {
   primaryColor: '#35D07F',
   secondaryColor: '#9ACDB2',
   imageURL: CELO_LOGO_URL,
-  blurb: '',
 }
 
 export const BNBNetworkInfo: NetworkInfo = {
-  chainId: SupportedChainId.BNB,
+  chainId: ChainId.BNB,
   id: SupportedNetwork.BNB,
   route: 'bnb',
   name: 'BNB Chain',
@@ -94,7 +93,17 @@ export const BNBNetworkInfo: NetworkInfo = {
   primaryColor: '#F0B90B',
   secondaryColor: '#F0B90B',
   imageURL: BNB_LOGO_URL,
-  blurb: '',
+}
+
+export const BaseNetworkInfo: NetworkInfo = {
+  chainId: ChainId.BASE,
+  id: SupportedNetwork.BASE,
+  route: 'base',
+  name: 'Base',
+  bgColor: '#0052ff',
+  primaryColor: '#0052ff',
+  secondaryColor: '#0052ff',
+  imageURL: BASE_LOGO_URL,
 }
 
 export const AvalancheNetworkInfo: NetworkInfo = {
@@ -106,7 +115,6 @@ export const AvalancheNetworkInfo: NetworkInfo = {
   primaryColor: '#e84142',
   secondaryColor: '#e84142',
   imageURL: AVALANCHE_LOGO_URL,
-  blurb: '',
 }
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
@@ -116,5 +124,6 @@ export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   ArbitrumNetworkInfo,
   CeloNetworkInfo,
   BNBNetworkInfo,
+  BaseNetworkInfo,
   AvalancheNetworkInfo,
 ]

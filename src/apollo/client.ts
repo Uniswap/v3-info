@@ -163,7 +163,7 @@ export const optimismClient = new ApolloClient({
 })
 
 export const baseClient = new ApolloClient({
-  uri: 'https://api.studio.thegraph.com/query/48211/uniswap-v3-base/v0.0.1',
+  uri: 'https://api.studio.thegraph.com/query/48211/uniswap-v3-base/version/latest',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -191,7 +191,7 @@ export const baseClient = new ApolloClient({
 })
 
 export const baseBlockClient = new ApolloClient({
-  uri: 'https://api.studio.thegraph.com/query/48211/base-blocks/v0.0.1',
+  uri: 'https://api.studio.thegraph.com/query/48211/base-blocks/version/latest',
   cache: new InMemoryCache(),
   queryDeduplication: true,
   defaultOptions: {

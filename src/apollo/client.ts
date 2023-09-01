@@ -120,7 +120,7 @@ export const arbitrumClient = new ApolloClient({
 })
 
 export const arbitrumBlockClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-one-blocks?source=uniswap',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-one-blocks',
   cache: new InMemoryCache(),
   queryDeduplication: true,
   defaultOptions: {

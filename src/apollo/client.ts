@@ -21,7 +21,7 @@ export const blockClient = new ApolloClient({
 })
 
 export const client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  uri: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -49,7 +49,7 @@ export const client = new ApolloClient({
 })
 
 export const avalancheClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/uniswap-v3-avax',
+  uri: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/uniswap-v3-avax?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -92,7 +92,7 @@ export const avalancheBlockClient = new ApolloClient({
 })
 
 export const arbitrumClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -135,7 +135,7 @@ export const arbitrumBlockClient = new ApolloClient({
 })
 
 export const optimismClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -163,7 +163,7 @@ export const optimismClient = new ApolloClient({
 })
 
 export const baseClient = new ApolloClient({
-  uri: 'https://api.studio.thegraph.com/query/48211/uniswap-v3-base/version/latest',
+  uri: 'https://api.studio.thegraph.com/query/48211/uniswap-v3-base/version/latest?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -206,7 +206,7 @@ export const baseBlockClient = new ApolloClient({
 })
 
 export const bscClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -264,7 +264,7 @@ export const optimismBlockClient = new ApolloClient({
 })
 
 export const polygonClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -307,7 +307,7 @@ export const polygonBlockClient = new ApolloClient({
 })
 
 export const celoClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo',
+  uri: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo?source=uniswap',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

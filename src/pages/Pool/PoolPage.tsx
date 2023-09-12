@@ -279,6 +279,8 @@ export default function PoolPage({
                         ? formatDollarAmount(latestValue)
                         : view === ChartView.VOL
                         ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                        : view === ChartView.FEES
+                        ? formatDollarAmount(formattedFeesUSD[formattedFeesUSD.length - 1]?.value)
                         : view === ChartView.DENSITY
                         ? ''
                         : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}{' '}

@@ -23,6 +23,7 @@ export type NetworkInfo = {
   chainId: ChainId
   id: SupportedNetwork
   route: string
+  pathName: string
   name: string
   imageURL: string
   bgColor: string
@@ -34,6 +35,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
   chainId: ChainId.MAINNET,
   id: SupportedNetwork.ETHEREUM,
   route: '',
+  pathName: '/',
   name: 'Ethereum',
   bgColor: '#fc077d',
   primaryColor: '#fc077d',
@@ -45,6 +47,7 @@ export const ArbitrumNetworkInfo: NetworkInfo = {
   chainId: ChainId.ARBITRUM_ONE,
   id: SupportedNetwork.ARBITRUM,
   route: 'arbitrum',
+  pathName: '/arbitrum/',
   name: 'Arbitrum',
   imageURL: ARBITRUM_LOGO_URL,
   bgColor: '#0A294B',
@@ -56,6 +59,7 @@ export const OptimismNetworkInfo: NetworkInfo = {
   chainId: ChainId.OPTIMISM,
   id: SupportedNetwork.OPTIMISM,
   route: 'optimism',
+  pathName: '/optimism/',
   name: 'Optimism',
   bgColor: '#F01B36',
   primaryColor: '#F01B36',
@@ -67,6 +71,7 @@ export const PolygonNetworkInfo: NetworkInfo = {
   chainId: ChainId.POLYGON,
   id: SupportedNetwork.POLYGON,
   route: 'polygon',
+  pathName: '/polygon/',
   name: 'Polygon',
   bgColor: '#8247e5',
   primaryColor: '#8247e5',
@@ -116,6 +121,13 @@ export const AvalancheNetworkInfo: NetworkInfo = {
   secondaryColor: '#e84142',
   imageURL: AVALANCHE_LOGO_URL,
 }
+
+export const SUPPORTED_NETWORK_PATH_NAMES = [
+  EthereumNetworkInfo.pathName,
+  ArbitrumNetworkInfo.pathName,
+  OptimismNetworkInfo.pathName,
+  PolygonNetworkInfo.pathName,
+]
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
   EthereumNetworkInfo,

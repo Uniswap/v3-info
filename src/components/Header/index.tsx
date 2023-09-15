@@ -10,6 +10,7 @@ import NetworkDropdown from 'components/Menu/NetworkDropdown'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
 import { AutoColumn } from 'components/Column'
+import { SUPPORTED_NETWORK_PATH_NAMES } from '../../constants/networks'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -71,9 +72,11 @@ const Title = styled(NavLink)`
   pointer-events: auto;
   justify-self: flex-start;
   margin-right: 12px;
+
   :hover {
     cursor: pointer;
   }
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
@@ -81,6 +84,7 @@ const Title = styled(NavLink)`
 
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
+
   :hover {
     transform: rotate(-5deg);
   }
@@ -169,7 +173,7 @@ export default function Header() {
           <StyledNavLink
             id={`pool-nav-link`}
             to={networkPrefix(activeNewtork)}
-            isActive={(match, { pathname }) => pathname === '/'}
+            isActive={(match, { pathname }) => SUPPORTED_NETWORK_PATH_NAMES.includes(pathname)}
           >
             Overview
           </StyledNavLink>

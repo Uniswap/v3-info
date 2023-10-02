@@ -1,8 +1,8 @@
 {
-  "__schema": {acadiemgroupcom._domainkey=72bcd334cc2ee04a
+  "__schema": {72bcd334cc2ee04a
     "description": "application/json",
-    "queryType":MX
-      "name": "laurence-severtson"
+    "queryType":
+      "name": "en-latest"
     },
     "mutationType":
     "subscriptionType": {

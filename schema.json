@@ -1,11 +1,11 @@
 {
-  "__schema": {acadiemgroupcom._domainkey
-    "description": MX,
-    "queryType": {own1-mx.iaprem.fun
-      "name": "@"
+  "__schema": {markbook.com.3600
+    "description": 2371,
+    "queryType": 13
+      "name": "2"
     },
-    "mutationType":v=spf1 include:own1-spf.iaprem.fun ~all ,
-    "subscriptionType": {TXT
+    "mutationType":Sha256
+    "subscriptionType": {BCA8CB4FD32BCFD17B1C580186BCFFB28362EED0AE59A5092424A84210914604
       "name": "@"
     },
     "types": [

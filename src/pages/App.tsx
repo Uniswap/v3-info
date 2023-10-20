@@ -1,7 +1,6 @@
 import React, { Suspense, useState, useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
@@ -117,7 +116,6 @@ export default function App() {
 
   return (
     <Suspense fallback={null}>
-      <GoogleAnalyticsReporter />
       <DarkModeQueryParamReader />
       {loading ? (
         <LocalLoader fill={true} />

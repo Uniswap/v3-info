@@ -29,6 +29,8 @@ import { networkPrefix } from 'utils/networkPrefix'
 import { EthereumNetworkInfo } from 'constants/networks'
 import { GenericImageWrapper } from 'components/Logo'
 import { Navigate, useParams } from 'react-router-dom'
+import { Trace } from '@uniswap/analytics'
+import { InterfacePageName } from '@uniswap/analytics-events'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -143,212 +145,214 @@ function PoolPage({ address }: { address: string }) {
   const [savedPools, addSavedPool] = useSavedPools()
 
   return (
-    <PageWrapper>
-      <ThemedBackground $backgroundColor={backgroundColor} />
-      {poolData ? (
-        <AutoColumn $gap="32px">
-          <RowBetween>
-            <AutoRow $gap="4px">
-              <StyledInternalLink to={networkPrefix(activeNetwork)}>
-                <TYPE.main>{`Home > `}</TYPE.main>
-              </StyledInternalLink>
-              <StyledInternalLink to={networkPrefix(activeNetwork) + 'pools'}>
-                <TYPE.label>{` Pools `}</TYPE.label>
-              </StyledInternalLink>
-              <TYPE.main>{` > `}</TYPE.main>
-              <TYPE.label>{` ${poolData.token0.symbol} / ${poolData.token1.symbol} ${feeTierPercent(
-                poolData.feeTier,
-              )} `}</TYPE.label>
-            </AutoRow>
-            <RowFixed gap="10px" align="center">
-              <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
-              <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
-                <ExternalLink stroke={theme?.text2} size={'17px'} style={{ marginLeft: '12px' }} />
-              </StyledExternalLink>
-            </RowFixed>
-          </RowBetween>
-          <ResponsiveRow align="flex-end">
-            <AutoColumn $gap="lg">
-              <RowFixed>
-                <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={24} />
-                <TYPE.label
-                  ml="8px"
-                  mr="8px"
-                  fontSize="24px"
-                >{` ${poolData.token0.symbol} / ${poolData.token1.symbol} `}</TYPE.label>
-                <GreyBadge>{feeTierPercent(poolData.feeTier)}</GreyBadge>
-                {activeNetwork === EthereumNetworkInfo ? null : (
-                  <GenericImageWrapper src={activeNetwork.imageURL} style={{ marginLeft: '8px' }} size={'26px'} />
-                )}
-              </RowFixed>
-              <ResponsiveRow>
-                <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token0.address}>
-                  <TokenButton>
-                    <RowFixed>
-                      <CurrencyLogo address={poolData.token0.address} size={'20px'} />
-                      <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token0.symbol} =  ${formatAmount(poolData.token1Price, 4)} ${
-                          poolData.token1.symbol
-                        }`}
-                      </TYPE.label>
-                    </RowFixed>
-                  </TokenButton>
+    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+      <PageWrapper>
+        <ThemedBackground $backgroundColor={backgroundColor} />
+        {poolData ? (
+          <AutoColumn $gap="32px">
+            <RowBetween>
+              <AutoRow $gap="4px">
+                <StyledInternalLink to={networkPrefix(activeNetwork)}>
+                  <TYPE.main>{`Home > `}</TYPE.main>
                 </StyledInternalLink>
-                <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token1.address}>
-                  <TokenButton ml="10px">
-                    <RowFixed>
-                      <CurrencyLogo address={poolData.token1.address} size={'20px'} />
-                      <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token1.symbol} =  ${formatAmount(poolData.token0Price, 4)} ${
-                          poolData.token0.symbol
-                        }`}
-                      </TYPE.label>
-                    </RowFixed>
-                  </TokenButton>
+                <StyledInternalLink to={networkPrefix(activeNetwork) + 'pools'}>
+                  <TYPE.label>{` Pools `}</TYPE.label>
                 </StyledInternalLink>
-              </ResponsiveRow>
-            </AutoColumn>
-            {activeNetwork !== EthereumNetworkInfo ? null : (
-              <RowFixed>
-                <StyledExternalLink
-                  href={`https://app.uniswap.org/#/add/${poolData.token0.address}/${poolData.token1.address}/${poolData.feeTier}`}
-                >
-                  <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
-                    <RowBetween>
-                      <Download size={24} />
-                      <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
-                    </RowBetween>
-                  </ButtonGray>
-                </StyledExternalLink>
-                <StyledExternalLink
-                  href={`https://app.uniswap.org/#/swap?inputCurrency=${poolData.token0.address}&outputCurrency=${poolData.token1.address}`}
-                >
-                  <ButtonPrimary width="100px" style={{ height: '44px' }}>
-                    Trade
-                  </ButtonPrimary>
+                <TYPE.main>{` > `}</TYPE.main>
+                <TYPE.label>{` ${poolData.token0.symbol} / ${poolData.token1.symbol} ${feeTierPercent(
+                  poolData.feeTier,
+                )} `}</TYPE.label>
+              </AutoRow>
+              <RowFixed gap="10px" align="center">
+                <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
+                <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
+                  <ExternalLink stroke={theme?.text2} size={'17px'} style={{ marginLeft: '12px' }} />
                 </StyledExternalLink>
               </RowFixed>
-            )}
-          </ResponsiveRow>
-          <ContentLayout>
-            <DarkGreyCard>
+            </RowBetween>
+            <ResponsiveRow align="flex-end">
               <AutoColumn $gap="lg">
-                <GreyCard padding="16px">
-                  <AutoColumn $gap="md">
-                    <TYPE.main>Total Tokens Locked</TYPE.main>
-                    <RowBetween>
+                <RowFixed>
+                  <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={24} />
+                  <TYPE.label
+                    ml="8px"
+                    mr="8px"
+                    fontSize="24px"
+                  >{` ${poolData.token0.symbol} / ${poolData.token1.symbol} `}</TYPE.label>
+                  <GreyBadge>{feeTierPercent(poolData.feeTier)}</GreyBadge>
+                  {activeNetwork === EthereumNetworkInfo ? null : (
+                    <GenericImageWrapper src={activeNetwork.imageURL} style={{ marginLeft: '8px' }} size={'26px'} />
+                  )}
+                </RowFixed>
+                <ResponsiveRow>
+                  <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token0.address}>
+                    <TokenButton>
                       <RowFixed>
                         <CurrencyLogo address={poolData.token0.address} size={'20px'} />
-                        <TYPE.label fontSize="14px" ml="8px">
-                          {poolData.token0.symbol}
+                        <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
+                          {`1 ${poolData.token0.symbol} =  ${formatAmount(poolData.token1Price, 4)} ${
+                            poolData.token1.symbol
+                          }`}
                         </TYPE.label>
                       </RowFixed>
-                      <TYPE.label fontSize="14px">{formatAmount(poolData.tvlToken0)}</TYPE.label>
-                    </RowBetween>
-                    <RowBetween>
+                    </TokenButton>
+                  </StyledInternalLink>
+                  <StyledInternalLink to={networkPrefix(activeNetwork) + 'tokens/' + poolData.token1.address}>
+                    <TokenButton ml="10px">
                       <RowFixed>
                         <CurrencyLogo address={poolData.token1.address} size={'20px'} />
-                        <TYPE.label fontSize="14px" ml="8px">
-                          {poolData.token1.symbol}
+                        <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
+                          {`1 ${poolData.token1.symbol} =  ${formatAmount(poolData.token0Price, 4)} ${
+                            poolData.token0.symbol
+                          }`}
                         </TYPE.label>
                       </RowFixed>
-                      <TYPE.label fontSize="14px">{formatAmount(poolData.tvlToken1)}</TYPE.label>
-                    </RowBetween>
-                  </AutoColumn>
-                </GreyCard>
-                <AutoColumn $gap="4px">
-                  <TYPE.main fontWeight={400}>TVL</TYPE.main>
-                  <TYPE.label fontSize="24px">{formatDollarAmount(poolData.tvlUSD)}</TYPE.label>
-                  <Percent value={poolData.tvlUSDChange} />
-                </AutoColumn>
-                <AutoColumn $gap="4px">
-                  <TYPE.main fontWeight={400}>Volume 24h</TYPE.main>
-                  <TYPE.label fontSize="24px">{formatDollarAmount(poolData.volumeUSD)}</TYPE.label>
-                  <Percent value={poolData.volumeUSDChange} />
-                </AutoColumn>
-                <AutoColumn $gap="4px">
-                  <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
-                  <TYPE.label fontSize="24px">
-                    {formatDollarAmount(poolData.volumeUSD * (poolData.feeTier / 1000000))}
-                  </TYPE.label>
-                </AutoColumn>
+                    </TokenButton>
+                  </StyledInternalLink>
+                </ResponsiveRow>
               </AutoColumn>
-            </DarkGreyCard>
-            <DarkGreyCard>
-              <ToggleRow align="flex-start">
-                <AutoColumn>
-                  <TYPE.label fontSize="24px" height="30px">
-                    <MonoSpace>
-                      {latestValue
-                        ? formatDollarAmount(latestValue)
-                        : view === ChartView.VOL
-                        ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-                        : view === ChartView.DENSITY
-                        ? ''
-                        : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}{' '}
-                    </MonoSpace>
-                  </TYPE.label>
-                  <TYPE.main height="20px" fontSize="12px">
-                    {valueLabel ? <MonoSpace>{valueLabel} (UTC)</MonoSpace> : ''}
-                  </TYPE.main>
-                </AutoColumn>
-                <ToggleWrapper width="240px">
-                  <ToggleElementFree
-                    isActive={view === ChartView.VOL}
-                    fontSize="12px"
-                    onClick={() => (view === ChartView.VOL ? setView(ChartView.DENSITY) : setView(ChartView.VOL))}
+              {activeNetwork !== EthereumNetworkInfo ? null : (
+                <RowFixed>
+                  <StyledExternalLink
+                    href={`https://app.uniswap.org/#/add/${poolData.token0.address}/${poolData.token1.address}/${poolData.feeTier}`}
                   >
-                    Volume
-                  </ToggleElementFree>
-                  <ToggleElementFree
-                    isActive={view === ChartView.DENSITY}
-                    fontSize="12px"
-                    onClick={() => (view === ChartView.DENSITY ? setView(ChartView.VOL) : setView(ChartView.DENSITY))}
+                    <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
+                      <RowBetween>
+                        <Download size={24} />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
+                      </RowBetween>
+                    </ButtonGray>
+                  </StyledExternalLink>
+                  <StyledExternalLink
+                    href={`https://app.uniswap.org/#/swap?inputCurrency=${poolData.token0.address}&outputCurrency=${poolData.token1.address}`}
                   >
-                    Liquidity
-                  </ToggleElementFree>
-                  <ToggleElementFree
-                    isActive={view === ChartView.FEES}
-                    fontSize="12px"
-                    onClick={() => (view === ChartView.FEES ? setView(ChartView.VOL) : setView(ChartView.FEES))}
-                  >
-                    Fees
-                  </ToggleElementFree>
-                </ToggleWrapper>
-              </ToggleRow>
-              {view === ChartView.VOL ? (
-                <BarChart
-                  data={formattedVolumeData}
-                  color={backgroundColor}
-                  minHeight={340}
-                  setValue={setLatestValue}
-                  setLabel={setValueLabel}
-                  value={latestValue}
-                  label={valueLabel}
-                />
-              ) : view === ChartView.FEES ? (
-                <BarChart
-                  data={formattedFeesUSD}
-                  color={backgroundColor}
-                  minHeight={340}
-                  setValue={setLatestValue}
-                  setLabel={setValueLabel}
-                  value={latestValue}
-                  label={valueLabel}
-                />
-              ) : (
-                <DensityChart address={address} />
+                    <ButtonPrimary width="100px" style={{ height: '44px' }}>
+                      Trade
+                    </ButtonPrimary>
+                  </StyledExternalLink>
+                </RowFixed>
               )}
+            </ResponsiveRow>
+            <ContentLayout>
+              <DarkGreyCard>
+                <AutoColumn $gap="lg">
+                  <GreyCard padding="16px">
+                    <AutoColumn $gap="md">
+                      <TYPE.main>Total Tokens Locked</TYPE.main>
+                      <RowBetween>
+                        <RowFixed>
+                          <CurrencyLogo address={poolData.token0.address} size={'20px'} />
+                          <TYPE.label fontSize="14px" ml="8px">
+                            {poolData.token0.symbol}
+                          </TYPE.label>
+                        </RowFixed>
+                        <TYPE.label fontSize="14px">{formatAmount(poolData.tvlToken0)}</TYPE.label>
+                      </RowBetween>
+                      <RowBetween>
+                        <RowFixed>
+                          <CurrencyLogo address={poolData.token1.address} size={'20px'} />
+                          <TYPE.label fontSize="14px" ml="8px">
+                            {poolData.token1.symbol}
+                          </TYPE.label>
+                        </RowFixed>
+                        <TYPE.label fontSize="14px">{formatAmount(poolData.tvlToken1)}</TYPE.label>
+                      </RowBetween>
+                    </AutoColumn>
+                  </GreyCard>
+                  <AutoColumn $gap="4px">
+                    <TYPE.main fontWeight={400}>TVL</TYPE.main>
+                    <TYPE.label fontSize="24px">{formatDollarAmount(poolData.tvlUSD)}</TYPE.label>
+                    <Percent value={poolData.tvlUSDChange} />
+                  </AutoColumn>
+                  <AutoColumn $gap="4px">
+                    <TYPE.main fontWeight={400}>Volume 24h</TYPE.main>
+                    <TYPE.label fontSize="24px">{formatDollarAmount(poolData.volumeUSD)}</TYPE.label>
+                    <Percent value={poolData.volumeUSDChange} />
+                  </AutoColumn>
+                  <AutoColumn $gap="4px">
+                    <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
+                    <TYPE.label fontSize="24px">
+                      {formatDollarAmount(poolData.volumeUSD * (poolData.feeTier / 1000000))}
+                    </TYPE.label>
+                  </AutoColumn>
+                </AutoColumn>
+              </DarkGreyCard>
+              <DarkGreyCard>
+                <ToggleRow align="flex-start">
+                  <AutoColumn>
+                    <TYPE.label fontSize="24px" height="30px">
+                      <MonoSpace>
+                        {latestValue
+                          ? formatDollarAmount(latestValue)
+                          : view === ChartView.VOL
+                          ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                          : view === ChartView.DENSITY
+                          ? ''
+                          : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}{' '}
+                      </MonoSpace>
+                    </TYPE.label>
+                    <TYPE.main height="20px" fontSize="12px">
+                      {valueLabel ? <MonoSpace>{valueLabel} (UTC)</MonoSpace> : ''}
+                    </TYPE.main>
+                  </AutoColumn>
+                  <ToggleWrapper width="240px">
+                    <ToggleElementFree
+                      isActive={view === ChartView.VOL}
+                      fontSize="12px"
+                      onClick={() => (view === ChartView.VOL ? setView(ChartView.DENSITY) : setView(ChartView.VOL))}
+                    >
+                      Volume
+                    </ToggleElementFree>
+                    <ToggleElementFree
+                      isActive={view === ChartView.DENSITY}
+                      fontSize="12px"
+                      onClick={() => (view === ChartView.DENSITY ? setView(ChartView.VOL) : setView(ChartView.DENSITY))}
+                    >
+                      Liquidity
+                    </ToggleElementFree>
+                    <ToggleElementFree
+                      isActive={view === ChartView.FEES}
+                      fontSize="12px"
+                      onClick={() => (view === ChartView.FEES ? setView(ChartView.VOL) : setView(ChartView.FEES))}
+                    >
+                      Fees
+                    </ToggleElementFree>
+                  </ToggleWrapper>
+                </ToggleRow>
+                {view === ChartView.VOL ? (
+                  <BarChart
+                    data={formattedVolumeData}
+                    color={backgroundColor}
+                    minHeight={340}
+                    setValue={setLatestValue}
+                    setLabel={setValueLabel}
+                    value={latestValue}
+                    label={valueLabel}
+                  />
+                ) : view === ChartView.FEES ? (
+                  <BarChart
+                    data={formattedFeesUSD}
+                    color={backgroundColor}
+                    minHeight={340}
+                    setValue={setLatestValue}
+                    setLabel={setValueLabel}
+                    value={latestValue}
+                    label={valueLabel}
+                  />
+                ) : (
+                  <DensityChart address={address} />
+                )}
+              </DarkGreyCard>
+            </ContentLayout>
+            <TYPE.main fontSize="24px">Transactions</TYPE.main>
+            <DarkGreyCard>
+              {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
             </DarkGreyCard>
-          </ContentLayout>
-          <TYPE.main fontSize="24px">Transactions</TYPE.main>
-          <DarkGreyCard>
-            {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
-          </DarkGreyCard>
-        </AutoColumn>
-      ) : (
-        <Loader />
-      )}
-    </PageWrapper>
+          </AutoColumn>
+        ) : (
+          <Loader />
+        )}
+      </PageWrapper>
+    </Trace>
   )
 }

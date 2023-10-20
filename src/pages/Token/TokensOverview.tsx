@@ -8,6 +8,7 @@ import { notEmpty } from 'utils'
 import { useSavedTokens } from 'state/user/hooks'
 import { DarkGreyCard } from 'components/Card'
 import TopTokenMovers from 'components/tokens/TopTokenMovers'
+import { Trace } from '@uniswap/analytics'
 
 export default function TokensOverview() {
   useEffect(() => {
@@ -26,27 +27,29 @@ export default function TokensOverview() {
   const watchListTokens = useTokenDatas(savedTokens)
 
   return (
-    <PageWrapper>
-      <AutoColumn $gap="lg">
-        <TYPE.main>Your Watchlist</TYPE.main>
-        {savedTokens.length > 0 ? (
-          <TokenTable tokenDatas={watchListTokens} />
-        ) : (
-          <DarkGreyCard>
-            <TYPE.main>Saved tokens will appear here</TYPE.main>
-          </DarkGreyCard>
-        )}
-        <HideSmall>
-          <DarkGreyCard style={{ paddingTop: '12px' }}>
-            <AutoColumn $gap="md">
-              <TYPE.mediumHeader fontSize="16px">Top Movers</TYPE.mediumHeader>
-              <TopTokenMovers />
-            </AutoColumn>
-          </DarkGreyCard>
-        </HideSmall>
-        <TYPE.main>All Tokens</TYPE.main>
-        <TokenTable tokenDatas={formattedTokens} />
-      </AutoColumn>
-    </PageWrapper>
+    <Trace page="tokens-overview-page" shouldLogImpression>
+      <PageWrapper>
+        <AutoColumn $gap="lg">
+          <TYPE.main>Your Watchlist</TYPE.main>
+          {savedTokens.length > 0 ? (
+            <TokenTable tokenDatas={watchListTokens} />
+          ) : (
+            <DarkGreyCard>
+              <TYPE.main>Saved tokens will appear here</TYPE.main>
+            </DarkGreyCard>
+          )}
+          <HideSmall>
+            <DarkGreyCard style={{ paddingTop: '12px' }}>
+              <AutoColumn $gap="md">
+                <TYPE.mediumHeader fontSize="16px">Top Movers</TYPE.mediumHeader>
+                <TopTokenMovers />
+              </AutoColumn>
+            </DarkGreyCard>
+          </HideSmall>
+          <TYPE.main>All Tokens</TYPE.main>
+          <TokenTable tokenDatas={formattedTokens} />
+        </AutoColumn>
+      </PageWrapper>
+    </Trace>
   )
 }

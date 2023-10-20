@@ -7,6 +7,7 @@ import { useAllPoolData, usePoolDatas } from 'state/pools/hooks'
 import { notEmpty } from 'utils'
 import { useSavedPools } from 'state/user/hooks'
 import { DarkGreyCard } from 'components/Card'
+import { Trace } from '@uniswap/analytics'
 // import TopPoolMovers from 'components/pools/TopPoolMovers'
 
 export default function PoolPage() {
@@ -26,19 +27,21 @@ export default function PoolPage() {
   const watchlistPools = usePoolDatas(savedPools)
 
   return (
-    <PageWrapper>
-      <AutoColumn $gap="lg">
-        <TYPE.main>Your Watchlist</TYPE.main>
-        {watchlistPools.length > 0 ? (
-          <PoolTable poolDatas={watchlistPools} />
-        ) : (
-          <DarkGreyCard>
-            <TYPE.main>Saved pools will appear here</TYPE.main>
-          </DarkGreyCard>
-        )}
-        <TYPE.main>All Pools</TYPE.main>
-        <PoolTable poolDatas={poolDatas} />
-      </AutoColumn>
-    </PageWrapper>
+    <Trace page="pools-overview-page" shouldLogImpression>
+      <PageWrapper>
+        <AutoColumn $gap="lg">
+          <TYPE.main>Your Watchlist</TYPE.main>
+          {watchlistPools.length > 0 ? (
+            <PoolTable poolDatas={watchlistPools} />
+          ) : (
+            <DarkGreyCard>
+              <TYPE.main>Saved pools will appear here</TYPE.main>
+            </DarkGreyCard>
+          )}
+          <TYPE.main>All Pools</TYPE.main>
+          <PoolTable poolDatas={poolDatas} />
+        </AutoColumn>
+      </PageWrapper>
+    </Trace>
   )
 }

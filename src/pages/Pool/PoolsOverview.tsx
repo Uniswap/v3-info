@@ -27,7 +27,7 @@ export default function PoolPage() {
 
   return (
     <PageWrapper>
-      <AutoColumn gap="lg">
+      <AutoColumn $gap="lg">
         <TYPE.main>Your Watchlist</TYPE.main>
         {watchlistPools.length > 0 ? (
           <PoolTable poolDatas={watchlistPools} />
@@ -36,14 +36,6 @@ export default function PoolPage() {
             <TYPE.main>Saved pools will appear here</TYPE.main>
           </DarkGreyCard>
         )}
-        {/* <HideSmall>
-          <DarkGreyCard style={{ paddingTop: '12px' }}>
-            <AutoColumn gap="md">
-              <TYPE.mediumHeader fontSize="16px">Trending by 24H Volume</TYPE.mediumHeader>
-              <TopPoolMovers />
-            </AutoColumn>
-          </DarkGreyCard>
-        </HideSmall> */}
         <TYPE.main>All Pools</TYPE.main>
         <PoolTable poolDatas={poolDatas} />
       </AutoColumn>

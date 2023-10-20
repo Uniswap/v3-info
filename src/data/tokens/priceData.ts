@@ -17,7 +17,7 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
       t${block.timestamp}:token(id:"${tokenAddress}", block: { number: ${block.number} }, subgraphError: allow) { 
         derivedETH
       }
-    `
+    `,
   )
   queryString += ','
   queryString += blocks.map(
@@ -25,7 +25,7 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
       b${block.timestamp}: bundle(id:"1", block: { number: ${block.number} }, subgraphError: allow) { 
         ethPriceUSD
       }
-    `
+    `,
   )
 
   queryString += '}'
@@ -65,7 +65,7 @@ export async function fetchTokenPriceData(
   interval: number,
   startTimestamp: number,
   dataClient: ApolloClient<NormalizedCacheObject>,
-  blockClient: ApolloClient<NormalizedCacheObject>
+  blockClient: ApolloClient<NormalizedCacheObject>,
 ): Promise<{
   data: PriceChartEntry[]
   error: boolean
@@ -119,7 +119,11 @@ export async function fetchTokenPriceData(
     let skip = 0
     let allFound = false
     while (!allFound) {
-      const { data: priceData, errors, loading } = await dataClient.query<PriceResults>({
+      const {
+        data: priceData,
+        errors,
+        loading,
+      } = await dataClient.query<PriceResults>({
         query: PRICE_CHART,
         variables: {
           address: address,

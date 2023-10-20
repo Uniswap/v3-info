@@ -46,7 +46,7 @@ interface PricesResponse {
 
 async function fetchEthPrices(
   blocks: [number, number, number],
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<NormalizedCacheObject>,
 ): Promise<{ data: EthPrices | undefined; error: boolean }> {
   try {
     const { data, error } = await client.query<PricesResponse>({

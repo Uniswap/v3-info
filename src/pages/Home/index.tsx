@@ -126,8 +126,8 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor} />
-      <AutoColumn gap="16px">
+      <ThemedBackgroundGlobal $backgroundColor={activeNetwork.bgColor} />
+      <AutoColumn $gap="16px">
         <TYPE.main>Uniswap Overview</TYPE.main>
         <ResponsiveRow>
           <ChartWrapper>
@@ -141,7 +141,7 @@ export default function Home() {
               setValue={setLiquidityHover}
               setLabel={setLeftLabel}
               topLeft={
-                <AutoColumn gap="4px">
+                <AutoColumn $gap="4px">
                   <TYPE.mediumHeader fontSize="16px">TVL</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">
                     <MonoSpace>{tvlValue} </MonoSpace>
@@ -164,7 +164,7 @@ export default function Home() {
                   ? weeklyVolumeData
                   : formattedVolumeData
               }
-              color={theme.blue1}
+              color={theme?.blue1}
               setValue={setVolumeHover}
               setLabel={setRightLabel}
               value={volumeHover}
@@ -173,20 +173,20 @@ export default function Home() {
               topRight={
                 <RowFixed style={{ marginLeft: '-40px', marginTop: '8px' }}>
                   <SmallOptionButton
-                    active={volumeWindow === VolumeWindow.daily}
+                    $active={volumeWindow === VolumeWindow.daily}
                     onClick={() => setVolumeWindow(VolumeWindow.daily)}
                   >
                     D
                   </SmallOptionButton>
                   <SmallOptionButton
-                    active={volumeWindow === VolumeWindow.weekly}
+                    $active={volumeWindow === VolumeWindow.weekly}
                     style={{ marginLeft: '8px' }}
                     onClick={() => setVolumeWindow(VolumeWindow.weekly)}
                   >
                     W
                   </SmallOptionButton>
                   <SmallOptionButton
-                    active={volumeWindow === VolumeWindow.monthly}
+                    $active={volumeWindow === VolumeWindow.monthly}
                     style={{ marginLeft: '8px' }}
                     onClick={() => setVolumeWindow(VolumeWindow.monthly)}
                   >
@@ -195,7 +195,7 @@ export default function Home() {
                 </RowFixed>
               }
               topLeft={
-                <AutoColumn gap="4px">
+                <AutoColumn $gap="4px">
                   <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">
                     <MonoSpace> {formatDollarAmount(volumeHover, 2)}</MonoSpace>

@@ -10,7 +10,7 @@ const MobilePopupWrapper = styled.div<{ height: string | number }>`
   max-width: 100%;
   height: ${({ height }) => height};
   margin: ${({ height }) => (height ? '0 auto;' : 0)};
-  margin-bottom: ${({ height }) => (height ? '20px' : 0)}};
+  margin-bottom: ${({ height }) => (height ? '20px' : 0)};
 
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -30,9 +30,9 @@ const MobilePopupInner = styled.div`
   }
 `
 
-const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean }>`
+const FixedPopupColumn = styled(AutoColumn)<{ $extraPadding: boolean }>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '108px' : '88px')};
+  top: ${({ $extraPadding }) => ($extraPadding ? '108px' : '88px')};
   right: 1rem;
   max-width: 355px !important;
   width: 100%;
@@ -51,7 +51,7 @@ export default function Popups() {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
+      <FixedPopupColumn $gap="20px" $extraPadding={urlWarningActive}>
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}

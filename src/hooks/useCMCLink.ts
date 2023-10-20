@@ -3,9 +3,6 @@ import { useState, useEffect } from 'react'
 // endpoint to check asset exists
 const cmcEndpoint = 'https://3rdparty-apis.coinmarketcap.com/v1/cryptocurrency/contract?address='
 
-// page to view assets
-const cmcAssetUrl = 'https://coinmarketcap.com/currencies/'
-
 /**
  * Check if asset exists on CMC, if exists
  * return  url, if not return undefined

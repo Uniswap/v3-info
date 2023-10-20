@@ -31,8 +31,8 @@ export function CustomToolTip({ chartProps, poolData, currentPrice }: CustomTool
 
   return (
     <TooltipWrapper>
-      <AutoColumn gap="sm">
-        <TYPE.main color={theme.text3}>Tick stats</TYPE.main>
+      <AutoColumn $gap="sm">
+        <TYPE.main color={theme?.text3}>Tick stats</TYPE.main>
         <RowBetween>
           <TYPE.label>{poolData?.token0?.symbol} Price: </TYPE.label>
           <TYPE.label>

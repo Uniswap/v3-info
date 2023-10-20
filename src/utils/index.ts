@@ -3,8 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
 import {
   ArbitrumNetworkInfo,
   AvalancheNetworkInfo,
@@ -28,20 +27,16 @@ export function isAddress(value: any): string | false {
 }
 
 const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
-  [SupportedChainId.MAINNET]: '',
-  [SupportedChainId.ROPSTEN]: 'ropsten.',
-  [SupportedChainId.RINKEBY]: 'rinkeby.',
-  [SupportedChainId.GOERLI]: 'goerli.',
-  [SupportedChainId.KOVAN]: 'kovan.',
-  [SupportedChainId.OPTIMISM]: 'optimistic.',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'kovan-optimistic.',
+  [ChainId.MAINNET]: '',
+  [ChainId.GOERLI]: 'goerli.',
+  [ChainId.OPTIMISM]: 'optimistic.',
 }
 
 export function getEtherscanLink(
   chainId: number,
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block',
-  networkVersion: NetworkInfo
+  networkVersion: NetworkInfo,
 ): string {
   const prefix =
     networkVersion === BNBNetworkInfo

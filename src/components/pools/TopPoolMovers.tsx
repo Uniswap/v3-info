@@ -31,7 +31,7 @@ const DataCard = ({ poolData }: { poolData: PoolData }) => {
   return (
     <Container to={'pools/' + poolData.address}>
       <Wrapper>
-        <AutoColumn gap="sm">
+        <AutoColumn $gap="sm">
           <RowFixed>
             <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={16} />
             <TYPE.label ml="8px">
@@ -69,7 +69,7 @@ export default function TopPoolMovers() {
   return (
     <ScrollableX>
       {topVolume.map((entry) =>
-        entry.data ? <DataCard key={'top-card-pool-' + entry.data.address} poolData={entry.data} /> : null
+        entry.data ? <DataCard key={'top-card-pool-' + entry.data.address} poolData={entry.data} /> : null,
       )}
     </ScrollableX>
   )

@@ -6,12 +6,14 @@ import styled from 'styled-components'
 import useInterval from '../../hooks/useInterval'
 import Portal from '@reach/portal'
 
-const PopoverContainer = styled.div<{ show: boolean }>`
+const PopoverContainer = styled.div<{ $show: boolean }>`
   z-index: 9999;
 
-  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
-  opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: visibility 150ms linear, opacity 150ms linear;
+  visibility: ${(props) => (props.$show ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.$show ? 1 : 0)};
+  transition:
+    visibility 150ms linear,
+    opacity 150ms linear;
 
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
@@ -103,7 +105,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
     <>
       <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
       <Portal>
-        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+        <PopoverContainer $show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
           <Arrow
             className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}

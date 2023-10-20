@@ -142,14 +142,14 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
       setSortField(newField)
       setSortDirection(sortField !== newField ? true : !sortDirection)
     },
-    [sortDirection, sortField]
+    [sortDirection, sortField],
   )
 
   const arrow = useCallback(
     (field: string) => {
       return sortField === field ? (!sortDirection ? '↑' : '↓') : ''
     },
-    [sortDirection, sortField]
+    [sortDirection, sortField],
   )
 
   if (!poolDatas) {
@@ -159,19 +159,19 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   return (
     <Wrapper>
       {sortedPools.length > 0 ? (
-        <AutoColumn gap="16px">
+        <AutoColumn $gap="16px">
           <ResponsiveGrid>
-            <Label color={theme.text2}>#</Label>
-            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
+            <Label color={theme?.text2}>#</Label>
+            <ClickableText color={theme?.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
               Pool {arrow(SORT_FIELD.feeTier)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+            <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+            <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
               Volume 24H {arrow(SORT_FIELD.volumeUSD)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
+            <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
               Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
             </ClickableText>
           </ResponsiveGrid>
@@ -193,7 +193,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
                 setPage(page === 1 ? page : page - 1)
               }}
             >
-              <Arrow faded={page === 1 ? true : false}>←</Arrow>
+              <Arrow $faded={page === 1 ? true : false}>←</Arrow>
             </div>
             <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
             <div
@@ -201,7 +201,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
                 setPage(page === maxPage ? page : page + 1)
               }}
             >
-              <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+              <Arrow $faded={page === maxPage ? true : false}>→</Arrow>
             </div>
           </PageButtons>
         </AutoColumn>

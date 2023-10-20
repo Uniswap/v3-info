@@ -77,5 +77,5 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateActiveNetworkVersion, (state, { payload: { activeNetworkVersion } }) => {
       state.activeNetworkVersion = activeNetworkVersion
-    })
+    }),
 )

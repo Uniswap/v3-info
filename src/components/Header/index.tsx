@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { darken } from 'polished'
 import styled from 'styled-components'
 import LogoDark from '../../assets/svg/logo_white.svg'
@@ -24,7 +24,9 @@ const HeaderFrame = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 2;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
 
   background-color: ${({ theme }) => theme.bg0};
 
@@ -62,7 +64,7 @@ const HeaderLinks = styled(Row)`
   @media (max-width: 1080px) {
     padding: 0.5rem;
     justify-content: flex-end;
-  } ;
+  }
 `
 
 const Title = styled(NavLink)`
@@ -86,29 +88,22 @@ const UniIcon = styled.div`
   }
 `
 
-const activeClassName = 'ACTIVE'
-
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName,
-})`
+const StyledNavLink = styled(NavLink)<{ $isActive: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
   font-size: 1rem;
   width: fit-content;
   margin: 0 6px;
   padding: 8px 12px;
   font-weight: 500;
 
-  &.${activeClassName} {
-    border-radius: 12px;
-    background-color: ${({ theme }) => theme.bg2};
-    color: ${({ theme }) => theme.text1};
-  }
+  border-radius: ${({ $isActive }) => ($isActive ? '12px' : 'unset')};
+  background-color: ${({ theme, $isActive }) => ($isActive ? theme.bg2 : 'unset')};
+  color: ${({ theme, $isActive }) => ($isActive ? theme.text1 : theme.text3)};
 
   :hover,
   :focus {
@@ -157,6 +152,8 @@ const SmallContentGrouping = styled.div`
 export default function Header() {
   const [activeNewtork] = useActiveNetworkVersion()
 
+  const { pathname } = useLocation()
+
   return (
     <HeaderFrame>
       <HeaderRow>
@@ -166,17 +163,21 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={networkPrefix(activeNewtork)}
-            isActive={(match, { pathname }) => pathname === '/'}
-          >
+          <StyledNavLink id={`pool-nav-link`} to={networkPrefix(activeNewtork)} $isActive={pathname === '/'}>
             Overview
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'pools'}>
+          <StyledNavLink
+            id={`stake-nav-link`}
+            to={networkPrefix(activeNewtork) + 'pools'}
+            $isActive={pathname.includes('pools')}
+          >
             Pools
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'tokens'}>
+          <StyledNavLink
+            id={`stake-nav-link`}
+            to={networkPrefix(activeNewtork) + 'tokens'}
+            $isActive={pathname.includes('tokens')}
+          >
             Tokens
           </StyledNavLink>
         </HeaderLinks>
@@ -187,7 +188,7 @@ export default function Header() {
         <Menu />
       </HeaderControls>
       <SmallContentGrouping>
-        <AutoColumn gap="sm">
+        <AutoColumn $gap="sm">
           <RowBetween>
             <NetworkDropdown />
             <Menu />

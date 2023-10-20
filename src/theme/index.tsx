@@ -27,7 +27,7 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
     `
     return accumulator
   },
-  {}
+  {},
 ) as any
 
 const white = '#FFFFFF'

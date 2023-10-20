@@ -135,7 +135,7 @@ interface TransactionResults {
 
 export async function fetchPoolTransactions(
   address: string,
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<NormalizedCacheObject>,
 ): Promise<{ data: Transaction[] | undefined; error: boolean; loading: boolean }> {
   const { data, error, loading } = await client.query<TransactionResults>({
     query: POOL_TRANSACTIONS,

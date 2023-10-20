@@ -21,19 +21,19 @@ export function useAllPoolData(): {
 export function useUpdatePoolData(): (pools: PoolData[]) => void {
   const dispatch = useDispatch<AppDispatch>()
   const [network] = useActiveNetworkVersion()
-  return useCallback((pools: PoolData[]) => dispatch(updatePoolData({ pools, networkId: network.id })), [
-    dispatch,
-    network.id,
-  ])
+  return useCallback(
+    (pools: PoolData[]) => dispatch(updatePoolData({ pools, networkId: network.id })),
+    [dispatch, network.id],
+  )
 }
 
 export function useAddPoolKeys(): (addresses: string[]) => void {
   const dispatch = useDispatch<AppDispatch>()
   const [network] = useActiveNetworkVersion()
-  return useCallback((poolAddresses: string[]) => dispatch(addPoolKeys({ poolAddresses, networkId: network.id })), [
-    dispatch,
-    network.id,
-  ])
+  return useCallback(
+    (poolAddresses: string[]) => dispatch(addPoolKeys({ poolAddresses, networkId: network.id })),
+    [dispatch, network.id],
+  )
 }
 
 export function usePoolDatas(poolAddresses: string[]): PoolData[] {
@@ -129,7 +129,7 @@ export function usePoolTransactions(address: string): Transaction[] | undefined 
 }
 
 export function usePoolTickData(
-  address: string
+  address: string,
 ): [PoolTickData | undefined, (poolAddress: string, tickData: PoolTickData) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const [activeNetwork] = useActiveNetworkVersion()
@@ -139,7 +139,7 @@ export function usePoolTickData(
   const setPoolTickData = useCallback(
     (address: string, tickData: PoolTickData) =>
       dispatch(updateTickData({ poolAddress: address, tickData, networkId: activeNetwork.id })),
-    [activeNetwork.id, dispatch]
+    [activeNetwork.id, dispatch],
   )
 
   return [tickData, setPoolTickData]

@@ -39,7 +39,7 @@ export function CurrentPriceLabel({ data, chartProps, poolData }: CurrentPriceLa
       <g>
         <foreignObject x={labelData.x - 80} y={318} width={'100%'} height={100}>
           <Wrapper>
-            <AutoColumn gap="6px">
+            <AutoColumn $gap="6px">
               <RowFixed align="center">
                 <TYPE.main mr="6px">Current Price</TYPE.main>
                 <div
@@ -48,7 +48,7 @@ export function CurrentPriceLabel({ data, chartProps, poolData }: CurrentPriceLa
                     height: '6px',
                     width: '6px',
                     borderRadius: '50%',
-                    backgroundColor: theme.pink1,
+                    backgroundColor: theme?.pink1,
                   }}
                 ></div>
               </RowFixed>

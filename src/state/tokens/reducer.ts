@@ -86,7 +86,7 @@ export default createReducer(initialState, (builder) =>
             ...state.byAddress[networkId][tokenData.address],
             data: tokenData,
             lastUpdated: currentTimestamp(),
-          })
+          }),
       )
     }) // add address to byAddress keys if not included yet
     .addCase(addTokenKeys, (state, { payload: { tokenAddresses, networkId } }) => {
@@ -127,6 +127,6 @@ export default createReducer(initialState, (builder) =>
             oldestFetchedTimestamp,
           },
         }
-      }
-    )
+      },
+    ),
 )

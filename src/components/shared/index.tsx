@@ -1,5 +1,3 @@
-import Row from 'components/Row'
-import React from 'react'
 import styled from 'styled-components'
 
 export const PageButtons = styled.div`
@@ -11,9 +9,9 @@ export const PageButtons = styled.div`
   margin-bottom: 0.5em;
 `
 
-export const Arrow = styled.div<{ faded: boolean }>`
+export const Arrow = styled.div<{ $faded: boolean }>`
   color: ${({ theme }) => theme.primary1};
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
+  opacity: ${(props) => (props.$faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
   :hover {

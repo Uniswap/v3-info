@@ -46,18 +46,22 @@ export default function ListUpdatePopup({
     removeThisPopup()
   }, [auto, dispatch, listUrl, removeThisPopup])
 
-  const { added: tokensAdded, changed: tokensChanged, removed: tokensRemoved } = useMemo(() => {
+  const {
+    added: tokensAdded,
+    changed: tokensChanged,
+    removed: tokensRemoved,
+  } = useMemo(() => {
     return diffTokenLists(oldList.tokens, newList.tokens)
   }, [newList.tokens, oldList.tokens])
   const numTokensChanged = useMemo(
     () =>
       Object.keys(tokensChanged).reduce((memo, chainId: any) => memo + Object.keys(tokensChanged[chainId]).length, 0),
-    [tokensChanged]
+    [tokensChanged],
   )
 
   return (
     <AutoRow>
-      <AutoColumn style={{ flex: '1' }} gap="8px">
+      <AutoColumn style={{ flex: '1' }} $gap="8px">
         {auto ? (
           <TYPE.body fontWeight={500}>
             The token list &quot;{oldList.name}&quot; has been updated to{' '}

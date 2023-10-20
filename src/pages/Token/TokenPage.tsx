@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
 import {
   useTokenData,
   usePoolsForToken,
@@ -40,9 +39,9 @@ import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
 import { EthereumNetworkInfo } from 'constants/networks'
 import { GenericImageWrapper } from 'components/Logo'
-// import { SmallOptionButton } from '../../components/Button'
 import { useCMCLink } from 'hooks/useCMCLink'
 import CMCLogo from '../../assets/images/cmc.png'
+import { useParams } from 'react-router-dom'
 
 const PriceText = styled(TYPE.label)`
   font-size: 36px;
@@ -85,16 +84,13 @@ enum ChartView {
 
 const DEFAULT_TIME_WINDOW = TimeWindow.WEEK
 
-export default function TokenPage({
-  match: {
-    params: { address },
-  },
-}: RouteComponentProps<{ address: string }>) {
+export default function TokenPage() {
   const [activeNetwork] = useActiveNetworkVersion()
+  const { address } = useParams<{ address?: string }>()
 
-  address = address.toLowerCase()
+  const formattedAddress = address?.toLowerCase() ?? ''
   // theming
-  const backgroundColor = useColor(address)
+  const backgroundColor = useColor(formattedAddress)
   const theme = useTheme()
 
   // scroll on page view
@@ -102,14 +98,14 @@ export default function TokenPage({
     window.scrollTo(0, 0)
   }, [])
 
-  const tokenData = useTokenData(address)
-  const poolsForToken = usePoolsForToken(address)
+  const tokenData = useTokenData(formattedAddress)
+  const poolsForToken = usePoolsForToken(formattedAddress)
   const poolDatas = usePoolDatas(poolsForToken ?? [])
-  const transactions = useTokenTransactions(address)
-  const chartData = useTokenChartData(address)
+  const transactions = useTokenTransactions(formattedAddress)
+  const chartData = useTokenChartData(formattedAddress)
 
   // check for link to CMC
-  const cmcLink = useCMCLink(address)
+  const cmcLink = useCMCLink(formattedAddress)
 
   // format for chart component
   const formattedTvlData = useMemo(() => {
@@ -145,7 +141,7 @@ export default function TokenPage({
   const [timeWindow] = useState(DEFAULT_TIME_WINDOW)
 
   // pricing data
-  const priceData = useTokenPriceData(address, ONE_HOUR_SECONDS, timeWindow)
+  const priceData = useTokenPriceData(formattedAddress, ONE_HOUR_SECONDS, timeWindow)
   const adjustedToCurrent = useMemo(() => {
     if (priceData && tokenData && priceData.length > 0) {
       const adjusted = Object.assign([], priceData)
@@ -167,20 +163,23 @@ export default function TokenPage({
 
   return (
     <PageWrapper>
-      <ThemedBackground backgroundColor={backgroundColor} />
+      <ThemedBackground $backgroundColor={backgroundColor} />
       {tokenData ? (
         !tokenData.exists ? (
           <LightGreyCard style={{ textAlign: 'center' }}>
             No pool has been created with this token yet. Create one
-            <StyledExternalLink style={{ marginLeft: '4px' }} href={`https://app.uniswap.org/#/add/${address}`}>
+            <StyledExternalLink
+              style={{ marginLeft: '4px' }}
+              href={`https://app.uniswap.org/#/add/${formattedAddress}`}
+            >
               here.
             </StyledExternalLink>
           </LightGreyCard>
         ) : (
-          <AutoColumn gap="32px">
-            <AutoColumn gap="32px">
+          <AutoColumn $gap="32px">
+            <AutoColumn $gap="32px">
               <RowBetween>
-                <AutoRow gap="4px">
+                <AutoRow $gap="4px">
                   <StyledInternalLink to={networkPrefix(activeNetwork)}>
                     <TYPE.main>{`Home > `}</TYPE.main>
                   </StyledInternalLink>
@@ -189,12 +188,15 @@ export default function TokenPage({
                   </StyledInternalLink>
                   <TYPE.main>{` > `}</TYPE.main>
                   <TYPE.label>{` ${tokenData.symbol} `}</TYPE.label>
-                  <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
-                    <TYPE.main>{` (${shortenAddress(address)}) `}</TYPE.main>
+                  <StyledExternalLink href={getEtherscanLink(1, formattedAddress, 'address', activeNetwork)}>
+                    <TYPE.main>{` (${shortenAddress(formattedAddress)}) `}</TYPE.main>
                   </StyledExternalLink>
                 </AutoRow>
                 <RowFixed align="center" justify="center">
-                  <SavedIcon fill={savedTokens.includes(address)} onClick={() => addSavedToken(address)} />
+                  <SavedIcon
+                    fill={savedTokens.includes(formattedAddress)}
+                    onClick={() => addSavedToken(formattedAddress)}
+                  />
                   {cmcLink && (
                     <StyledExternalLink
                       href={cmcLink}
@@ -209,15 +211,15 @@ export default function TokenPage({
                       <StyledCMCLogo src={CMCLogo} />
                     </StyledExternalLink>
                   )}
-                  <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
-                    <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
+                  <StyledExternalLink href={getEtherscanLink(1, formattedAddress, 'address', activeNetwork)}>
+                    <ExternalLink stroke={theme?.text2} size={'17px'} style={{ marginLeft: '12px' }} />
                   </StyledExternalLink>
                 </RowFixed>
               </RowBetween>
               <ResponsiveRow align="flex-end">
-                <AutoColumn gap="md">
+                <AutoColumn $gap="md">
                   <RowFixed gap="lg">
-                    <CurrencyLogo address={address} />
+                    <CurrencyLogo address={formattedAddress} />
                     <TYPE.label ml={'10px'} fontSize="20px">
                       {tokenData.name}
                     </TYPE.label>
@@ -235,7 +237,7 @@ export default function TokenPage({
                 </AutoColumn>
                 {activeNetwork !== EthereumNetworkInfo ? null : (
                   <RowFixed>
-                    <StyledExternalLink href={`https://app.uniswap.org/#/add/${address}`}>
+                    <StyledExternalLink href={`https://app.uniswap.org/#/add/${formattedAddress}`}>
                       <ButtonGray width="170px" mr="12px" height={'100%'} style={{ height: '44px' }}>
                         <RowBetween>
                           <Download size={24} />
@@ -243,7 +245,7 @@ export default function TokenPage({
                         </RowBetween>
                       </ButtonGray>
                     </StyledExternalLink>
-                    <StyledExternalLink href={`https://app.uniswap.org/#/swap?inputCurrency=${address}`}>
+                    <StyledExternalLink href={`https://app.uniswap.org/#/swap?inputCurrency=${formattedAddress}`}>
                       <ButtonPrimary width="100px" bgColor={backgroundColor} style={{ height: '44px' }}>
                         Trade
                       </ButtonPrimary>
@@ -254,22 +256,22 @@ export default function TokenPage({
             </AutoColumn>
             <ContentLayout>
               <DarkGreyCard>
-                <AutoColumn gap="lg">
-                  <AutoColumn gap="4px">
+                <AutoColumn $gap="lg">
+                  <AutoColumn $gap="4px">
                     <TYPE.main fontWeight={400}>TVL</TYPE.main>
                     <TYPE.label fontSize="24px">{formatDollarAmount(tokenData.tvlUSD)}</TYPE.label>
                     <Percent value={tokenData.tvlUSDChange} />
                   </AutoColumn>
-                  <AutoColumn gap="4px">
+                  <AutoColumn $gap="4px">
                     <TYPE.main fontWeight={400}>24h Trading Vol</TYPE.main>
                     <TYPE.label fontSize="24px">{formatDollarAmount(tokenData.volumeUSD)}</TYPE.label>
                     <Percent value={tokenData.volumeUSDChange} />
                   </AutoColumn>
-                  <AutoColumn gap="4px">
+                  <AutoColumn $gap="4px">
                     <TYPE.main fontWeight={400}>7d Trading Vol</TYPE.main>
                     <TYPE.label fontSize="24px">{formatDollarAmount(tokenData.volumeUSDWeek)}</TYPE.label>
                   </AutoColumn>
-                  <AutoColumn gap="4px">
+                  <AutoColumn $gap="4px">
                     <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
                     <TYPE.label fontSize="24px">{formatDollarAmount(tokenData.feesUSD)}</TYPE.label>
                   </AutoColumn>
@@ -355,35 +357,6 @@ export default function TokenPage({
                     <LocalLoader fill={false} />
                   )
                 ) : null}
-                {/* <RowBetween width="100%">
-                  <div> </div>
-                  <AutoRow gap="4px" width="fit-content">
-                    <SmallOptionButton
-                      active={timeWindow === TimeWindow.DAY}
-                      onClick={() => setTimeWindow(TimeWindow.DAY)}
-                    >
-                      24H
-                    </SmallOptionButton>
-                    <SmallOptionButton
-                      active={timeWindow === TimeWindow.WEEK}
-                      onClick={() => setTimeWindow(TimeWindow.WEEK)}
-                    >
-                      1W
-                    </SmallOptionButton>
-                    <SmallOptionButton
-                      active={timeWindow === TimeWindow.MONTH}
-                      onClick={() => setTimeWindow(TimeWindow.MONTH)}
-                    >
-                      1M
-                    </SmallOptionButton>
-                    <SmallOptionButton
-                      active={timeWindow === TimeWindow.DAY}
-                      onClick={() => setTimeWindow(TimeWindow.DAY)}
-                    >
-                      All
-                    </SmallOptionButton>
-                  </AutoRow>
-                </RowBetween> */}
               </DarkGreyCard>
             </ContentLayout>
             <TYPE.main>Pools</TYPE.main>

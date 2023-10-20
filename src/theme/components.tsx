@@ -3,7 +3,6 @@ import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
-import { MEDIA_WIDTHS } from './index'
 import { ArrowLeft, X, ExternalLink as LinkIconFeather, Trash } from 'react-feather'
 
 export const ButtonText = styled.button`
@@ -24,7 +23,7 @@ export const ButtonText = styled.button`
   }
 `
 
-export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
+export const Button = styled.button.attrs<{ warning: boolean; backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1,
 }))`
   padding: 1rem 2rem 1rem 2rem;
@@ -230,7 +229,7 @@ export function ExternalLink({
         })
       }
     },
-    [href, target]
+    [href, target],
   )
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }
@@ -256,7 +255,7 @@ export function ExternalLinkIcon({
         })
       }
     },
-    [href, target]
+    [href, target],
   )
   return (
     <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClick} {...rest}>

@@ -122,7 +122,7 @@ interface TransactionResults {
 }
 
 export async function fetchTopTransactions(
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<NormalizedCacheObject>,
 ): Promise<Transaction[] | undefined> {
   try {
     const { data, error, loading } = await client.query<TransactionResults>({

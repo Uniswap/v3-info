@@ -1,7 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
-import { useCallback, useMemo } from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { useActiveWeb3React } from '../../hooks'
+import { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedToken,
@@ -12,7 +11,6 @@ import {
   addSavedToken,
   addSavedPool,
 } from './actions'
-import { useAppSelector } from 'hooks/useAppDispatch'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -22,16 +20,6 @@ function serializeToken(token: Token): SerializedToken {
     symbol: token.symbol,
     name: token.name,
   }
-}
-
-function deserializeToken(serializedToken: SerializedToken): Token {
-  return new Token(
-    serializedToken.chainId,
-    serializedToken.address,
-    serializedToken.decimals,
-    serializedToken.symbol,
-    serializedToken.name
-  )
 }
 
 export function useIsDarkMode(): boolean {
@@ -55,7 +43,7 @@ export function useAddUserToken(): (token: Token) => void {
     (token: Token) => {
       dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -66,7 +54,7 @@ export function useSavedTokens(): [string[], (address: string) => void] {
     (address: string) => {
       dispatch(addSavedToken({ address }))
     },
-    [dispatch]
+    [dispatch],
   )
   return [savedTokens ?? [], updatedSavedTokens]
 }
@@ -78,7 +66,7 @@ export function useSavedPools(): [string[], (address: string) => void] {
     (address: string) => {
       dispatch(addSavedPool({ address }))
     },
-    [dispatch]
+    [dispatch],
   )
   return [savedPools ?? [], updateSavedPools]
 }
@@ -89,18 +77,8 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
     (chainId: number, address: string) => {
       dispatch(removeSerializedToken({ chainId, address }))
     },
-    [dispatch]
+    [dispatch],
   )
-}
-
-export function useUserAddedTokens(): Token[] {
-  const { chainId } = useActiveWeb3React()
-  const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
-
-  return useMemo(() => {
-    if (!chainId) return []
-    return Object.values(serializedTokensMap?.[chainId] ?? {}).map(deserializeToken)
-  }, [serializedTokensMap, chainId])
 }
 
 export function useURLWarningVisible(): boolean {

@@ -100,7 +100,7 @@ export default createReducer(initialState, (builder) =>
             ...state.byAddress[networkId][poolData.address],
             data: poolData,
             lastUpdated: currentTimestamp(),
-          })
+          }),
       )
     })
     // add address to byAddress keys if not included yet
@@ -125,5 +125,5 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateTickData, (state, { payload: { poolAddress, tickData, networkId } }) => {
       state.byAddress[networkId][poolAddress] = { ...state.byAddress[networkId][poolAddress], tickData }
-    })
+    }),
 )

@@ -70,7 +70,7 @@ const fetchInitializedTicks = async (
   poolAddress: string,
   tickIdxLowerBound: number,
   tickIdxUpperBound: number,
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<NormalizedCacheObject>,
 ): Promise<{ loading?: boolean; error?: boolean; ticks?: Tick[] }> => {
   const tickQuery = gql`
     query surroundingTicks(
@@ -158,13 +158,17 @@ const poolQuery = gql`
 export const fetchTicksSurroundingPrice = async (
   poolAddress: string,
   client: ApolloClient<NormalizedCacheObject>,
-  numSurroundingTicks = DEFAULT_SURROUNDING_TICKS
+  numSurroundingTicks = DEFAULT_SURROUNDING_TICKS,
 ): Promise<{
   loading?: boolean
   error?: boolean
   data?: PoolTickData
 }> => {
-  const { data: poolResult, error, loading } = await client.query<PoolResult>({
+  const {
+    data: poolResult,
+    error,
+    loading,
+  } = await client.query<PoolResult>({
     query: poolQuery,
     variables: {
       poolAddress,
@@ -258,7 +262,7 @@ export const fetchTicksSurroundingPrice = async (
     activeTickProcessed: TickProcessed,
     tickSpacing: number,
     numSurroundingTicks: number,
-    direction: Direction
+    direction: Direction,
   ) => {
     let previousTickProcessed: TickProcessed = {
       ...activeTickProcessed,
@@ -301,13 +305,13 @@ export const fetchTicksSurroundingPrice = async (
       if (direction == Direction.ASC && currentInitializedTick) {
         currentTickProcessed.liquidityActive = JSBI.add(
           previousTickProcessed.liquidityActive,
-          JSBI.BigInt(currentInitializedTick.liquidityNet)
+          JSBI.BigInt(currentInitializedTick.liquidityNet),
         )
       } else if (direction == Direction.DESC && JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
         // We are iterating descending, so look at the previous tick and apply any net liquidity.
         currentTickProcessed.liquidityActive = JSBI.subtract(
           previousTickProcessed.liquidityActive,
-          previousTickProcessed.liquidityNet
+          previousTickProcessed.liquidityNet,
         )
       }
 
@@ -326,14 +330,14 @@ export const fetchTicksSurroundingPrice = async (
     activeTickProcessed,
     tickSpacing,
     numSurroundingTicks,
-    Direction.ASC
+    Direction.ASC,
   )
 
   const previousTicks: TickProcessed[] = computeSurroundingTicks(
     activeTickProcessed,
     tickSpacing,
     numSurroundingTicks,
-    Direction.DESC
+    Direction.DESC,
   )
 
   const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)

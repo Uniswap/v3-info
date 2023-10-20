@@ -11,8 +11,8 @@ interface TagInfo extends TagDetails {
  * Token instances created from token info on a token list.
  */
 export class WrappedTokenInfo implements Token {
-  public readonly isNative: false = false
-  public readonly isToken: true = true
+  public readonly isNative = false
+  public readonly isToken = true
   public readonly list: TokenList
 
   public readonly tokenInfo: TokenInfo

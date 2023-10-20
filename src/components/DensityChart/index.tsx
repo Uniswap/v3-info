@@ -171,7 +171,7 @@ export default function DensityChart({ address }: DensityChartProps) {
               tvlToken0: amount0,
               tvlToken1: amount1,
             }
-          })
+          }),
         )
         // offset the values to line off bars with TVL used to swap across bar
         newData?.map((entry, i) => {
@@ -257,6 +257,9 @@ export default function DensityChart({ address }: DensityChartProps) {
     height: number
     fill: string
   }) => {
+    if (isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)) {
+      return null
+    }
     return (
       <g>
         <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
@@ -294,7 +297,7 @@ export default function DensityChart({ address }: DensityChartProps) {
               }}
             >
               {zoomedData?.map((entry, index) => {
-                return <Cell key={`cell-${index}`} fill={entry.isCurrent ? theme.pink1 : theme.blue1} />
+                return <Cell key={`cell-${index}`} fill={entry.isCurrent ? theme?.pink1 : theme?.blue1} />
               })}
               <LabelList
                 dataKey="activeLiquidity"

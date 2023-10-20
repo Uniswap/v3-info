@@ -73,7 +73,7 @@ export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): Token
       .reduce<{ [chainId: string]: true }>((memo, value) => {
         memo[value] = true
         return memo
-      }, {})
+      }, {}),
   ).map((id) => parseInt(id))
 
   return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {
@@ -113,7 +113,7 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
   return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(
-    (url) => !UNSUPPORTED_LIST_URLS.includes(url)
+    (url) => !UNSUPPORTED_LIST_URLS.includes(url),
   )
 }
 

@@ -6,7 +6,6 @@ import { animated } from 'react-spring'
 import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
-import TransactionPopup from './TransactionPopup'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -72,12 +71,7 @@ export default function PopupItem({
   const theme = useContext(ThemeContext)
 
   let popupContent
-  if ('txn' in content) {
-    const {
-      txn: { hash, success, summary },
-    } = content
-    popupContent = <TransactionPopup hash={hash} success={success} summary={summary} />
-  } else if ('listUpdate' in content) {
+  if ('listUpdate' in content) {
     const {
       listUpdate: { listUrl, oldList, newList, auto },
     } = content
@@ -92,7 +86,7 @@ export default function PopupItem({
 
   return (
     <Popup>
-      <StyledClose color={theme.text2} onClick={removeThisPopup} />
+      <StyledClose color={theme?.text2} onClick={removeThisPopup} />
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>

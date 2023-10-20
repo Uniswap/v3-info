@@ -10,7 +10,7 @@ import {
   updatePriceData,
   updateTransactions,
 } from './actions'
-import { isAddress } from 'ethers/lib/utils'
+import { isAddress } from 'ethers'
 import { fetchPoolsForToken } from 'data/tokens/poolsForToken'
 import { fetchTokenChartData } from 'data/tokens/chartData'
 import { fetchTokenPriceData } from 'data/tokens/priceData'
@@ -38,7 +38,7 @@ export function useUpdateTokenData(): (tokens: TokenData[]) => void {
     (tokens: TokenData[]) => {
       dispatch(updateTokenData({ tokens, networkId: activeNetwork.id }))
     },
-    [activeNetwork.id, dispatch]
+    [activeNetwork.id, dispatch],
   )
 }
 
@@ -47,7 +47,7 @@ export function useAddTokenKeys(): (addresses: string[]) => void {
   const [activeNetwork] = useActiveNetworkVersion()
   return useCallback(
     (tokenAddresses: string[]) => dispatch(addTokenKeys({ tokenAddresses, networkId: activeNetwork.id })),
-    [activeNetwork.id, dispatch]
+    [activeNetwork.id, dispatch],
   )
 }
 
@@ -64,13 +64,13 @@ export function useTokenDatas(addresses: string[] | undefined): TokenData[] | un
 
   const data = useMemo(() => {
     if (!addresses) {
-      return undefined
+      return []
     }
     return addresses
       .map((a) => {
         return allTokenData[a]?.data
       })
-      .filter(notEmpty)
+      .filter(notEmpty) as TokenData[]
   }, [addresses, allTokenData])
 
   return data
@@ -166,7 +166,7 @@ export function useTokenChartData(address: string): TokenChartEntry[] | undefine
 export function useTokenPriceData(
   address: string,
   interval: number,
-  timeWindow: OpUnitType
+  timeWindow: OpUnitType,
 ): PriceChartEntry[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
   const [activeNetwork] = useActiveNetworkVersion()
@@ -187,7 +187,7 @@ export function useTokenPriceData(
         interval,
         startTimestamp,
         dataClient,
-        blockClient
+        blockClient,
       )
       if (data) {
         dispatch(
@@ -197,7 +197,7 @@ export function useTokenPriceData(
             priceData: data,
             oldestFetchedTimestamp: startTimestamp,
             networkId: activeNetwork.id,
-          })
+          }),
         )
       }
       if (fetchingError) {

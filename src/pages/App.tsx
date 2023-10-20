@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
@@ -34,12 +34,12 @@ const HeaderWrapper = styled.div`
   z-index: 2;
 `
 
-const BodyWrapper = styled.div<{ warningActive?: boolean }>`
+const BodyWrapper = styled.div<{ $warningActive?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   padding-top: 40px;
-  margin-top: ${({ warningActive }) => (warningActive ? '140px' : '100px')};
+  margin-top: ${({ $warningActive }) => ($warningActive ? '140px' : '100px')};
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -117,8 +117,8 @@ export default function App() {
 
   return (
     <Suspense fallback={null}>
-      <Route component={GoogleAnalyticsReporter} />
-      <Route component={DarkModeQueryParamReader} />
+      <GoogleAnalyticsReporter />
+      <DarkModeQueryParamReader />
       {loading ? (
         <LocalLoader fill={true} />
       ) : (
@@ -153,15 +153,15 @@ export default function App() {
               </BodyWrapper>
             </AppWrapper>
           ) : (
-            <BodyWrapper warningActive={showNotSyncedWarning}>
+            <BodyWrapper $warningActive={showNotSyncedWarning}>
               <Popups />
-              <Switch>
-                <Route exact strict path="/:networkID?/pools/:address" component={PoolPage} />
-                <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
-                <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
-                <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
-                <Route exact path="/:networkID?" component={Home} />
-              </Switch>
+              <Routes>
+                <Route path="/:networkID?/pools/:address" element={<PoolPage />} />
+                <Route path="/:networkID?/pools" element={<PoolsOverview />} />
+                <Route path="/:networkID?/tokens/:address" element={<RedirectInvalidToken />} />
+                <Route path="/:networkID?/tokens" element={<TokensOverview />} />
+                <Route path="/:networkID?" element={<Home />} />
+              </Routes>
               <Marginer />
             </BodyWrapper>
           )}

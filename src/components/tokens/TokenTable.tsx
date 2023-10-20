@@ -84,7 +84,7 @@ const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) 
           <HideExtraSmall style={{ marginLeft: '10px' }}>
             <RowFixed>
               <HoverInlineText text={tokenData.name} />
-              <Label ml="8px" color={theme.text3}>
+              <Label ml="8px" color={theme?.text3}>
                 ({tokenData.symbol})
               </Label>
             </RowFixed>
@@ -169,14 +169,14 @@ export default function TokenTable({
       setSortField(newField)
       setSortDirection(sortField !== newField ? true : !sortDirection)
     },
-    [sortDirection, sortField]
+    [sortDirection, sortField],
   )
 
   const arrow = useCallback(
     (field: string) => {
       return sortField === field ? (!sortDirection ? '↑' : '↓') : ''
     },
-    [sortDirection, sortField]
+    [sortDirection, sortField],
   )
 
   if (!tokenDatas) {
@@ -186,25 +186,25 @@ export default function TokenTable({
   return (
     <Wrapper>
       {sortedTokens.length > 0 ? (
-        <AutoColumn gap="16px">
+        <AutoColumn $gap="16px">
           <ResponsiveGrid>
-            <Label color={theme.text2}>#</Label>
-            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.name)}>
+            <Label color={theme?.text2}>#</Label>
+            <ClickableText color={theme?.text2} onClick={() => handleSort(SORT_FIELD.name)}>
               Name {arrow(SORT_FIELD.name)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.priceUSD)}>
+            <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.priceUSD)}>
               Price {arrow(SORT_FIELD.priceUSD)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChange)}>
+            <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChange)}>
               Price Change {arrow(SORT_FIELD.priceUSDChange)}
             </ClickableText>
             {/* <ClickableText end={1} onClick={() => handleSort(SORT_FIELD.priceUSDChangeWeek)}>
             7d {arrow(SORT_FIELD.priceUSDChangeWeek)}
           </ClickableText> */}
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+            <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
               Volume 24H {arrow(SORT_FIELD.volumeUSD)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+            <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
           </ResponsiveGrid>
@@ -227,7 +227,7 @@ export default function TokenTable({
                 setPage(page === 1 ? page : page - 1)
               }}
             >
-              <Arrow faded={page === 1 ? true : false}>←</Arrow>
+              <Arrow $faded={page === 1 ? true : false}>←</Arrow>
             </div>
             <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
             <div
@@ -235,7 +235,7 @@ export default function TokenTable({
                 setPage(page === maxPage ? page : page + 1)
               }}
             >
-              <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+              <Arrow $faded={page === maxPage ? true : false}>→</Arrow>
             </div>
           </PageButtons>
         </AutoColumn>

@@ -24,6 +24,6 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
           throw error
         })
     },
-    [dispatch]
+    [dispatch],
   )
 }

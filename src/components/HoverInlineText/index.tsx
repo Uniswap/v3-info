@@ -3,15 +3,15 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const TextWrapper = styled.div<{
-  margin: boolean
-  link: boolean
+  $margin: boolean
+  $link: boolean
   color?: string
   fontSize?: string
-  adjustSize?: boolean
+  $adjustSize?: boolean
 }>`
   position: relative;
-  margin-left: ${({ margin }) => margin && '4px'};
-  color: ${({ theme, link, color }) => (link ? theme.blue1 : color ?? theme.text1)};
+  margin-left: ${({ $margin }) => $margin && '4px'};
+  color: ${({ theme, $link, color }) => ($link ? theme.blue1 : color ?? theme.text1)};
   font-size: ${({ fontSize }) => fontSize ?? 'inherit'};
 
   :hover {
@@ -19,7 +19,7 @@ const TextWrapper = styled.div<{
   }
 
   @media screen and (max-width: 600px) {
-    font-size: ${({ adjustSize }) => adjustSize && '12px'};
+    font-size: ${({ $adjustSize }) => $adjustSize && '12px'};
   }
 `
 
@@ -53,9 +53,9 @@ const HoverInlineText = ({
         <TextWrapper
           onMouseEnter={() => setShowHover(true)}
           onMouseLeave={() => setShowHover(false)}
-          margin={margin}
-          adjustSize={adjustSize}
-          link={!!link}
+          $margin={margin}
+          $adjustSize={adjustSize}
+          $link={!!link}
           color={color}
           fontSize={fontSize}
           {...rest}
@@ -67,7 +67,7 @@ const HoverInlineText = ({
   }
 
   return (
-    <TextWrapper color={color} margin={margin} adjustSize={adjustSize} link={!!link} fontSize={fontSize} {...rest}>
+    <TextWrapper color={color} $margin={margin} $adjustSize={adjustSize} $link={!!link} fontSize={fontSize} {...rest}>
       {text}
     </TextWrapper>
   )

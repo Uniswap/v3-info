@@ -24,7 +24,7 @@ export const GET_BLOCKS = (timestamps: string[]) => {
  */
 export function useBlocksFromTimestamps(
   timestamps: number[],
-  blockClientOverride?: ApolloClient<NormalizedCacheObject>
+  blockClientOverride?: ApolloClient<NormalizedCacheObject>,
 ): {
   blocks:
     | {
@@ -95,7 +95,7 @@ export function useBlocksFromTimestamps(
 export async function getBlocksFromTimestamps(
   timestamps: number[],
   blockClient: ApolloClient<NormalizedCacheObject>,
-  skipCount = 500
+  skipCount = 500,
 ) {
   if (timestamps?.length === 0) {
     return []

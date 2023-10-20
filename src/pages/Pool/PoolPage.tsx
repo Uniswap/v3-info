@@ -1,9 +1,8 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import { useColor } from 'hooks/useColor'
 import { ThemedBackground, PageWrapper } from 'pages/styled'
-import { feeTierPercent, getEtherscanLink } from 'utils'
+import { feeTierPercent, getEtherscanLink, isAddress } from 'utils'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { TYPE, StyledInternalLink } from 'theme'
@@ -29,6 +28,7 @@ import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
 import { EthereumNetworkInfo } from 'constants/networks'
 import { GenericImageWrapper } from 'components/Logo'
+import { Navigate, useParams } from 'react-router-dom'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -72,11 +72,15 @@ enum ChartView {
   FEES,
 }
 
-export default function PoolPage({
-  match: {
-    params: { address },
-  },
-}: RouteComponentProps<{ address: string }>) {
+export default function PoolPageWrapper() {
+  const { address } = useParams<{ address: string }>()
+  if (!address || !isAddress(address)) {
+    return <Navigate to={`/`} replace />
+  }
+  return <PoolPage address={address} />
+}
+
+function PoolPage({ address }: { address: string }) {
   const [activeNetwork] = useActiveNetworkVersion()
 
   useEffect(() => {
@@ -140,11 +144,11 @@ export default function PoolPage({
 
   return (
     <PageWrapper>
-      <ThemedBackground backgroundColor={backgroundColor} />
+      <ThemedBackground $backgroundColor={backgroundColor} />
       {poolData ? (
-        <AutoColumn gap="32px">
+        <AutoColumn $gap="32px">
           <RowBetween>
-            <AutoRow gap="4px">
+            <AutoRow $gap="4px">
               <StyledInternalLink to={networkPrefix(activeNetwork)}>
                 <TYPE.main>{`Home > `}</TYPE.main>
               </StyledInternalLink>
@@ -153,18 +157,18 @@ export default function PoolPage({
               </StyledInternalLink>
               <TYPE.main>{` > `}</TYPE.main>
               <TYPE.label>{` ${poolData.token0.symbol} / ${poolData.token1.symbol} ${feeTierPercent(
-                poolData.feeTier
+                poolData.feeTier,
               )} `}</TYPE.label>
             </AutoRow>
             <RowFixed gap="10px" align="center">
               <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
               <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
-                <ExternalLink stroke={theme.text2} size={'17px'} style={{ marginLeft: '12px' }} />
+                <ExternalLink stroke={theme?.text2} size={'17px'} style={{ marginLeft: '12px' }} />
               </StyledExternalLink>
             </RowFixed>
           </RowBetween>
           <ResponsiveRow align="flex-end">
-            <AutoColumn gap="lg">
+            <AutoColumn $gap="lg">
               <RowFixed>
                 <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={24} />
                 <TYPE.label
@@ -228,9 +232,9 @@ export default function PoolPage({
           </ResponsiveRow>
           <ContentLayout>
             <DarkGreyCard>
-              <AutoColumn gap="lg">
+              <AutoColumn $gap="lg">
                 <GreyCard padding="16px">
-                  <AutoColumn gap="md">
+                  <AutoColumn $gap="md">
                     <TYPE.main>Total Tokens Locked</TYPE.main>
                     <RowBetween>
                       <RowFixed>
@@ -252,17 +256,17 @@ export default function PoolPage({
                     </RowBetween>
                   </AutoColumn>
                 </GreyCard>
-                <AutoColumn gap="4px">
+                <AutoColumn $gap="4px">
                   <TYPE.main fontWeight={400}>TVL</TYPE.main>
                   <TYPE.label fontSize="24px">{formatDollarAmount(poolData.tvlUSD)}</TYPE.label>
                   <Percent value={poolData.tvlUSDChange} />
                 </AutoColumn>
-                <AutoColumn gap="4px">
+                <AutoColumn $gap="4px">
                   <TYPE.main fontWeight={400}>Volume 24h</TYPE.main>
                   <TYPE.label fontSize="24px">{formatDollarAmount(poolData.volumeUSD)}</TYPE.label>
                   <Percent value={poolData.volumeUSDChange} />
                 </AutoColumn>
-                <AutoColumn gap="4px">
+                <AutoColumn $gap="4px">
                   <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
                   <TYPE.label fontSize="24px">
                     {formatDollarAmount(poolData.volumeUSD * (poolData.feeTier / 1000000))}

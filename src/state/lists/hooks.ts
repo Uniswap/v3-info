@@ -34,7 +34,6 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   const map = list.tokens.reduce<Mutable<TokenAddressMap>>((tokenMap, tokenInfo) => {
     const token = new WrappedTokenInfo(tokenInfo, list)
     if (tokenMap[token.chainId]?.[token.address] !== undefined) {
-      console.error(`Duplicate token! ${token.address}`)
       return tokenMap
     }
     if (!tokenMap[token.chainId]) tokenMap[token.chainId] = {}

@@ -20,15 +20,11 @@ import { SharedEventName } from '@uniswap/analytics-events'
 
 // Actual key is set by proxy server
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
-initializeAnalytics(
-  AMPLITUDE_DUMMY_KEY,
-  OriginApplication.INTERFACE, // OriginApplication.INFO, // todo: use correct value here
-  {
-    proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
-    defaultEventName: SharedEventName.PAGE_VIEWED,
-    debug: true,
-  },
-)
+initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INFO, {
+  proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
+  defaultEventName: SharedEventName.PAGE_VIEWED,
+  debug: true,
+})
 
 function Updaters() {
   return (

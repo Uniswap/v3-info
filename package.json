@@ -131,7 +131,7 @@
     "@types/ms": "^0.7.33",
     "@types/numeral": "^2.0.1",
     "@types/ua-parser-js": "^0.7.38",
-    "@uniswap/analytics": "^1.5.0",
+    "@uniswap/analytics": "^1.6.0",
     "@uniswap/analytics-events": "^2.25.0",
     "@uniswap/default-token-list": "^2.0.0",
     "apollo-cache-inmemory": "^1.6.6",

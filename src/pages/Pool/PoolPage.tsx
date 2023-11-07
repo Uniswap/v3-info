@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useColor } from 'hooks/useColor'
 import { ThemedBackground, PageWrapper } from 'pages/styled'
-import { feeTierPercent, getEtherscanLink, isAddress } from 'utils'
+import { ExplorerDataType, feeTierPercent, getExplorerLink, isAddress } from 'utils'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { TYPE, StyledInternalLink } from 'theme'
@@ -31,6 +31,7 @@ import { GenericImageWrapper } from 'components/Logo'
 import { Navigate, useParams } from 'react-router-dom'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -165,7 +166,7 @@ function PoolPage({ address }: { address: string }) {
               </AutoRow>
               <RowFixed gap="10px" align="center">
                 <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
-                <StyledExternalLink href={getEtherscanLink(1, address, 'address', activeNetwork)}>
+                <StyledExternalLink href={getExplorerLink(ChainId.MAINNET, address, ExplorerDataType.ADDRESS)}>
                   <ExternalLink stroke={theme?.text2} size={'17px'} style={{ marginLeft: '12px' }} />
                 </StyledExternalLink>
               </RowFixed>

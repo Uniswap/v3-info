@@ -293,7 +293,7 @@ interface TransactionResults {
 
 export async function fetchTokenTransactions(
   address: string,
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<NormalizedCacheObject>,
 ): Promise<{ data: Transaction[] | undefined; error: boolean; loading: boolean }> {
   try {
     const { data, error, loading } = await client.query<TransactionResults>({

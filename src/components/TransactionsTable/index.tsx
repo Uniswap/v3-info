@@ -4,7 +4,7 @@ import { DarkGreyCard } from 'components/Card'
 import Loader from 'components/Loader'
 import { AutoColumn } from 'components/Column'
 import { formatDollarAmount, formatAmount } from 'utils/numbers'
-import { shortenAddress, getEtherscanLink } from 'utils'
+import { shortenAddress, getExplorerLink, ExplorerDataType } from 'utils'
 import { Label, ClickableText } from 'components/Text'
 import { Transaction, TransactionType } from 'types'
 import { formatTime } from 'utils/date'
@@ -15,6 +15,7 @@ import useTheme from 'hooks/useTheme'
 import HoverInlineText from 'components/HoverInlineText'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { OptimismNetworkInfo } from 'constants/networks'
+import { ChainId } from '@uniswap/sdk-core'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -64,15 +65,15 @@ const ResponsiveGrid = styled.div`
   }
 `
 
-const SortText = styled.button<{ active: boolean }>`
+const SortText = styled.button<{ $active: boolean }>`
   cursor: pointer;
-  font-weight: ${({ active }) => (active ? 500 : 400)};
+  font-weight: ${({ $active }) => ($active ? 500 : 400)};
   margin-right: 0.75rem !important;
   border: none;
   background-color: transparent;
   font-size: 1rem;
   padding: 0px;
-  color: ${({ active, theme }) => (active ? theme.text1 : theme.text3)};
+  color: ${({ $active, theme }) => ($active ? theme.text1 : theme.text3)};
   outline: none;
   @media screen and (max-width: 600px) {
     font-size: 14px;
@@ -97,8 +98,8 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
 
   return (
     <ResponsiveGrid>
-      <ExternalLink href={getEtherscanLink(1, transaction.hash, 'transaction', activeNetwork)}>
-        <Label color={color ?? theme.blue1} fontWeight={400}>
+      <ExternalLink href={getExplorerLink(ChainId.MAINNET, transaction.hash, ExplorerDataType.TRANSACTION)}>
+        <Label color={color ?? theme?.blue1} fontWeight={400}>
           {transaction.type === TransactionType.MINT
             ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
             : transaction.type === TransactionType.SWAP
@@ -117,8 +118,8 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
       </Label>
       <Label end={1} fontWeight={400}>
         <ExternalLink
-          href={getEtherscanLink(1, transaction.sender, 'address', activeNetwork)}
-          style={{ color: color ?? theme.blue1 }}
+          href={getExplorerLink(ChainId.MAINNET, transaction.sender, ExplorerDataType.ADDRESS)}
+          style={{ color: color ?? theme?.blue1 }}
         >
           {shortenAddress(transaction.sender)}
         </ExternalLink>
@@ -186,14 +187,14 @@ export default function TransactionTable({
       setSortField(newField)
       setSortDirection(sortField !== newField ? true : !sortDirection)
     },
-    [sortDirection, sortField]
+    [sortDirection, sortField],
   )
 
   const arrow = useCallback(
     (field: string) => {
       return sortField === field ? (!sortDirection ? '↑' : '↓') : ''
     },
-    [sortDirection, sortField]
+    [sortDirection, sortField],
   )
 
   if (!transactions) {
@@ -202,14 +203,14 @@ export default function TransactionTable({
 
   return (
     <Wrapper>
-      <AutoColumn gap="16px">
+      <AutoColumn $gap="16px">
         <ResponsiveGrid>
           <RowFixed>
             <SortText
               onClick={() => {
                 setTxFilter(undefined)
               }}
-              active={txFilter === undefined}
+              $active={txFilter === undefined}
             >
               All
             </SortText>
@@ -217,7 +218,7 @@ export default function TransactionTable({
               onClick={() => {
                 setTxFilter(TransactionType.SWAP)
               }}
-              active={txFilter === TransactionType.SWAP}
+              $active={txFilter === TransactionType.SWAP}
             >
               Swaps
             </SortText>
@@ -225,7 +226,7 @@ export default function TransactionTable({
               onClick={() => {
                 setTxFilter(TransactionType.MINT)
               }}
-              active={txFilter === TransactionType.MINT}
+              $active={txFilter === TransactionType.MINT}
             >
               Adds
             </SortText>
@@ -233,24 +234,24 @@ export default function TransactionTable({
               onClick={() => {
                 setTxFilter(TransactionType.BURN)
               }}
-              active={txFilter === TransactionType.BURN}
+              $active={txFilter === TransactionType.BURN}
             >
               Removes
             </SortText>
           </RowFixed>
-          <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.amountUSD)} end={1}>
+          <ClickableText color={theme?.text2} onClick={() => handleSort(SORT_FIELD.amountUSD)} end={1}>
             Total Value {arrow(SORT_FIELD.amountUSD)}
           </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken0)}>
+          <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken0)}>
             Token Amount {arrow(SORT_FIELD.amountToken0)}
           </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken1)}>
+          <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken1)}>
             Token Amount {arrow(SORT_FIELD.amountToken1)}
           </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.sender)}>
+          <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.sender)}>
             Account {arrow(SORT_FIELD.sender)}
           </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.timestamp)}>
+          <ClickableText color={theme?.text2} end={1} onClick={() => handleSort(SORT_FIELD.timestamp)}>
             Time {arrow(SORT_FIELD.timestamp)}
           </ClickableText>
         </ResponsiveGrid>
@@ -274,7 +275,7 @@ export default function TransactionTable({
               setPage(page === 1 ? page : page - 1)
             }}
           >
-            <Arrow faded={page === 1 ? true : false}>←</Arrow>
+            <Arrow $faded={page === 1 ? true : false}>←</Arrow>
           </div>
           <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
           <div
@@ -282,7 +283,7 @@ export default function TransactionTable({
               setPage(page === maxPage ? page : page + 1)
             }}
           >
-            <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+            <Arrow $faded={page === maxPage ? true : false}>→</Arrow>
           </div>
         </PageButtons>
       </AutoColumn>

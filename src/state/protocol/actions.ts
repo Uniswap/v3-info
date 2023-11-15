@@ -5,11 +5,11 @@ import { SupportedNetwork } from 'constants/networks'
 
 // protocol wide info
 export const updateProtocolData = createAction<{ protocolData: ProtocolData; networkId: SupportedNetwork }>(
-  'protocol/updateProtocolData'
+  'protocol/updateProtocolData',
 )
 export const updateChartData = createAction<{ chartData: ChartDayData[]; networkId: SupportedNetwork }>(
-  'protocol/updateChartData'
+  'protocol/updateChartData',
 )
 export const updateTransactions = createAction<{ transactions: Transaction[]; networkId: SupportedNetwork }>(
-  'protocol/updateTransactions'
+  'protocol/updateTransactions',
 )

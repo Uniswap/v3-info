@@ -1,9 +1,7 @@
 import React, { HTMLProps, useCallback } from 'react'
-import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
-import { MEDIA_WIDTHS } from './index'
 import { ArrowLeft, X, ExternalLink as LinkIconFeather, Trash } from 'react-feather'
 
 export const ButtonText = styled.button`
@@ -24,7 +22,7 @@ export const ButtonText = styled.button`
   }
 `
 
-export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
+export const Button = styled.button.attrs<{ warning: boolean; backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1,
 }))`
   padding: 1rem 2rem 1rem 2rem;
@@ -219,18 +217,11 @@ export function ExternalLink({
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
       if (target === '_blank' || event.ctrlKey || event.metaKey) {
-        ReactGA.outboundLink({ label: href }, () => {
-          console.debug('Fired outbound link event', href)
-        })
       } else {
         event.preventDefault()
-        // send a ReactGA event and then trigger a location change
-        ReactGA.outboundLink({ label: href }, () => {
-          window.location.href = href
-        })
       }
     },
-    [href, target]
+    [target],
   )
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }
@@ -245,18 +236,11 @@ export function ExternalLinkIcon({
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
       if (target === '_blank' || event.ctrlKey || event.metaKey) {
-        ReactGA.outboundLink({ label: href }, () => {
-          console.debug('Fired outbound link event', href)
-        })
       } else {
         event.preventDefault()
-        // send a ReactGA event and then trigger a location change
-        ReactGA.outboundLink({ label: href }, () => {
-          window.location.href = href
-        })
       }
     },
-    [href, target]
+    [target],
   )
   return (
     <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClick} {...rest}>

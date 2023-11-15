@@ -1,10 +1,8 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { BookOpen, Code, Info, MessageCircle } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ExternalLink } from '../../theme'
 
@@ -52,7 +50,10 @@ const StyledMenu = styled.div`
 const MenuFlyout = styled.span`
   min-width: 8.125rem;
   background-color: ${({ theme }) => theme.bg3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.01),
+    0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   padding: 0.5rem;
@@ -62,7 +63,7 @@ const MenuFlyout = styled.span`
   position: absolute;
   top: 2.6rem;
   right: 0rem;
-  z-index: 100;
+  z-index: 1000;
 `
 
 const MenuItem = styled(ExternalLink)`
@@ -83,19 +84,18 @@ const MenuItem = styled(ExternalLink)`
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-v3-info'
 
 export default function Menu() {
-  const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.MENU)
-  const toggle = useToggleModal(ApplicationModal.MENU)
-  useOnClickOutside(node, open ? toggle : undefined)
+  const node = useRef<HTMLDivElement>(null)
+  const [isOpen, setOpen] = useState(false)
+
+  useOnClickOutside(node, isOpen ? () => setOpen(false) : undefined)
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-    <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle}>
+    <StyledMenu ref={node}>
+      <StyledMenuButton onClick={() => setOpen((open) => !open)}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
-      {open && (
+      {isOpen && (
         <MenuFlyout>
           <MenuItem id="link" href="https://uniswap.org/">
             <Info size={14} />

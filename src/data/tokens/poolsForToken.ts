@@ -38,7 +38,7 @@ interface PoolsForTokenResponse {
  */
 export async function fetchPoolsForToken(
   address: string,
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<NormalizedCacheObject>,
 ): Promise<{
   loading: boolean
   error: boolean

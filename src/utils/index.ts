@@ -3,20 +3,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
-import {
-  ArbitrumNetworkInfo,
-  AvalancheNetworkInfo,
-  BaseNetworkInfo,
-  BNBNetworkInfo,
-  CeloNetworkInfo,
-  NetworkInfo,
-  PolygonNetworkInfo,
-} from 'constants/networks'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token } from '@uniswap/sdk-core'
+
 import JSBI from 'jsbi'
 import { TokenAddressMap } from '../state/lists/hooks'
-import { OptimismNetworkInfo } from '../constants/networks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -27,89 +17,54 @@ export function isAddress(value: any): string | false {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
-  [SupportedChainId.MAINNET]: '',
-  [SupportedChainId.ROPSTEN]: 'ropsten.',
-  [SupportedChainId.RINKEBY]: 'rinkeby.',
-  [SupportedChainId.GOERLI]: 'goerli.',
-  [SupportedChainId.KOVAN]: 'kovan.',
-  [SupportedChainId.OPTIMISM]: 'optimistic.',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'kovan-optimistic.',
+const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
+  [ChainId.MAINNET]: 'https://etherscan.io',
+  [ChainId.GOERLI]: 'https://goerli.etherscan.io',
+  [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
+  [ChainId.ARBITRUM_ONE]: 'https://arbiscan.io',
+  [ChainId.ARBITRUM_GOERLI]: 'https://goerli.arbiscan.io',
+  [ChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
+  [ChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
+  [ChainId.POLYGON]: 'https://polygonscan.com',
+  [ChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
+  [ChainId.CELO]: 'https://celoscan.io',
+  [ChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
+  [ChainId.BNB]: 'https://bscscan.com',
+  [ChainId.AVALANCHE]: 'https://snowtrace.io',
+  [ChainId.BASE]: 'https://basescan.org',
 }
 
-export function getEtherscanLink(
-  chainId: number,
-  data: string,
-  type: 'transaction' | 'token' | 'address' | 'block',
-  networkVersion: NetworkInfo
-): string {
-  const prefix =
-    networkVersion === BNBNetworkInfo
-      ? 'https://bscscan.com/'
-      : networkVersion === PolygonNetworkInfo
-      ? 'https://polygonscan.com/'
-      : networkVersion === CeloNetworkInfo
-      ? 'https://celoscan.io/'
-      : networkVersion === AvalancheNetworkInfo
-      ? 'https://avascan.info/'
-      : networkVersion === ArbitrumNetworkInfo
-      ? 'https://arbiscan.io/'
-      : networkVersion === BaseNetworkInfo
-      ? 'https://basescan.org/'
-      : networkVersion === OptimismNetworkInfo
-      ? 'https://optimistic.etherscan.io'
-      : `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+export enum ExplorerDataType {
+  TRANSACTION = 'transaction',
+  TOKEN = 'token',
+  ADDRESS = 'address',
+  BLOCK = 'block',
+  NATIVE = 'native',
+}
 
-  if (networkVersion === OptimismNetworkInfo) {
-    switch (type) {
-      case 'transaction': {
-        return `${prefix}/tx/${data}`
-      }
-      case 'token': {
-        return `${prefix}/address/${data}`
-      }
-      case 'block': {
-        return `https://optimistic.etherscan.io`
-      }
-      case 'address':
-      default: {
-        return `${prefix}/address/${data}`
-      }
-    }
-  }
-
-  if (networkVersion === ArbitrumNetworkInfo) {
-    switch (type) {
-      case 'transaction': {
-        return `${prefix}/tx/${data}`
-      }
-      case 'token': {
-        return `${prefix}/address/${data}`
-      }
-      case 'block': {
-        return 'https://arbiscan.io/'
-      }
-      case 'address':
-      default: {
-        return `${prefix}/address/${data}`
-      }
-    }
-  }
+/**
+ * Return the explorer link for the given data and data type
+ * @param chainId the ID of the chain for which to return the data
+ * @param data the data to return a link for
+ * @param type the type of the data
+ */
+export function getExplorerLink(chainId: number, data: string, type: ExplorerDataType): string {
+  const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {
-    case 'transaction': {
+    case ExplorerDataType.TRANSACTION:
       return `${prefix}/tx/${data}`
-    }
-    case 'token': {
+
+    case ExplorerDataType.TOKEN:
       return `${prefix}/token/${data}`
-    }
-    case 'block': {
+
+    case ExplorerDataType.BLOCK:
       return `${prefix}/block/${data}`
-    }
-    case 'address':
-    default: {
+
+    case ExplorerDataType.ADDRESS:
       return `${prefix}/address/${data}`
-    }
+    default:
+      return `${prefix}`
   }
 }
 

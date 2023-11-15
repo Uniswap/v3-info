@@ -15,7 +15,7 @@ const Wrapper = styled(Card)`
   width: 100%;
   padding: 1rem;
   display: flex;
-  background-color: ${({ theme }) => theme.bg0}
+  background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
   > * {
     font-size: 1rem;
@@ -52,7 +52,7 @@ const LineChart = ({
 }: LineChartProps) => {
   // theming
   const theme = useTheme()
-  const textColor = theme.text2
+  const textColor = theme?.text2
 
   // chart pointer
   const chartRef = useRef<HTMLDivElement>(null)
@@ -145,7 +145,7 @@ const LineChart = ({
       const series = chartCreated.addAreaSeries({
         lineColor: color,
         topColor: darken(0.36, color),
-        bottomColor: theme.bg0,
+        bottomColor: theme?.bg0,
         lineWidth: 2,
         priceLineVisible: false,
       })
@@ -183,10 +183,10 @@ const LineChart = ({
         }
       })
     }
-  }, [chartCreated, color, currentValue, data, height, setLabel, setValue, theme.bg0])
+  }, [chartCreated, color, currentValue, data, height, setLabel, setValue, theme])
 
   return (
-    <Wrapper minHeight={minHeight}>
+    <Wrapper $minHeight={minHeight}>
       <RowBetween>
         {topLeft ?? null}
         {topRight ?? null}

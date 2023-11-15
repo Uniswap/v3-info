@@ -69,7 +69,7 @@ export function useDerivedOffsetTVLHistory() {
           })
           return accum
         },
-        Promise.resolve({} as { [key: number]: ChartDayData })
+        Promise.resolve({} as { [key: number]: ChartDayData }),
       )
 
       // Format as array
@@ -108,29 +108,32 @@ export function useDerivedProtocolTVLHistory() {
       // fetch all data for each pool
       const data = await addresses
         .slice(0, POOL_COUNT_FOR_AGGREGATE) // @TODO: must be replaced with aggregate with subgraph data fixed.
-        .reduce(async (accumP: Promise<{ [key: number]: ChartDayData }>, address) => {
-          const accum = await accumP
-          if (POOL_HIDE[currentNetwork.id].includes(address)) {
-            return accum
-          }
-          const { data } = await fetchPoolChartData(address, dataClient)
-          if (!data) return accum
-          dispatch(updatePoolChartData({ poolAddress: address, chartData: data, networkId: currentNetwork.id }))
-          data.map((poolDayData: PoolChartEntry) => {
-            const { date, totalValueLockedUSD, volumeUSD } = poolDayData
-            const roundedDate = date
-            if (!accum[roundedDate]) {
-              accum[roundedDate] = {
-                tvlUSD: 0,
-                date: roundedDate,
-                volumeUSD: 0,
-              }
+        .reduce(
+          async (accumP: Promise<{ [key: number]: ChartDayData }>, address) => {
+            const accum = await accumP
+            if (POOL_HIDE[currentNetwork.id].includes(address)) {
+              return accum
             }
-            accum[roundedDate].tvlUSD = accum[roundedDate].tvlUSD + totalValueLockedUSD
-            accum[roundedDate].volumeUSD = accum[roundedDate].volumeUSD + volumeUSD
-          })
-          return accum
-        }, Promise.resolve({} as { [key: number]: ChartDayData }))
+            const { data } = await fetchPoolChartData(address, dataClient)
+            if (!data) return accum
+            dispatch(updatePoolChartData({ poolAddress: address, chartData: data, networkId: currentNetwork.id }))
+            data.map((poolDayData: PoolChartEntry) => {
+              const { date, totalValueLockedUSD, volumeUSD } = poolDayData
+              const roundedDate = date
+              if (!accum[roundedDate]) {
+                accum[roundedDate] = {
+                  tvlUSD: 0,
+                  date: roundedDate,
+                  volumeUSD: 0,
+                }
+              }
+              accum[roundedDate].tvlUSD = accum[roundedDate].tvlUSD + totalValueLockedUSD
+              accum[roundedDate].volumeUSD = accum[roundedDate].volumeUSD + volumeUSD
+            })
+            return accum
+          },
+          Promise.resolve({} as { [key: number]: ChartDayData }),
+        )
 
       // Format as array
       setChartData({ ...chartData, [currentNetwork.id]: Object.values(data) })

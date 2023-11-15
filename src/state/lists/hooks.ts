@@ -34,7 +34,6 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   const map = list.tokens.reduce<Mutable<TokenAddressMap>>((tokenMap, tokenInfo) => {
     const token = new WrappedTokenInfo(tokenInfo, list)
     if (tokenMap[token.chainId]?.[token.address] !== undefined) {
-      console.error(`Duplicate token! ${token.address}`)
       return tokenMap
     }
     if (!tokenMap[token.chainId]) tokenMap[token.chainId] = {}
@@ -73,7 +72,7 @@ export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): Token
       .reduce<{ [chainId: string]: true }>((memo, value) => {
         memo[value] = true
         return memo
-      }, {})
+      }, {}),
   ).map((id) => parseInt(id))
 
   return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {
@@ -113,7 +112,7 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
   return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(
-    (url) => !UNSUPPORTED_LIST_URLS.includes(url)
+    (url) => !UNSUPPORTED_LIST_URLS.includes(url),
   )
 }
 

@@ -20,7 +20,6 @@ import {
 import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import {
   addPopup,
@@ -33,7 +32,8 @@ import {
 } from './actions'
 
 export function useBlockNumber(): number | undefined {
-  const { chainId } = useActiveWeb3React()
+  const [activeNetwork] = useActiveNetworkVersion()
+  const chainId = activeNetwork.chainId
 
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
 }
@@ -75,7 +75,7 @@ export function useAddPopup(): (content: PopupContent, key?: string) => void {
     (content: PopupContent, key?: string) => {
       dispatch(addPopup({ content, key }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -86,7 +86,7 @@ export function useRemovePopup(): (key: string) => void {
     (key: string) => {
       dispatch(removePopup({ key }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -103,7 +103,7 @@ export function useSubgraphStatus(): [
     syncedBlock: number | undefined
     headBlock: number | undefined
   },
-  (available: boolean | null, syncedBlock: number | undefined, headBlock: number | undefined) => void
+  (available: boolean | null, syncedBlock: number | undefined, headBlock: number | undefined) => void,
 ] {
   const dispatch = useDispatch()
   const status = useSelector((state: AppState) => state.application.subgraphStatus)
@@ -112,7 +112,7 @@ export function useSubgraphStatus(): [
     (available: boolean | null, syncedBlock: number | undefined, headBlock: number | undefined) => {
       dispatch(updateSubgraphStatus({ available, syncedBlock, headBlock }))
     },
-    [dispatch]
+    [dispatch],
   )
   return [status, update]
 }
@@ -125,7 +125,7 @@ export function useActiveNetworkVersion(): [NetworkInfo, (activeNetworkVersion: 
     (activeNetworkVersion: NetworkInfo) => {
       dispatch(updateActiveNetworkVersion({ activeNetworkVersion }))
     },
-    [dispatch]
+    [dispatch],
   )
   return [activeNetwork, update]
 }

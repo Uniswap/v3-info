@@ -15,7 +15,7 @@ const Wrapper = styled(Card)`
   padding: 1rem;
   padding-right: 2rem;
   display: flex;
-  background-color: ${({ theme }) => theme.bg0}
+  background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
   > * {
     font-size: 1rem;
@@ -51,7 +51,7 @@ const BarChart = ({
   ...rest
 }: LineChartProps) => {
   const theme = useTheme()
-  const textColor = theme.text2
+  const textColor = theme?.text2
   const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
 
@@ -181,10 +181,10 @@ const BarChart = ({
         }
       })
     }
-  }, [chartCreated, color, currentValue, data, height, setLabel, setValue, theme.bg0])
+  }, [chartCreated, color, currentValue, data, height, setLabel, setValue, theme?.bg0])
 
   return (
-    <Wrapper minHeight={minHeight}>
+    <Wrapper $minHeight={minHeight}>
       <RowBetween>
         {topLeft ?? null}
         {topRight ?? null}

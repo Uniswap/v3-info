@@ -12,13 +12,13 @@ import { GreyBadge } from 'components/Card'
 import { feeTierPercent } from 'utils'
 import { useSavedTokens, useSavedPools } from 'state/user/hooks'
 import { SavedIcon } from 'components/Button'
-import { useHistory } from 'react-router-dom'
 import { useTokenDatas } from 'state/tokens/hooks'
 import { usePoolDatas } from 'state/pools/hooks'
 import HoverInlineText from 'components/HoverInlineText'
 import { TOKEN_HIDE, POOL_HIDE } from '../../constants/index'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
+import { useNavigate } from 'react-router-dom'
 
 const Container = styled.div`
   position: relative;
@@ -37,7 +37,7 @@ const Wrapper = styled(Row)`
 
   @media (max-width: 1080px) {
     width: 100%;
-  } ;
+  }
 `
 
 const StyledInput = styled.input`
@@ -64,7 +64,7 @@ const StyledInput = styled.input`
   }
 `
 
-const Menu = styled.div<{ hide: boolean }>`
+const Menu = styled.div<{ $hide: boolean }>`
   display: flex;
   flex-direction: column;
   z-index: 9999;
@@ -78,9 +78,12 @@ const Menu = styled.div<{ hide: boolean }>`
   position: absolute;
   background: ${({ theme }) => theme.bg0};
   border-radius: 8px;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.04),
+    0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.04);
-  display: ${({ hide }) => hide && 'none'};
+  display: ${({ $hide }) => $hide && 'none'};
   border: 1px solid ${({ theme }) => theme.pink1};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -119,9 +122,9 @@ const Break = styled.div`
   width: 100%;
 `
 
-const HoverText = styled.div<{ hide?: boolean | undefined }>`
+const HoverText = styled.div<{ $hide?: boolean | undefined }>`
   color: ${({ theme }) => theme.blue1};
-  display: ${({ hide = false }) => hide && 'none'};
+  display: ${({ $hide = false }) => $hide && 'none'};
   :hover {
     cursor: pointer;
     opacity: 0.6;
@@ -135,7 +138,7 @@ const HoverRowLink = styled.div`
   }
 `
 
-const OptionButton = styled.div<{ enabled: boolean }>`
+const OptionButton = styled.div<{ $enabled: boolean }>`
   width: fit-content;
   padding: 4px 8px;
   border-radius: 8px;
@@ -145,8 +148,8 @@ const OptionButton = styled.div<{ enabled: boolean }>`
   margin-right: 10px;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme, enabled }) => (enabled ? theme.pink1 : 'transparent')};
-  color: ${({ theme, enabled }) => (enabled ? theme.white : theme.pink1)};
+  background-color: ${({ theme, $enabled }) => ($enabled ? theme.pink1 : 'transparent')};
+  color: ${({ theme, $enabled }) => ($enabled ? theme.white : theme.pink1)};
   :hover {
     opacity: 0.6;
     cursor: pointer;
@@ -154,7 +157,7 @@ const OptionButton = styled.div<{ enabled: boolean }>`
 `
 
 const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [activeNetwork] = useActiveNetworkVersion()
 
   const ref = useRef<HTMLInputElement>(null)
@@ -207,7 +210,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
     setShowMenu(false)
     setPoolsShown(3)
     setTokensShown(3)
-    history.push(to)
+    navigate(to)
   }
 
   // get date for watchlist
@@ -218,11 +221,11 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
   const [showWatchlist, setShowWatchlist] = useState(false)
   const tokensForList = useMemo(
     () => (showWatchlist ? watchListTokenData ?? [] : tokens.sort((t0, t1) => (t0.volumeUSD > t1.volumeUSD ? -1 : 1))),
-    [showWatchlist, tokens, watchListTokenData]
+    [showWatchlist, tokens, watchListTokenData],
   )
   const poolForList = useMemo(
     () => (showWatchlist ? watchListPoolData ?? [] : pools.sort((p0, p1) => (p0.volumeUSD > p1.volumeUSD ? -1 : 1))),
-    [pools, showWatchlist, watchListPoolData]
+    [pools, showWatchlist, watchListPoolData],
   )
 
   return (
@@ -246,14 +249,14 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
           />
           {!focused && <TYPE.gray pl="2px">⌘/</TYPE.gray>}
         </Wrapper>
-        <Menu hide={!showMenu} ref={menuRef}>
-          <AutoColumn gap="lg">
-            <AutoColumn gap="sm">
+        <Menu $hide={!showMenu} ref={menuRef}>
+          <AutoColumn $gap="lg">
+            <AutoColumn $gap="sm">
               <RowFixed>
-                <OptionButton enabled={!showWatchlist} onClick={() => setShowWatchlist(false)}>
+                <OptionButton $enabled={!showWatchlist} onClick={() => setShowWatchlist(false)}>
                   Search
                 </OptionButton>
-                <OptionButton enabled={showWatchlist} onClick={() => setShowWatchlist(true)}>
+                <OptionButton $enabled={showWatchlist} onClick={() => setShowWatchlist(true)}>
                   Watchlist
                 </OptionButton>
               </RowFixed>
@@ -319,7 +322,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               onClick={() => {
                 setTokensShown(tokensShown + 5)
               }}
-              hide={!(tokensForList.length > 3 && tokensForList.length >= tokensShown)}
+              $hide={!(tokensForList.length > 3 && tokensForList.length >= tokensShown)}
               ref={textRef}
             >
               See more...
@@ -387,7 +390,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               onClick={() => {
                 setPoolsShown(poolsShown + 5)
               }}
-              hide={!(poolForList.length > 3 && poolForList.length >= poolsShown)}
+              $hide={!(poolForList.length > 3 && poolForList.length >= poolsShown)}
               ref={textRef}
             >
               See more...

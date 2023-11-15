@@ -63,5 +63,5 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateTransactions, (state, { payload: { transactions, networkId } }) => {
       state[networkId].transactions = transactions
-    })
+    }),
 )

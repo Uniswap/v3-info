@@ -58,7 +58,7 @@ const Chart = ({
   const parsedValue = value
 
   return (
-    <Wrapper minHeight={minHeight} {...rest}>
+    <Wrapper $minHeight={minHeight} {...rest}>
       <RowBetween>
         {topLeft ?? null}
         {topRight ?? null}
@@ -100,13 +100,13 @@ const Chart = ({
               minTickGap={10}
             />
             <Tooltip
-              cursor={{ stroke: theme.bg2 }}
+              cursor={{ stroke: theme?.bg2 }}
               contentStyle={{ display: 'none' }}
-              formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
-                if (setValue && parsedValue !== props.payload.value) {
-                  setValue(props.payload.value)
+              formatter={(value: number, name: string, config: { payload: { time: string; value: number } }) => {
+                if (setValue && parsedValue !== config.payload.value) {
+                  setValue(config.payload.value)
                 }
-                const formattedTime = dayjs(props.payload.time).format('MMM D, YYYY')
+                const formattedTime = dayjs(config.payload.time).format('MMM D, YYYY')
                 if (setLabel && label !== formattedTime) setLabel(formattedTime)
               }}
             />

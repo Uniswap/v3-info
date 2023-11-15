@@ -30,7 +30,7 @@ export function chainIdToNetworkName(networkId: ChainId) {
 
 const getTokenLogoURL = ({ address, chainId }: { address: string; chainId: ChainId }) => {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/${chainIdToNetworkName(
-    chainId
+    chainId,
   )}/assets/${address}/logo.png`
 }
 

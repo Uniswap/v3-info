@@ -30,7 +30,7 @@ const TopBar = () => {
     <Wrapper>
       <RowBetween>
         <Polling />
-        <AutoRow gap="6px">
+        <AutoRow $gap="6px">
           <RowFixed>
             {activeNetwork.id === SupportedNetwork.CELO ? (
               <Item>Celo Price:</Item>
@@ -46,7 +46,7 @@ const TopBar = () => {
             </Item>
           </RowFixed>
         </AutoRow>
-        <AutoRow gap="6px" style={{ justifyContent: 'flex-end' }}>
+        <AutoRow $gap="6px" style={{ justifyContent: 'flex-end' }}>
           <StyledLink href="https://v2.info.uniswap.org/#/">V2 Analytics</StyledLink>
           <StyledLink href="https://docs.uniswap.org/">Docs</StyledLink>
           <StyledLink href="https://app.uniswap.org/#/swap">App</StyledLink>

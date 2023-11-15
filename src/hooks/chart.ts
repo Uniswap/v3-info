@@ -22,7 +22,7 @@ function unixToType(unix: number, type: 'month' | 'week') {
 
 export function useTransformedVolumeData(
   chartData: ChartDayData[] | PoolChartEntry[] | TokenChartEntry[] | undefined,
-  type: 'month' | 'week'
+  type: 'month' | 'week',
 ) {
   return useMemo(() => {
     if (chartData) {

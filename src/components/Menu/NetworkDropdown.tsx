@@ -67,8 +67,8 @@ const NetworkRow = styled(RowBetween)<{ active?: boolean; disabled?: boolean }>`
   }
 `
 
-const Badge = styled.div<{ bgColor?: string }>`
-  background-color: ${({ theme, bgColor }) => bgColor ?? theme.bg4};
+const Badge = styled.div<{ $bgColor?: string }>`
+  background-color: ${({ theme, $bgColor }) => $bgColor ?? theme.bg4};
   border-radius: 6px;
   padding: 2px 6px;
   font-size: 12px;
@@ -101,13 +101,13 @@ export default function NetworkDropdown() {
       <Wrapper onClick={() => setShowMenu(!showMenu)}>
         <RowFixed>
           <LogoWrapper src={activeNetwork.imageURL} />
-          <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px" style={{ whiteSpace: 'nowrap' }}>
+          <TYPE.main fontSize="14px" color={theme?.white} ml="8px" mt="-2px" mr="2px" style={{ whiteSpace: 'nowrap' }}>
             {activeNetwork.name}
           </TYPE.main>
           {[EthereumNetworkInfo, PolygonNetworkInfo, CeloNetworkInfo, BNBNetworkInfo, AvalancheNetworkInfo].includes(
-            activeNetwork
+            activeNetwork,
           ) ? null : (
-            <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
+            <Badge $bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
               L2
             </Badge>
           )}
@@ -116,8 +116,8 @@ export default function NetworkDropdown() {
       </Wrapper>
       {showMenu && (
         <FlyOut>
-          <AutoColumn gap="16px">
-            <TYPE.main color={theme.text3} fontWeight={600} fontSize="16px">
+          <AutoColumn $gap="16px">
+            <TYPE.main color={theme?.text3} fontWeight={600} fontSize="16px">
               Select network
             </TYPE.main>
             {SUPPORTED_NETWORK_VERSIONS.map((n) => {
@@ -134,7 +134,7 @@ export default function NetworkDropdown() {
                         <LogoWrapper src={n.imageURL} />
                         {activeNetwork.id === n.id && <GreenDot />}
                       </LogaContainer>
-                      <TYPE.main ml="12px" color={theme.white}>
+                      <TYPE.main ml="12px" color={theme?.white}>
                         {n.name}
                       </TYPE.main>
                     </RowFixed>

@@ -13,7 +13,7 @@ const Wrapper = styled(Card)`
   width: 100%;
   padding: 1rem;
   display: flex;
-  background-color: ${({ theme }) => theme.bg0}
+  background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
   > * {
     font-size: 1rem;
@@ -49,7 +49,7 @@ const CandleChart = ({
   ...rest
 }: LineChartProps) => {
   const theme = useTheme()
-  const textColor = theme.text3
+  const textColor = theme?.text3
   const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
 
@@ -165,10 +165,10 @@ const CandleChart = ({
         }
       })
     }
-  }, [chartCreated, color, data, height, setValue, setLabel, theme.bg0])
+  }, [chartCreated, color, data, height, setValue, setLabel, theme])
 
   return (
-    <Wrapper minHeight={minHeight}>
+    <Wrapper $minHeight={minHeight}>
       <RowBetween>
         {topLeft ?? null}
         {topRight ?? null}

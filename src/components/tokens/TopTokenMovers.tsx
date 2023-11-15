@@ -41,7 +41,7 @@ const DataCard = ({ tokenData }: { tokenData: TokenData }) => {
       <GreyCard padding="16px">
         <RowFixed>
           <CurrencyLogo address={tokenData.address} size="32px" />
-          <AutoColumn gap="3px" style={{ marginLeft: '12px' }}>
+          <AutoColumn $gap="3px" style={{ marginLeft: '12px' }}>
             <TYPE.label fontSize="14px">
               <HoverInlineText text={tokenData.symbol} />
             </TYPE.label>
@@ -85,18 +85,11 @@ export default function TopTokenMovers() {
     }
   }, [increaseRef, increaseSet])
 
-  // function handleHover() {
-  //   if (resetInterval) {
-  //     resetInterval()
-  //   }
-  //   setPauseAnimation(true)
-  // }
-
   return (
-    <FixedContainer gap="md">
+    <FixedContainer $gap="md">
       <ScrollableRow ref={increaseRef}>
         {topPriceIncrease.map((entry) =>
-          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null
+          entry.data ? <DataCard key={'top-card-token-' + entry.data?.address} tokenData={entry.data} /> : null,
         )}
       </ScrollableRow>
     </FixedContainer>

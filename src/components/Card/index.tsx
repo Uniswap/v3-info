@@ -1,13 +1,20 @@
 import styled from 'styled-components'
 import { Box } from 'rebass/styled-components'
 
-const Card = styled(Box)<{ width?: string; padding?: string; border?: string; borderRadius?: string }>`
+const Card = styled(Box)<{
+  width?: string
+  padding?: string
+  border?: string
+  borderRadius?: string
+  $minHeight?: number
+}>`
   width: ${({ width }) => width ?? '100%'};
   border-radius: 16px;
   padding: 1rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
+  min-height: ${({ $minHeight }) => `${$minHeight}px`};
 `
 export default Card
 

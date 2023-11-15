@@ -54,6 +54,9 @@ const CustomBar = ({
   height: number
   fill: string
 }) => {
+  if (isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)) {
+    return null
+  }
   return (
     <g>
       <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
@@ -82,7 +85,7 @@ const Chart = ({
   const now = dayjs()
 
   return (
-    <Wrapper minHeight={minHeight} {...rest}>
+    <Wrapper $minHeight={minHeight} {...rest}>
       <RowBetween style={{ alignItems: 'flex-start' }}>
         {topLeft ?? null}
         {topRight ?? null}
@@ -118,27 +121,27 @@ const Chart = ({
               minTickGap={10}
             />
             <Tooltip
-              cursor={{ fill: theme.bg2 }}
+              cursor={{ fill: theme?.bg2 }}
               contentStyle={{ display: 'none' }}
-              formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
-                if (setValue && parsedValue !== props.payload.value) {
-                  setValue(props.payload.value)
+              formatter={(value: number, name: string, config: { payload: { time: string; value: number } }) => {
+                if (setValue && parsedValue !== config.payload.value) {
+                  setValue(config.payload.value)
                 }
-                const formattedTime = dayjs(props.payload.time).format('MMM D')
-                const formattedTimeDaily = dayjs(props.payload.time).format('MMM D YYYY')
-                const formattedTimePlusWeek = dayjs(props.payload.time).add(1, 'week')
-                const formattedTimePlusMonth = dayjs(props.payload.time).add(1, 'month')
+                const formattedTime = dayjs(config.payload.time).format('MMM D')
+                const formattedTimeDaily = dayjs(config.payload.time).format('MMM D YYYY')
+                const formattedTimePlusWeek = dayjs(config.payload.time).add(1, 'week')
+                const formattedTimePlusMonth = dayjs(config.payload.time).add(1, 'month')
 
                 if (setLabel && label !== formattedTime) {
                   if (activeWindow === VolumeWindow.weekly) {
                     const isCurrent = formattedTimePlusWeek.isAfter(now)
                     setLabel(
-                      formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusWeek.format('MMM D, YYYY'))
+                      formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusWeek.format('MMM D, YYYY')),
                     )
                   } else if (activeWindow === VolumeWindow.monthly) {
                     const isCurrent = formattedTimePlusMonth.isAfter(now)
                     setLabel(
-                      formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusMonth.format('MMM D, YYYY'))
+                      formattedTime + '-' + (isCurrent ? 'current' : formattedTimePlusMonth.format('MMM D, YYYY')),
                     )
                   } else {
                     setLabel(formattedTimeDaily)
@@ -149,7 +152,7 @@ const Chart = ({
             <Bar
               dataKey="value"
               fill={color}
-              shape={(props) => {
+              shape={(props: { height: number; width: number; x: number; y: number }) => {
                 return <CustomBar height={props.height} width={props.width} x={props.x} y={props.y} fill={color} />
               }}
             />

@@ -3,9 +3,10 @@ import styled, { keyframes } from 'styled-components'
 import { TYPE, ExternalLink } from '../../theme'
 
 import { useActiveNetworkVersion, useSubgraphStatus } from '../../state/application/hooks'
-import { getEtherscanLink } from '../../utils'
+import { ExplorerDataType, getExplorerLink } from '../../utils'
 import useTheme from 'hooks/useTheme'
 import { EthereumNetworkInfo } from 'constants/networks'
+import { ChainId } from '@uniswap/sdk-core'
 
 const StyledPolling = styled.div`
   display: flex;
@@ -80,14 +81,16 @@ export default function Polling() {
         clearTimeout(timer1)
       }
     },
-    [status] //useEffect will run only one time
+    [status], //useEffect will run only one time
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
   return (
-    <ExternalLink href={latestBlock ? getEtherscanLink(1, latestBlock.toString(), 'block', activeNetwork) : ''}>
+    <ExternalLink
+      href={latestBlock ? getExplorerLink(ChainId.MAINNET, latestBlock.toString(), ExplorerDataType.BLOCK) : ''}
+    >
       <StyledPolling>
-        <TYPE.small mr="4px" color={theme.text3}>
+        <TYPE.small mr="4px" color={theme?.text3}>
           Latest synced block:{' '}
         </TYPE.small>
         <TYPE.small style={{ opacity: isMounted ? '0.6' : '0.8' }}>{latestBlock}</TYPE.small>

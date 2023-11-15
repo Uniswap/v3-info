@@ -1,17 +1,13 @@
 import React from 'react'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
 import TokenPage from './TokenPage'
-import { isAddress } from 'ethers/lib/utils'
+import { isAddress } from 'ethers'
+import { Navigate, useParams } from 'react-router-dom'
 
-export function RedirectInvalidToken(props: RouteComponentProps<{ address: string }>) {
-  const {
-    match: {
-      params: { address },
-    },
-  } = props
+export function RedirectInvalidToken() {
+  const { address } = useParams<{ address?: string }>()
 
-  if (!isAddress(address)) {
-    return <Redirect to={`/`} />
+  if (!address || !isAddress(address)) {
+    return <Navigate to={`/`} replace />
   }
-  return <TokenPage {...props} />
+  return <TokenPage />
 }

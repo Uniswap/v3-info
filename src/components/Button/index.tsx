@@ -39,7 +39,7 @@ const Base = styled(RebassButton)<{
   }
 `
 
-export const ButtonPrimary = styled(Base)<{ bgColor?: string }>`
+export const ButtonPrimary = styled(Base)<{ bgColor?: string; altDisabledStyle?: boolean }>`
   background-color: ${({ theme, bgColor }) => bgColor ?? theme.primary1};
   color: white;
   &:focus {
@@ -114,7 +114,7 @@ export const ButtonGray = styled(Base)`
   }
 `
 
-export const ButtonSecondary = styled(Base)`
+export const ButtonSecondary = styled(Base)<{ padding?: string }>`
   border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
   background-color: transparent;
@@ -407,19 +407,19 @@ export const SavedIcon = ({
   const theme = useTheme()
   return (
     <HoverIcon {...rest}>
-      <Star stroke={theme.text2} fill={fill ? theme.text2 : 'transparent'} size={size} />
+      <Star stroke={theme?.text2} fill={fill ? theme?.text2 : 'transparent'} size={size} />
     </HoverIcon>
   )
 }
 
-export const SmallOptionButton = styled(Base)<{ active?: boolean }>`
+export const SmallOptionButton = styled(Base)<{ $active?: boolean }>`
   padding: 4px;
   width: fit-content;
   font-size: 12px;
   border-radius: 4px;
   min-width: 36px;
-  background-color: ${({ active, theme }) => (active ? theme.bg2 : theme.bg1)};
-  color: ${({ active, theme }) => (active ? theme.text1 : theme.text2)};
+  background-color: ${({ $active, theme }) => ($active ? theme.bg2 : theme.bg1)};
+  color: ${({ $active, theme }) => ($active ? theme.text1 : theme.text2)};
 
   :hover {
     opacity: 0.6;

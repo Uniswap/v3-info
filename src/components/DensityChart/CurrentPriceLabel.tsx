@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import { TYPE } from 'theme'
+import { formatAmount } from 'utils/numbers'
 
 const Wrapper = styled.div`
   border-radius: 8px;
@@ -52,12 +53,12 @@ export function CurrentPriceLabel({ data, chartProps, poolData }: CurrentPriceLa
                   }}
                 ></div>
               </RowFixed>
-              <TYPE.label>{`1 ${poolData.token0.symbol} = ${Number(price0).toLocaleString(undefined, {
-                minimumSignificantDigits: 1,
-              })} ${poolData.token1.symbol}`}</TYPE.label>
-              <TYPE.label>{`1 ${poolData.token1.symbol} = ${Number(price1).toLocaleString(undefined, {
-                minimumSignificantDigits: 1,
-              })} ${poolData.token0.symbol}`}</TYPE.label>
+              <TYPE.label>{`1 ${poolData.token0.symbol} = ${formatAmount(price0, 4)} ${
+                poolData.token1.symbol
+              }`}</TYPE.label>
+              <TYPE.label>{`1 ${poolData.token1.symbol} = ${formatAmount(price1, 4)} ${
+                poolData.token0.symbol
+              }`}</TYPE.label>
             </AutoColumn>
           </Wrapper>
         </foreignObject>

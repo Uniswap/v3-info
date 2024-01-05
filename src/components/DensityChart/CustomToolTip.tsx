@@ -36,23 +36,13 @@ export function CustomToolTip({ chartProps, poolData, currentPrice }: CustomTool
         <RowBetween>
           <TYPE.label>{poolData?.token0?.symbol} Price: </TYPE.label>
           <TYPE.label>
-            {price0
-              ? Number(price0).toLocaleString(undefined, {
-                  minimumSignificantDigits: 1,
-                })
-              : ''}{' '}
-            {poolData?.token1?.symbol}
+            {price0 ? formatAmount(price0, 4) : ''} {poolData?.token1?.symbol}
           </TYPE.label>
         </RowBetween>
         <RowBetween>
           <TYPE.label>{poolData?.token1?.symbol} Price: </TYPE.label>
           <TYPE.label>
-            {price1
-              ? Number(price1).toLocaleString(undefined, {
-                  minimumSignificantDigits: 1,
-                })
-              : ''}{' '}
-            {poolData?.token0?.symbol}
+            {price1 ? formatAmount(price1, 4) : ''} {poolData?.token0?.symbol}
           </TYPE.label>
         </RowBetween>
         {currentPrice && price0 && currentPrice > price1 ? (

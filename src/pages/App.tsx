@@ -16,6 +16,7 @@ import { ExternalLink, TYPE } from 'theme'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo, OptimismNetworkInfo } from 'constants/networks'
+import { Link } from 'rebass'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -65,7 +66,7 @@ const Hide1080 = styled.div`
   }
 `
 
-const WarningWrapper = styled.div`
+const BannerWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -79,6 +80,21 @@ const WarningBanner = styled.div`
   width: 100%;
   text-align: center;
   font-weight: 500;
+`
+
+const UrlBanner = styled.div`
+  background-color: ${({ theme }) => theme.pink1};
+  padding: 1rem 0.75rem;
+  color: white;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+`
+
+const Decorator = styled.span`
+  text-decoration: underline;
+  color: white;
 `
 
 const BLOCK_DIFFERENCE_THRESHOLD = 30
@@ -124,13 +140,21 @@ export default function App() {
           <URLWarning />
           <HeaderWrapper>
             {showNotSyncedWarning && (
-              <WarningWrapper>
+              <BannerWrapper>
                 <WarningBanner>
                   {`Warning: 
                   Data has only synced to  block ${subgraphStatus.syncedBlock} (out of ${subgraphStatus.headBlock}). Please check back soon.`}
                 </WarningBanner>
-              </WarningWrapper>
+              </BannerWrapper>
             )}
+            <BannerWrapper>
+              <UrlBanner>
+                {`Explore the new combined V2 and V3 analytics at `}
+                <Link href={'https://app.uniswap.org/explore'}>
+                  <Decorator>app.uniswap.org</Decorator>
+                </Link>
+              </UrlBanner>
+            </BannerWrapper>
             <Hide1080>
               <TopBar />
             </Hide1080>

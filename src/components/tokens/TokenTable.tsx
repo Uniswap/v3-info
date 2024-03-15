@@ -16,6 +16,7 @@ import HoverInlineText from '../HoverInlineText'
 import useTheme from 'hooks/useTheme'
 import { TOKEN_HIDE } from '../../constants/index'
 import { useActiveNetworkVersion } from 'state/application/hooks'
+import { networkPrefix } from 'utils/networkPrefix'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -69,9 +70,10 @@ const ResponsiveLogo = styled(CurrencyLogo)`
 `
 
 const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) => {
+  const [activeNetwork] = useActiveNetworkVersion()
   const theme = useTheme()
   return (
-    <LinkWrapper to={'tokens/' + tokenData.address}>
+    <LinkWrapper to={networkPrefix(activeNetwork) + 'tokens/' + tokenData.address}>
       <ResponsiveGrid>
         <Label>{index + 1}</Label>
         <Label>

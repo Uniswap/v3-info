@@ -31,7 +31,7 @@ import { GenericImageWrapper } from 'components/Logo'
 import { Navigate, useParams } from 'react-router-dom'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+// import { ChainId } from '@uniswap/sdk-core'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -166,7 +166,7 @@ function PoolPage({ address }: { address: string }) {
               </AutoRow>
               <RowFixed gap="10px" align="center">
                 <SavedIcon fill={savedPools.includes(address)} onClick={() => addSavedPool(address)} />
-                <StyledExternalLink href={getExplorerLink(ChainId.MAINNET, address, ExplorerDataType.ADDRESS)}>
+                <StyledExternalLink href={getExplorerLink(activeNetwork.chainId, address, ExplorerDataType.ADDRESS)}>
                   <ExternalLink stroke={theme?.text2} size={'17px'} style={{ marginLeft: '12px' }} />
                 </StyledExternalLink>
               </RowFixed>

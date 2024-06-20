@@ -170,6 +170,7 @@ export function useFetchSearchResults(value: string): {
         console.log(e)
       }
     }
+
     if (value && value.length > 0) {
       fetch()
     }
@@ -209,17 +210,19 @@ export function useFetchSearchResults(value: string): {
   }, [allTokens, newTokens])
 
   const filteredSortedTokens = useMemo(() => {
+    const getMatch = (tokenEntry: string) => tokenEntry.match(new RegExp(escapeRegExp(value), 'i'))
+    const isAddress = /^(0x[0-9a-fA-F]{40})$/.test(value)
+
     return combinedTokens.filter((t) => {
       const regexMatches = Object.keys(t).map((tokenEntryKey) => {
-        const isAddress = value.slice(0, 2) === '0x'
         if (tokenEntryKey === 'address' && isAddress) {
-          return t[tokenEntryKey].match(new RegExp(escapeRegExp(value), 'i'))
+          return getMatch(t[tokenEntryKey])
         }
         if (tokenEntryKey === 'symbol' && !isAddress) {
-          return t[tokenEntryKey].match(new RegExp(escapeRegExp(value), 'i'))
+          return getMatch(t[tokenEntryKey])
         }
         if (tokenEntryKey === 'name' && !isAddress) {
-          return t[tokenEntryKey].match(new RegExp(escapeRegExp(value), 'i'))
+          return getMatch(t[tokenEntryKey])
         }
         return false
       })
@@ -241,9 +244,10 @@ export function useFetchSearchResults(value: string): {
   }, [allPools, newPools])
 
   const filteredSortedPools = useMemo(() => {
+    const isAddress = /^(0x[0-9a-fA-F]{40})$/.test(value)
+
     return combinedPools.filter((t) => {
       const regexMatches = Object.keys(t).map((key) => {
-        const isAddress = value.slice(0, 2) === '0x'
         if (key === 'address' && isAddress) {
           return t[key].match(new RegExp(escapeRegExp(value), 'i'))
         }

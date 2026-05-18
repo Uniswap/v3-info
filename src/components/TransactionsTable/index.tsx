@@ -149,20 +149,11 @@ export default function TransactionTable({
 
   // pagination
   const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
-
-  useEffect(() => {
-    let extraPages = 1
-    if (transactions.length % maxItems === 0) {
-      extraPages = 0
-    }
-    setMaxPage(Math.floor(transactions.length / maxItems) + extraPages)
-  }, [maxItems, transactions])
 
   // filter on txn type
   const [txFilter, setTxFilter] = useState<TransactionType | undefined>(undefined)
 
-  const sortedTransactions = useMemo(() => {
+  const filteredTransactions = useMemo(() => {
     return transactions
       ? transactions
           .slice()
@@ -178,9 +169,18 @@ export default function TransactionTable({
           .filter((x) => {
             return txFilter === undefined || x.type === txFilter
           })
-          .slice(maxItems * (page - 1), page * maxItems)
       : []
-  }, [transactions, maxItems, page, sortField, sortDirection, txFilter])
+  }, [transactions, sortField, sortDirection, txFilter])
+
+  const maxPage = Math.max(1, Math.ceil(filteredTransactions.length / maxItems))
+
+  useEffect(() => {
+    setPage((currentPage) => Math.min(currentPage, maxPage))
+  }, [maxPage])
+
+  const sortedTransactions = useMemo(() => {
+    return filteredTransactions.slice(maxItems * (page - 1), page * maxItems)
+  }, [filteredTransactions, maxItems, page])
 
   const handleSort = useCallback(
     (newField: string) => {
